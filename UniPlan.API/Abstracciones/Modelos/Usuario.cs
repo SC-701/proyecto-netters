@@ -27,7 +27,7 @@ namespace Abstracciones.Modelos
     
     }
 
-
+   
 
     public class UsuarioResponse : UsuarioBase
     {
@@ -44,6 +44,13 @@ namespace Abstracciones.Modelos
 
 
 
+    }
+
+
+    public class LoginRequest
+    {
+        public string Correo { get; set; } = string.Empty;
+        public string Contrasenna { get; set; } = string.Empty;
     }
 
 }

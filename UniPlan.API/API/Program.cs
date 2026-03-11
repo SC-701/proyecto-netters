@@ -13,9 +13,15 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+//PARA PROGRAMA
 builder.Services.AddScoped<IRepositorioDapper, RepositorioDapper>();
 builder.Services.AddScoped<IProgramaDA, ProgramaDA>();
 builder.Services.AddScoped<IProgramaFlujo, ProgramaFlujo>();
+
+
+//PARA USUARIO
+builder.Services.AddScoped<IUsuarioDA, UsuarioDA>();
+builder.Services.AddScoped<IUsuarioFlujo, UsuarioFlujo>();
 
 var app = builder.Build();
 
