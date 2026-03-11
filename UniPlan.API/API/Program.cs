@@ -23,6 +23,11 @@ builder.Services.AddScoped<IProgramaFlujo, ProgramaFlujo>();
 builder.Services.AddScoped<IUsuarioDA, UsuarioDA>();
 builder.Services.AddScoped<IUsuarioFlujo, UsuarioFlujo>();
 
+
+//PARA CURSO
+builder.Services.AddScoped<ICursoDA, CursoDA>();
+builder.Services.AddScoped<ICursoFlujo, CursoFlujo>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
