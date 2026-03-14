@@ -1,12 +1,14 @@
 ﻿using Abstracciones.Interfaces.API;
 using Abstracciones.Interfaces.Flujo;
 using Abstracciones.Modelos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class UsuarioController : ControllerBase, IUsuarioController
     {
         private readonly IUsuarioFlujo _usuarioFlujo;
@@ -26,6 +28,7 @@ namespace API.Controllers
         }
 
         [HttpPost("Login")]
+        [Authorize(Roles = "1")]
         public async Task<IActionResult> IniciarSesion([FromBody] LoginRequest login)
         {
             var resultado = await _usuarioFlujo.IniciarSesion(login.Correo, login.Contrasenna);

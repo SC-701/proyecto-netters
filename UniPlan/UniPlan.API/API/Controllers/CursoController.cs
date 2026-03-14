@@ -1,11 +1,13 @@
 ﻿using Abstracciones.Interfaces.API;
 using Abstracciones.Interfaces.Flujo;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class CursoController : ControllerBase, ICursoController
     {
         private readonly ICursoFlujo _cursoFlujo;
@@ -18,6 +20,7 @@ namespace API.Controllers
         }
 
         [HttpGet("PorPrograma/{idPrograma}")]
+        [Authorize(Roles = "1")]
         public async Task<IActionResult> ObtenerCursosPorPrograma([FromRoute] Guid idPrograma)
         {
             var resultado = await _cursoFlujo.ObtenerCursosPorPrograma(idPrograma);

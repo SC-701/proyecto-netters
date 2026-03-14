@@ -1,11 +1,13 @@
 ﻿using Abstracciones.Interfaces.API;
 using Abstracciones.Interfaces.Flujo;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ProgramaController : ControllerBase, IProgramaController
     {
         private IProgramaFlujo _programaFlujo;
@@ -19,6 +21,7 @@ namespace API.Controllers
 
         #region Operaciones
         [HttpGet]
+        [Authorize(Roles = "1")]
         public async Task<IActionResult> ObtenerProgramas()
         {
             var resultado = await _programaFlujo.ObtenerProgramas();
