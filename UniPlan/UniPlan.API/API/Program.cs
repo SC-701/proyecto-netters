@@ -58,6 +58,10 @@ builder.Services.AddTransient<Autorizacion.Abstracciones.DA.ISeguridadDA,
 builder.Services.AddTransient<Autorizacion.Abstracciones.DA.IRepositorioDapper,
                                Autorizacion.DA.Repositorios.RepositorioDapper>();
 
+// PARA HORARIOS 
+builder.Services.AddScoped<IPlanificacionDA, PlanificacionDA>();
+builder.Services.AddScoped<IPlanificacionFlujo, PlanificacionFlujo>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
