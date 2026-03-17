@@ -6,6 +6,6 @@
     [FechaCreacion] DATETIME         DEFAULT (getdate()) NOT NULL,
     [Estado]        BIT              DEFAULT ((1)) NOT NULL,
     PRIMARY KEY CLUSTERED ([Id] ASC),
-    CONSTRAINT [FK_Planificacion_Usuario] FOREIGN KEY ([IdUsuario]) REFERENCES [dbo].[Usuario] ([Id])
+    CONSTRAINT [FK_Planificacion_Usuarios] FOREIGN KEY ([IdUsuario]) REFERENCES [dbo].[Usuarios] ([Id])
 );
 

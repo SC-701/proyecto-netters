@@ -78,5 +78,12 @@
     <Build Include="dbo\Stored Procedures\IniciarSesion.sql" />
     <Build Include="dbo\Stored Procedures\CrearPlanificacion.sql" />
     <Build Include="dbo\Stored Procedures\AgregarCursoPlanificado.sql" />
+    <Build Include="dbo\Tables\Usuarios.sql" />
+    <Build Include="dbo\Tables\PerfilesxUsuario.sql" />
+    <Build Include="dbo\Tables\Perfiles.sql" />
+    <Build Include="dbo\Stored Procedures\ObtenerUsuario.sql" />
+    <Build Include="dbo\Stored Procedures\ObtenerPlanificacionesPorUsuario.sql" />
+    <Build Include="dbo\Stored Procedures\ObtenerPerfilesxUsuario.sql" />
+    <Build Include="dbo\Stored Procedures\AgregarUsuario.sql" />
   </ItemGroup>
 </Project>

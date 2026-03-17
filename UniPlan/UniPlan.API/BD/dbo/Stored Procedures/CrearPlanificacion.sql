@@ -1,10 +1,12 @@
-﻿CREATE PROCEDURE CrearPlanificacion
+﻿CREATE   PROCEDURE [dbo].[CrearPlanificacion]
     @IdUsuario UNIQUEIDENTIFIER,
     @NumeroPeriodo INT,
     @NombrePeriodo VARCHAR(50)
 AS
 BEGIN
     SET NOCOUNT ON;
+
+    DECLARE @Id UNIQUEIDENTIFIER = NEWID();
 
     INSERT INTO Planificacion
     (
@@ -17,11 +19,13 @@ BEGIN
     )
     VALUES
     (
-        NEWID(),
+        @Id,
         @IdUsuario,
         @NumeroPeriodo,
         @NombrePeriodo,
         GETDATE(),
         1
     );
+
+    SELECT @Id;
 END;
