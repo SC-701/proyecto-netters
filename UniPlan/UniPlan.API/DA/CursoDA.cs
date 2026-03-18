@@ -17,20 +17,51 @@ namespace DA
             _sqlConnection = _repositorioDapper.ObtenerRepositorio();
         }
 
-        public async Task<IEnumerable<CursoResponse>> ObtenerCursosPorPrograma(Guid idPrograma)
-        {
-            string query = @"ObtenerCursosPorPrograma";
+        public async Task<IEnumerable<CursoResponse>> ObtenerCursosPorPrograma (Guid idPrograma) {
+            const string query = @"ObtenerCursosPorPrograma";
 
-            var resultadoConsulta = await _sqlConnection.QueryAsync<CursoResponse>(
+            return await _sqlConnection.QueryAsync<CursoResponse>(
                 query,
-                new
-                {
-                    IdPrograma = idPrograma
-                },
-                commandType: CommandType.StoredProcedure
-            );
+                new { IdPrograma = idPrograma },
+                commandType: CommandType.StoredProcedure);
+        }
 
-            return resultadoConsulta;
+        public async Task<CursoResponse?> ObtenerCursoPorId (Guid idCurso) {
+            const string query = @"ObtenerCursoPorId";
+
+            var resultado = await _sqlConnection.QueryAsync<CursoResponse>(
+                query,
+                new { IdCurso = idCurso },
+                commandType: CommandType.StoredProcedure);
+
+            return resultado.FirstOrDefault();
+        }
+
+        public async Task<IEnumerable<RequisitoCursoResponse>> ObtenerRequisitosPorCurso (Guid idCurso) {
+            const string query = @"ObtenerRequisitosPorCurso";
+
+            return await _sqlConnection.QueryAsync<RequisitoCursoResponse>(
+                query,
+                new { IdCurso = idCurso },
+                commandType: CommandType.StoredProcedure);
+        }
+
+        public async Task<IEnumerable<GrupoHorarioResponse>> ObtenerGruposHorarioPorCurso (Guid idCurso) {
+            const string query = @"ObtenerGruposHorarioPorCurso";
+
+            return await _sqlConnection.QueryAsync<GrupoHorarioResponse>(
+                query,
+                new { IdCurso = idCurso },
+                commandType: CommandType.StoredProcedure);
+        }
+
+        public async Task<IEnumerable<BloqueHorarioResponse>> ObtenerBloquesHorarioGrupo (Guid idGrupoHorario) {
+            const string query = @"ObtenerBloquesHorarioGrupo";
+
+            return await _sqlConnection.QueryAsync<BloqueHorarioResponse>(
+                query,
+                new { IdGrupoHorario = idGrupoHorario },
+                commandType: CommandType.StoredProcedure);
         }
     }
 }

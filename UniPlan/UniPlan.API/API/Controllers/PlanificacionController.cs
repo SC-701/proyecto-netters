@@ -22,16 +22,19 @@ namespace API.Controllers
 
         [HttpPost("Crear")]
         [Authorize(Roles = "1")]
-        public async Task<IActionResult> CrearPlanificacion([FromBody] PlanificacionRequest planificacion)
-        {
-            var resultado = await _planificacionFlujo.CrearPlanificacion(planificacion);
-            return StatusCode(201, resultado);
+        public async Task<IActionResult> CrearPlanificacion ([FromBody] PlanificacionRequest planificacion) {
+            try {
+                var resultado = await _planificacionFlujo.CrearPlanificacion(planificacion);
+                return StatusCode(201, resultado);
+            }
+            catch (InvalidOperationException ex) {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpGet("PorUsuario/{idUsuario}")]
         [Authorize(Roles = "1")]
-        public async Task<IActionResult> ObtenerPlanificacionesPorUsuario([FromRoute] Guid idUsuario)
-        {
+        public async Task<IActionResult> ObtenerPlanificacionesPorUsuario ([FromRoute] Guid idUsuario) {
             var resultado = await _planificacionFlujo.ObtenerPlanificacionesPorUsuario(idUsuario);
 
             if (!resultado.Any())
@@ -42,16 +45,31 @@ namespace API.Controllers
 
         [HttpPost("AgregarCurso")]
         [Authorize(Roles = "1")]
-        public async Task<IActionResult> AgregarCursoPlanificado([FromBody] CursoPlanificadoRequest cursoPlanificado)
-        {
-            await _planificacionFlujo.AgregarCursoPlanificado(cursoPlanificado);
-            return Ok();
+        public async Task<IActionResult> AgregarCursoPlanificado ([FromBody] CursoPlanificadoRequest cursoPlanificado) {
+            try {
+                await _planificacionFlujo.AgregarCursoPlanificado(cursoPlanificado);
+                return Ok();
+            }
+            catch (InvalidOperationException ex) {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpDelete("{idPlanificacion}/Curso/{idCurso}")]
+        [Authorize(Roles = "1")]
+        public async Task<IActionResult> EliminarCursoPlanificado ([FromRoute] Guid idPlanificacion, [FromRoute] Guid idCurso) {
+            try {
+                await _planificacionFlujo.EliminarCursoPlanificado(idPlanificacion, idCurso);
+                return Ok();
+            }
+            catch (InvalidOperationException ex) {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpGet("HorarioUsuario/{idUsuario}")]
         [Authorize(Roles = "1")]
-        public async Task<IActionResult> ObtenerHorarioUsuario([FromRoute] Guid idUsuario)
-        {
+        public async Task<IActionResult> ObtenerHorarioUsuario ([FromRoute] Guid idUsuario) {
             var resultado = await _planificacionFlujo.ObtenerHorarioUsuario(idUsuario);
 
             if (!resultado.Any())

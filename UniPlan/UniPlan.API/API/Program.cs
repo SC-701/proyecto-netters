@@ -50,6 +50,11 @@ builder.Services.AddScoped<IUsuarioFlujo, UsuarioFlujo>();
 builder.Services.AddScoped<ICursoDA, CursoDA>();
 builder.Services.AddScoped<ICursoFlujo, CursoFlujo>();
 
+//PARA CURSO APROBADO
+builder.Services.AddScoped<ICursoAprobadoDA, CursoAprobadoDA>();
+builder.Services.AddScoped<ICursoAprobadoFlujo, CursoAprobadoFlujo>();
+
+
 //Para SEGURIDAD
 builder.Services.AddTransient<Autorizacion.Abstracciones.Flujo.IAutorizacionFlujo,
                                Autorizacion.Flujo.AutorizacionFlujo>();
@@ -72,7 +77,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseAuthentication();
 app.AutorizacionClaims();
 
 app.UseAuthorization();
