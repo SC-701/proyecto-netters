@@ -97,12 +97,11 @@ namespace Flujo {
                     if (HayChoqueHorario(bloqueExistente.Dia, bloqueExistente.HoraInicio, bloqueExistente.HoraFin,
                         bloqueNuevo.Dia, bloqueNuevo.HoraInicio, bloqueNuevo.HoraFin)) {
                         errores.Add($"Existe choque horario con el curso {bloqueExistente.Codigo} - {bloqueExistente.NombreCurso}.");
-                        goto FinValidacionChoques;
+                        return;
                     }
                 }
             }
 
-        FinValidacionChoques:
 
             if (errores.Any())
                 throw new InvalidOperationException(string.Join(" ", errores.Distinct()));
