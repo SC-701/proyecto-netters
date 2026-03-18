@@ -1,0 +1,164 @@
+﻿@page
+@model Web.Pages.App.DashboardModel
+@{
+    ViewData["Title"] = "Dashboard";
+    ViewData["ActivePage"] = "Dashboard";
+    ViewData["UserName"] = Model.UserName;
+    ViewData["UserCareer"] = Model.UserCareer;
+    ViewData["UserAvatar"] = Model.UserAvatarUrl;
+    Layout = "_AppLayout";
+}
+
+<!-- Page Header -->
+<header class="mb-8 flex flex-wrap justify-between items-end gap-4">
+    <div>
+        <h2 class="text-3xl font-black tracking-tight text-slate-900 dark:text-white">¡Hola, @Model.FirstName!</h2>
+        <p class="text-slate-500 mt-1">Aquí tienes el resumen de tu progreso académico actual.</p>
+    </div>
+    <div class="flex gap-3">
+        <a asp-page="/App/Schedule"
+           class="px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-700 flex items-center gap-2">
+            <span class="material-symbols-outlined text-[20px]">calendar_today</span>
+            Ver horario
+        </a>
+        <a asp-page="/App/Planner" asp-page-handler="NewTerm"
+           class="px-4 py-2 text-sm font-medium text-white bg-primary rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2 shadow-sm">
+            <span class="material-symbols-outlined text-[20px]">add</span>
+            Crear nuevo cuatrimestre
+        </a>
+    </div>
+</header>
+
+<!-- Stats Cards -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+        <div class="flex items-center justify-between mb-2">
+            <span class="text-slate-500 text-sm font-medium">Materias Aprobadas</span>
+            <span class="material-symbols-outlined text-green-500">check_circle</span>
+        </div>
+        <div class="text-3xl font-bold text-slate-900 dark:text-white">@Model.Stats.ApprovedSubjects</div>
+        <div class="mt-2 text-xs text-slate-400">De un total de @Model.Stats.TotalSubjects materias</div>
+    </div>
+    <div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+        <div class="flex items-center justify-between mb-2">
+            <span class="text-slate-500 text-sm font-medium">Créditos Completados</span>
+            <span class="material-symbols-outlined text-primary">school</span>
+        </div>
+        <div class="text-3xl font-bold text-slate-900 dark:text-white">
+            @Model.Stats.CompletedCredits
+            <span class="text-slate-400 text-xl font-medium"> / @Model.Stats.TotalCredits</span>
+        </div>
+        <div class="mt-2 text-xs text-slate-400">Progreso total del plan</div>
+    </div>
+    <div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+        <div class="flex items-center justify-between mb-2">
+            <span class="text-slate-500 text-sm font-medium">Materias Pendientes</span>
+            <span class="material-symbols-outlined text-orange-500">pending_actions</span>
+        </div>
+        <div class="text-3xl font-bold text-slate-900 dark:text-white">@Model.Stats.PendingSubjects</div>
+        <div class="mt-2 text-xs text-slate-400">Materias restantes para egresar</div>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+    <!-- Columna izquierda -->
+    <div class="lg:col-span-2 space-y-8">
+
+        <!-- Progreso de Carrera -->
+        <section class="bg-white dark:bg-slate-900 p-8 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-6">Progreso de Carrera</h3>
+            <div class="space-y-6">
+                <div>
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-sm font-medium text-slate-600 dark:text-slate-400">Créditos totales</span>
+                        <span class="text-sm font-bold text-primary">@Model.Stats.CreditsPercent%</span>
+                    </div>
+                    <div class="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-3">
+                        <div class="bg-primary h-3 rounded-full shadow-[0_0_10px_rgba(36,99,235,0.2)]"
+                             style="width: @Model.Stats.CreditsPercent%;"></div>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800">
+                        <p class="text-xs text-slate-500 uppercase tracking-wider mb-1">Promedio General</p>
+                        <p class="text-xl font-bold text-slate-900 dark:text-white">@Model.Stats.GeneralAverage / 10</p>
+                    </div>
+                    <div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800">
+                        <p class="text-xs text-slate-500 uppercase tracking-wider mb-1">Último Cuatrimestre</p>
+                        <p class="text-xl font-bold text-slate-900 dark:text-white">@Model.Stats.LastTermAverage</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Cuatrimestre en Curso -->
+        <section class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+            <div class="p-6 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center">
+                <h3 class="text-lg font-bold text-slate-900 dark:text-white">Cuatrimestre en Curso</h3>
+                <span class="px-2.5 py-1 text-xs font-semibold bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 rounded-full">
+                    Activo
+                </span>
+            </div>
+            <div class="divide-y divide-slate-100 dark:divide-slate-800">
+                @foreach (var subject in Model.CurrentTermSubjects)
+                {
+                    <div class="p-6 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                        <div class="flex items-center gap-4">
+                            <div class="size-10 rounded flex items-center justify-center font-bold text-sm"
+                                 style="background-color: @subject.BgColor; color: @subject.TextColor;">
+                                @subject.Initials
+                            </div>
+                            <div>
+                                <p class="font-semibold text-slate-900 dark:text-white text-sm">@subject.Name</p>
+                                <p class="text-xs text-slate-500">@subject.Schedule</p>
+                            </div>
+                        </div>
+                        <span class="text-xs font-medium text-slate-400">@subject.Credits Créditos</span>
+                    </div>
+                }
+            </div>
+        </section>
+    </div>
+
+    <!-- Columna derecha -->
+    <div class="space-y-6">
+
+        <!-- Próximas Materias -->
+        <section class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+            <h3 class="text-sm font-bold text-slate-500 uppercase tracking-widest mb-4">Próximas Materias</h3>
+            <div class="space-y-4">
+                @foreach (var upcoming in Model.UpcomingSubjects)
+                {
+                    <div class="flex items-start gap-3">
+                        <div class="size-2 mt-2 rounded-full @(upcoming.IsAvailable ? "bg-primary/40" : "bg-slate-200 dark:bg-slate-700")"></div>
+                        <div>
+                            <p class="text-sm font-bold text-slate-900 dark:text-white">@upcoming.Name</p>
+                            <p class="text-xs text-slate-500">
+                                @(string.IsNullOrEmpty(upcoming.Prerequisite) ? "Prerrequisito: Ninguno" : $"Prerrequisito: {upcoming.Prerequisite}")
+                            </p>
+                        </div>
+                    </div>
+                }
+            </div>
+            <a asp-page="/App/Planner"
+               class="w-full mt-6 py-2 text-sm font-medium text-primary hover:text-blue-700 flex items-center justify-center gap-1 group">
+                Ver plan de estudios completo
+                <span class="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
+            </a>
+        </section>
+
+        <!-- Tip Card -->
+        <div class="bg-gradient-to-br from-primary to-blue-700 p-6 rounded-xl text-white shadow-lg">
+            <div class="flex items-center gap-2 mb-3">
+                <span class="material-symbols-outlined text-yellow-300">lightbulb</span>
+                <h4 class="font-bold">Dato UniPlan</h4>
+            </div>
+            <p class="text-sm text-blue-50 leading-relaxed mb-4">@Model.TipMessage</p>
+            <a asp-page="/App/Planner" asp-page-handler="Suggest"
+               class="block w-full py-2 bg-white/20 hover:bg-white/30 rounded-lg text-sm font-medium transition-colors text-center">
+                Sugerir materias
+            </a>
+        </div>
+    </div>
+</div>

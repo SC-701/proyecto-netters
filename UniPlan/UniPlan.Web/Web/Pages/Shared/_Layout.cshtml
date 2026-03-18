@@ -1,0 +1,94 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2463eb",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#111621",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+    <title>@ViewData["Title"] - UniPlan</title>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100">
+    <div class="relative flex min-h-screen flex-col overflow-x-hidden">
+
+        <!-- HEADER -->
+        <header class="sticky top-0 z-50 w-full border-b border-slate-200 dark:border-slate-800 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md">
+            <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+                <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary text-3xl">auto_stories</span>
+                    <h2 class="text-xl font-bold tracking-tight text-slate-900 dark:text-white">UniPlan</h2>
+                </div>
+                <div class="flex items-center gap-4">
+                    <a asp-page="/Account/Login"
+                       class="text-sm font-semibold text-slate-700 dark:text-slate-200 hover:text-primary transition-colors">
+                        Login
+                    </a>
+                    <a asp-page="/Account/Register"
+                       class="rounded-lg bg-primary px-5 py-2.5 text-sm font-bold text-white shadow-sm hover:bg-primary/90 transition-all">
+                        Sign Up
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <!-- CONTENIDO DE CADA PÁGINA -->
+        <main class="flex-1">
+            @RenderBody()
+        </main>
+
+        <!-- FOOTER -->
+        <footer class="border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-background-dark py-12">
+            <div class="mx-auto max-w-7xl px-6">
+                <div class="flex flex-col items-center justify-between gap-8 md:flex-row">
+                    <div class="flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary text-2xl">auto_stories</span>
+                        <span class="text-lg font-bold text-slate-900 dark:text-white">UniPlan</span>
+                    </div>
+                    <div class="flex flex-wrap justify-center gap-8 text-sm font-medium text-slate-500 dark:text-slate-400">
+                        <a asp-page="/Privacy" class="hover:text-primary transition-colors">Privacidad</a>
+                        <a asp-page="/Terms" class="hover:text-primary transition-colors">Términos</a>
+                        <a asp-page="/Contact" class="hover:text-primary transition-colors">Contacto</a>
+                        <a asp-page="/Blog" class="hover:text-primary transition-colors">Blog</a>
+                    </div>
+                    <div class="flex gap-4">
+                        <a href="#" class="text-slate-400 hover:text-primary transition-colors">
+                            <span class="material-symbols-outlined">share</span>
+                        </a>
+                        <a href="#" class="text-slate-400 hover:text-primary transition-colors">
+                            <span class="material-symbols-outlined">language</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="mt-8 border-t border-slate-100 dark:border-slate-800 pt-8 text-center text-sm text-slate-400">
+                    <p>© 2024 UniPlan. Hecho para estudiantes, por estudiantes.</p>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>
