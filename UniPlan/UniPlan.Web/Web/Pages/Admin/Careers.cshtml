@@ -1,0 +1,123 @@
+﻿@page
+@model Web.Pages.Admin.CareersModel
+@{
+    ViewData["Title"] = "Gestión de Carreras";
+    ViewData["ActivePage"] = "Careers";
+    ViewData["AdminName"] = Model.AdminName;
+    ViewData["AdminEmail"] = Model.AdminEmail;
+    Layout = "_AdminLayout";
+}
+
+<!-- Header -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+    <div>
+        <h2 class="text-3xl font-black tracking-tight text-slate-900 dark:text-white">Gestión de Carreras</h2>
+        <p class="text-slate-500 dark:text-slate-400 mt-1">Administra los programas académicos y facultades.</p>
+    </div>
+    <a asp-page="/Admin/Careers" asp-page-handler="Create"
+       class="inline-flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-white px-5 py-2.5 rounded-xl font-bold text-sm transition-all shadow-lg shadow-primary/20">
+        <span class="material-symbols-outlined text-lg">add</span>
+        Agregar Carrera
+    </a>
+</div>
+
+<!-- Stats -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+        <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Total Carreras</p>
+        <p class="text-2xl font-bold mt-1 text-slate-900 dark:text-white">@Model.Stats.TotalCareers</p>
+    </div>
+    <div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+        <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Facultades</p>
+        <p class="text-2xl font-bold mt-1 text-slate-900 dark:text-white">@Model.Stats.TotalFaculties</p>
+    </div>
+    <div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+        <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Estudiantes Activos</p>
+        <p class="text-2xl font-bold mt-1 text-slate-900 dark:text-white">@Model.Stats.ActiveStudents.ToString("N0")</p>
+    </div>
+</div>
+
+<!-- Table -->
+<div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+    <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+            <thead>
+                <tr class="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800">
+                    <th class="px-6 py-4 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Carrera</th>
+                    <th class="px-6 py-4 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Facultad</th>
+                    <th class="px-6 py-4 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Créditos Totales</th>
+                    <th class="px-6 py-4 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Estudiantes</th>
+                    <th class="px-6 py-4 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider text-right">Acciones</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-200 dark:divide-slate-800">
+                @foreach (var career in Model.Careers)
+                {
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+                        <td class="px-6 py-5">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded flex items-center justify-center"
+                                     style="background-color: @career.IconBgColor; color: @career.IconColor;">
+                                    <span class="material-symbols-outlined text-sm">@career.Icon</span>
+                                </div>
+                                <span class="text-sm font-bold">@career.Name</span>
+                            </div>
+                        </td>
+                        <td class="px-6 py-5 text-sm text-slate-600 dark:text-slate-400">@career.Faculty</td>
+                        <td class="px-6 py-5 text-sm text-slate-600 dark:text-slate-400">@career.TotalCredits</td>
+                        <td class="px-6 py-5">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300">
+                                @career.StudentCount.ToString("N0") Estudiantes
+                            </span>
+                        </td>
+                        <td class="px-6 py-5 text-right">
+                            <div class="flex justify-end gap-2">
+                                <a asp-page="/Admin/Careers" asp-page-handler="Edit"
+                                   asp-route-id="@career.Id"
+                                   class="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg text-slate-600 dark:text-slate-400 transition-colors">
+                                    <span class="material-symbols-outlined text-xl">edit_note</span>
+                                </a>
+                                <form method="post" asp-page-handler="Delete" class="inline">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@career.Id" />
+                                    <button type="submit"
+                                            onclick="return confirm('¿Eliminar @career.Name?')"
+                                            class="p-2 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg text-red-500 transition-colors">
+                                        <span class="material-symbols-outlined text-xl">delete</span>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination -->
+    <div class="px-6 py-4 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
+        <p class="text-xs text-slate-500 font-medium">
+            Mostrando @Model.PageStart a @Model.PageEnd de @Model.Stats.TotalCareers carreras
+        </p>
+        <div class="flex gap-2">
+            <a asp-page="/Admin/Careers" asp-route-page="@(Model.CurrentPage - 1)"
+               class="px-3 py-1 text-xs font-bold border border-slate-300 dark:border-slate-700 rounded hover:bg-white dark:hover:bg-slate-800 transition-colors
+                      @(Model.CurrentPage <= 1 ? "pointer-events-none opacity-40" : "")">
+                Anterior
+            </a>
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                <a asp-page="/Admin/Careers" asp-route-page="@i"
+                   class="px-3 py-1 text-xs font-bold rounded transition-colors
+                              @(i == Model.CurrentPage ? "bg-primary text-white shadow-sm" : "border border-slate-300 dark:border-slate-700 hover:bg-white dark:hover:bg-slate-800")">
+                    @i
+                </a>
+            }
+            <a asp-page="/Admin/Careers" asp-route-page="@(Model.CurrentPage + 1)"
+               class="px-3 py-1 text-xs font-bold border border-slate-300 dark:border-slate-700 rounded hover:bg-white dark:hover:bg-slate-800 transition-colors
+                      @(Model.CurrentPage >= Model.TotalPages ? "pointer-events-none opacity-40" : "")">
+                Siguiente
+            </a>
+        </div>
+    </div>
+</div>

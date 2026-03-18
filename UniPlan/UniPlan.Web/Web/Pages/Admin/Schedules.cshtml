@@ -1,0 +1,201 @@
+﻿@page
+@model Web.Pages.Admin.SchedulesModel
+@{
+    ViewData["Title"] = "Gestión de Grupos y Horarios";
+    ViewData["ActivePage"] = "Schedules";
+    ViewData["AdminName"] = Model.AdminName;
+    ViewData["AdminEmail"] = Model.AdminEmail;
+    Layout = "_AdminLayout";
+}
+
+<!-- Header -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+    <div>
+        <h2 class="text-3xl font-black tracking-tight text-slate-900 dark:text-white">Gestión de Grupos y Horarios</h2>
+        <p class="text-slate-500 dark:text-slate-400 mt-1">Configura la oferta académica para el próximo ciclo.</p>
+    </div>
+    <a asp-page="/Admin/GroupForm"
+       class="inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-white rounded-lg font-bold shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all">
+        <span class="material-symbols-outlined">add</span>
+        Crear Nuevo Grupo
+    </a>
+</div>
+
+<!-- Filters & Tabs -->
+<div class="bg-white dark:bg-slate-900 rounded-xl p-6 border border-slate-200 dark:border-slate-800 mb-8">
+    <form method="get" class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+        <div class="space-y-2">
+            <label class="text-xs font-bold uppercase tracking-wider text-slate-400">Semestre Académico</label>
+            <select asp-for="Filter.SemesterId"
+                    asp-items="Model.SemesterOptions"
+                    class="w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-sm">
+            </select>
+        </div>
+        <div class="space-y-2">
+            <label class="text-xs font-bold uppercase tracking-wider text-slate-400">Facultad / Departamento</label>
+            <select asp-for="Filter.FacultyId"
+                    asp-items="Model.FacultyOptions"
+                    class="w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-sm">
+            </select>
+        </div>
+        <div class="space-y-2">
+            <label class="text-xs font-bold uppercase tracking-wider text-slate-400">Carrera</label>
+            <select asp-for="Filter.CareerId"
+                    asp-items="Model.CareerOptions"
+                    class="w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-sm">
+            </select>
+        </div>
+        <div class="md:col-span-3 flex justify-end">
+            <button type="submit"
+                    class="px-5 py-2 bg-primary text-white text-sm font-bold rounded-lg hover:bg-primary/90 transition-all">
+                Aplicar filtros
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- Group Cards -->
+<div class="space-y-4">
+    @foreach (var group in Model.Groups)
+    {
+        var cardClass = group.NeedsAttention
+        ? "opacity-80 border-dashed"
+        : "hover:border-primary/50";
+
+        var capacityBarColor = group.CapacityPercent >= 75 ? "bg-primary"
+        : group.CapacityPercent >= 25 ? "bg-emerald-500"
+        : "bg-slate-300 dark:bg-slate-600";
+
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-5 transition-colors @cardClass">
+            <div class="flex flex-wrap items-center justify-between gap-4">
+
+                <!-- Info izquierda -->
+                <div class="flex items-center gap-4">
+                    <div class="size-12 rounded-lg flex items-center justify-center font-bold text-sm"
+                         style="background-color: @group.BadgeBgColor; color: @group.BadgeTextColor;">
+                        @group.BadgeCode
+                    </div>
+                    <div>
+                        @if (group.NeedsAttention)
+                        {
+                            <h3 class="font-bold text-slate-400 dark:text-slate-500 italic">@group.Name</h3>
+                            <div class="flex items-center gap-3 mt-1 text-sm text-slate-400">
+                                <span class="flex items-center gap-1 font-medium text-amber-500">
+                                    <span class="material-symbols-outlined text-sm">warning</span>
+                                    Requiere atención
+                                </span>
+                            </div>
+                        }
+                        else
+                        {
+                            <h3 class="font-bold text-slate-900 dark:text-white">@group.Name</h3>
+                            <div class="flex items-center gap-3 mt-1 text-sm text-slate-500 dark:text-slate-400">
+                                <span class="flex items-center gap-1">
+                                    <span class="material-symbols-outlined text-sm">person</span>
+                                    @group.Teacher
+                                </span>
+                                <span class="flex items-center gap-1">
+                                    <span class="material-symbols-outlined text-sm">meeting_room</span>
+                                    @group.Room
+                                </span>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <!-- Horarios -->
+                <div class="flex flex-wrap gap-2">
+                    @foreach (var slot in group.TimeSlots)
+                    {
+                        var slotClass = group.NeedsAttention
+                        ? "border border-slate-200 dark:border-slate-700 text-slate-400"
+                        : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300";
+                        <span class="px-3 py-1 rounded-full text-xs font-bold @slotClass">@slot</span>
+                    }
+                </div>
+
+                <!-- Capacidad y acciones -->
+                <div class="flex items-center gap-6">
+                    <div class="text-right">
+                        <p class="text-xs text-slate-400 uppercase font-bold">Capacidad</p>
+                        <div class="flex items-center gap-2 mt-1">
+                            <div class="w-24 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                                <div class="h-full rounded-full @capacityBarColor"
+                                     style="width: @group.CapacityPercent%;"></div>
+                            </div>
+                            <span class="text-sm font-bold @(group.NeedsAttention ? "text-slate-400" : "")">
+                                @group.EnrolledCount/@group.Capacity
+                            </span>
+                        </div>
+                    </div>
+
+                    @if (group.NeedsAttention)
+                    {
+                        <a asp-page="/Admin/GroupForm" asp-route-id="@group.Id" asp-route-action="assign"
+                           class="px-4 py-1.5 bg-primary/10 text-primary rounded-lg text-xs font-bold hover:bg-primary/20 transition-colors">
+                            Asignar Profesor
+                        </a>
+                    }
+                    else
+                    {
+                        <a asp-page="/Admin/GroupForm" asp-route-id="@group.Id"
+                           class="p-2 text-slate-400 hover:text-primary transition-colors">
+                            <span class="material-symbols-outlined">edit</span>
+                        </a>
+                        <form method="post" asp-page-handler="Delete" class="inline">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@group.Id" />
+                            <button type="submit"
+                                    onclick="return confirm('¿Eliminar el grupo @group.Name?')"
+                                    class="p-2 text-slate-400 hover:text-red-500 transition-colors">
+                                <span class="material-symbols-outlined">delete</span>
+                            </button>
+                        </form>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<!-- Pagination -->
+<div class="mt-8 flex items-center justify-between">
+    <p class="text-sm text-slate-500">
+        Mostrando @Model.PageEnd de @Model.TotalGroups grupos
+    </p>
+    <div class="flex gap-2">
+        <a asp-page="/Admin/Schedules"
+           asp-route-page="@(Model.CurrentPage - 1)"
+           asp-route-semesterId="@Model.Filter.SemesterId"
+           asp-route-facultyId="@Model.Filter.FacultyId"
+           asp-route-careerId="@Model.Filter.CareerId"
+           asp-route-view="@Model.ActiveView"
+           class="px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-800 text-sm font-medium hover:bg-slate-50 transition-colors
+                  @(Model.CurrentPage <= 1 ? "pointer-events-none opacity-40" : "")">
+            Anterior
+        </a>
+        @for (int i = 1; i <= Model.TotalPages; i++)
+        {
+            <a asp-page="/Admin/Schedules"
+               asp-route-page="@i"
+               asp-route-semesterId="@Model.Filter.SemesterId"
+               asp-route-facultyId="@Model.Filter.FacultyId"
+               asp-route-careerId="@Model.Filter.CareerId"
+               asp-route-view="@Model.ActiveView"
+               class="px-3 py-1.5 rounded-lg border text-sm font-medium transition-colors
+                          @(i == Model.CurrentPage ? "border-primary bg-primary text-white" : "border-slate-200 dark:border-slate-800 hover:bg-slate-50")">
+                @i
+            </a>
+        }
+        <a asp-page="/Admin/Schedules"
+           asp-route-page="@(Model.CurrentPage + 1)"
+           asp-route-semesterId="@Model.Filter.SemesterId"
+           asp-route-facultyId="@Model.Filter.FacultyId"
+           asp-route-careerId="@Model.Filter.CareerId"
+           asp-route-view="@Model.ActiveView"
+           class="px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-800 text-sm font-medium hover:bg-slate-50 transition-colors
+                  @(Model.CurrentPage >= Model.TotalPages ? "pointer-events-none opacity-40" : "")">
+            Siguiente
+        </a>
+    </div>
+</div>
