@@ -30,5 +30,27 @@ namespace API.Controllers
 
             return Ok(resultado);
         }
+
+        [HttpGet("Detalle/{idCurso}")]
+        [Authorize(Roles = "1")]
+        public async Task<IActionResult> ObtenerCursoDetalle ([FromRoute] Guid idCurso) {
+            var resultado = await _cursoFlujo.ObtenerCursoDetalle(idCurso);
+
+            if (resultado == null)
+                return NotFound();
+
+            return Ok(resultado);
+        }
+
+        [HttpGet("Disponibles/{idUsuario}")]
+        [Authorize(Roles = "1")]
+        public async Task<IActionResult> ObtenerCursosDisponiblesParaUsuario ([FromRoute] Guid idUsuario) {
+            var resultado = await _cursoFlujo.ObtenerCursosDisponiblesParaUsuario(idUsuario);
+
+            if (!resultado.Any())
+                return NoContent();
+
+            return Ok(resultado);
+        }
     }
 }

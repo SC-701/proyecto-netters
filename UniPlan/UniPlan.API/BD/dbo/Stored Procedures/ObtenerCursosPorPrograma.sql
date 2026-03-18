@@ -1,20 +1,22 @@
-﻿CREATE PROCEDURE ObtenerCursosPorPrograma
+﻿
+/* ---------- Cursos ---------- */
+CREATE   PROCEDURE dbo.ObtenerCursosPorPrograma
     @IdPrograma UNIQUEIDENTIFIER
 AS
 BEGIN
     SET NOCOUNT ON;
 
     SELECT
-        Id,
-        Codigo,
-        Nombre,
-        Creditos,
-        Cuatrimestre,
-        IdPrograma,
-        Estado,
-        FechaCreacion
-    FROM Curso
-    WHERE IdPrograma = @IdPrograma
-      AND Estado = 1
-    ORDER BY Cuatrimestre, Nombre;
+        c.Id,
+        c.Codigo,
+        c.Nombre,
+        c.Creditos,
+        c.Cuatrimestre,
+        c.IdPrograma,
+        c.Estado,
+        c.FechaCreacion
+    FROM dbo.Curso c
+    WHERE c.IdPrograma = @IdPrograma
+      AND c.Estado = 1
+    ORDER BY c.Cuatrimestre, c.Nombre;
 END;

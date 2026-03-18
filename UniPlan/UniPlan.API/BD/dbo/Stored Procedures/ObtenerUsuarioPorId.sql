@@ -1,8 +1,6 @@
 ﻿
-/* ---------- Usuarios académicos ---------- */
-CREATE   PROCEDURE dbo.IniciarSesion
-    @Correo VARCHAR(150),
-    @Contrasenna VARCHAR(255)
+CREATE   PROCEDURE dbo.ObtenerUsuarioPorId
+    @IdUsuario UNIQUEIDENTIFIER
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -15,7 +13,6 @@ BEGIN
         u.Estado,
         u.FechaCreacion
     FROM dbo.Usuario u
-    WHERE u.Correo = @Correo
-      AND u.Contrasenna = @Contrasenna
+    WHERE u.Id = @IdUsuario
       AND u.Estado = 1;
 END;

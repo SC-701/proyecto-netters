@@ -25,4 +25,15 @@ namespace Abstracciones.Modelos
     {
         public Guid Id { get; set; }
     }
+
+    public class CursoPlanificadoHorarioResponse {
+        public Guid IdPlanificacion { get; set; }
+        public Guid IdCurso { get; set; }
+        public Guid IdGrupoHorario { get; set; }
+        public string Codigo { get; set; } = string.Empty;
+        public string NombreCurso { get; set; } = string.Empty;
+        public string Dia { get; set; } = string.Empty;
+        public TimeSpan HoraInicio { get; set; }
+        public TimeSpan HoraFin { get; set; }
+    }
 }

@@ -9,11 +9,9 @@ namespace Abstracciones.Interfaces.DA
 {
     public interface IUsuarioDA
     {
-
-
-        Task<Guid> RegistrarUsuario(UsuarioRequest usuario);
-
-        Task<UsuarioResponse?> IniciarSesion(string correo, string contrasenna);
+        Task<Guid> RegistrarUsuario (UsuarioRequest usuario);
+        Task<UsuarioResponse?> IniciarSesion (string correo, string contrasenna);
+        Task<UsuarioResponse?> ObtenerUsuarioPorId (Guid idUsuario);
 
     }
 }

@@ -85,5 +85,15 @@
     <Build Include="dbo\Stored Procedures\ObtenerPlanificacionesPorUsuario.sql" />
     <Build Include="dbo\Stored Procedures\ObtenerPerfilesxUsuario.sql" />
     <Build Include="dbo\Stored Procedures\AgregarUsuario.sql" />
+    <Build Include="dbo\Stored Procedures\ObtenerUsuarioPorId.sql" />
+    <Build Include="dbo\Stored Procedures\ObtenerRequisitosPorCurso.sql" />
+    <Build Include="dbo\Stored Procedures\ObtenerPlanificacionPorId.sql" />
+    <Build Include="dbo\Stored Procedures\ObtenerGruposHorarioPorCurso.sql" />
+    <Build Include="dbo\Stored Procedures\ObtenerCursosPlanificadosPorPlanificacion.sql" />
+    <Build Include="dbo\Stored Procedures\ObtenerCursosAprobadosPorUsuario.sql" />
+    <Build Include="dbo\Stored Procedures\ObtenerCursoPorId.sql" />
+    <Build Include="dbo\Stored Procedures\ObtenerBloquesHorarioGrupo.sql" />
+    <Build Include="dbo\Stored Procedures\ExistePlanificacionUsuarioPeriodo.sql" />
+    <Build Include="dbo\Stored Procedures\EliminarCursoPlanificado.sql" />
   </ItemGroup>
 </Project>

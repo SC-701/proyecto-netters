@@ -1,4 +1,5 @@
-﻿CREATE PROCEDURE RegistrarUsuario
+﻿
+CREATE   PROCEDURE dbo.RegistrarUsuario
     @NombreCompleto VARCHAR(150),
     @Correo VARCHAR(150),
     @Contrasenna VARCHAR(255),
@@ -9,15 +10,26 @@ BEGIN
 
     IF EXISTS (
         SELECT 1
-        FROM Usuario
+        FROM dbo.Usuario
         WHERE Correo = @Correo
     )
     BEGIN
-        RAISERROR('El correo ya se encuentra registrado.', 16, 1);
-        RETURN;
-    END
+        THROW 50010, 'El correo ya se encuentra registrado.', 1;
+    END;
 
-    INSERT INTO Usuario
+    IF NOT EXISTS (
+        SELECT 1
+        FROM dbo.Programa
+        WHERE IdPrograma = @IdPrograma
+          AND Estado = 1
+    )
+    BEGIN
+        THROW 50011, 'El programa indicado no existe o se encuentra inactivo.', 1;
+    END;
+
+    DECLARE @Id UNIQUEIDENTIFIER = NEWID();
+
+    INSERT INTO dbo.Usuario
     (
         Id,
         NombreCompleto,
@@ -29,7 +41,7 @@ BEGIN
     )
     VALUES
     (
-        NEWID(),
+        @Id,
         @NombreCompleto,
         @Correo,
         @Contrasenna,
@@ -37,4 +49,6 @@ BEGIN
         1,
         GETDATE()
     );
+
+    SELECT @Id;
 END;

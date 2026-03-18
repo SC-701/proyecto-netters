@@ -23,43 +23,43 @@ namespace DA
             _repositorioDapper = repositorioDapper;
             _sqlConnection = _repositorioDapper.ObtenerRepositorio();
         }
-        public async Task<UsuarioResponse?> IniciarSesion(string correo, string contrasenna)
-        {
-            string query = @"IniciarSesion";
+        public async Task<UsuarioResponse?> IniciarSesion (string correo, string contrasenna) {
+            const string query = @"IniciarSesion";
 
             var resultadoConsulta = await _sqlConnection.QueryAsync<UsuarioResponse>(
                 query,
-                new
-                {
+                new {
                     Correo = correo,
                     Contrasenna = contrasenna
                 },
-                commandType: CommandType.StoredProcedure
-            );
+                commandType: CommandType.StoredProcedure);
 
             return resultadoConsulta.FirstOrDefault();
         }
 
+        public async Task<Guid> RegistrarUsuario (UsuarioRequest usuario) {
+            const string query = @"RegistrarUsuario";
 
-
-        public async Task<Guid> RegistrarUsuario(UsuarioRequest usuario)
-        {
-            string query = @"RegistrarUsuario";
-
-            var resultadoConsulta = await _sqlConnection.ExecuteScalarAsync<Guid>(
+            return await _sqlConnection.ExecuteScalarAsync<Guid>(
                 query,
-                new
-                {
-              
+                new {
                     NombreCompleto = usuario.NombreCompleto,
                     Correo = usuario.Correo,
                     Contrasenna = usuario.Contrasenna,
                     IdPrograma = usuario.IdPrograma
                 },
-                commandType: CommandType.StoredProcedure
-            );
+                commandType: CommandType.StoredProcedure);
+        }
 
-            return resultadoConsulta;
+        public async Task<UsuarioResponse?> ObtenerUsuarioPorId (Guid idUsuario) {
+            const string query = @"ObtenerUsuarioPorId";
+
+            var resultadoConsulta = await _sqlConnection.QueryAsync<UsuarioResponse>(
+                query,
+                new { IdUsuario = idUsuario },
+                commandType: CommandType.StoredProcedure);
+
+            return resultadoConsulta.FirstOrDefault();
         }
     }
 }

@@ -17,71 +17,93 @@ namespace DA
             _sqlConnection = _repositorioDapper.ObtenerRepositorio();
         }
 
-        public async Task<Guid> CrearPlanificacion(PlanificacionRequest planificacion)
-        {
-            string query = @"CrearPlanificacion";
+        public async Task<Guid> CrearPlanificacion (PlanificacionRequest planificacion) {
+            const string query = @"CrearPlanificacion";
 
-            var resultadoConsulta = await _sqlConnection.ExecuteScalarAsync<Guid>(
+            return await _sqlConnection.ExecuteScalarAsync<Guid>(
                 query,
-                new
-                {
+                new {
                     IdUsuario = planificacion.IdUsuario,
                     NumeroPeriodo = planificacion.NumeroPeriodo,
                     NombrePeriodo = planificacion.NombrePeriodo
                 },
-                commandType: CommandType.StoredProcedure
-            );
-
-            return resultadoConsulta;
+                commandType: CommandType.StoredProcedure);
         }
 
-        public async Task<IEnumerable<PlanificacionResponse>> ObtenerPlanificacionesPorUsuario(Guid idUsuario)
-        {
-            string query = @"ObtenerPlanificacionesPorUsuario";
+        public async Task<IEnumerable<PlanificacionResponse>> ObtenerPlanificacionesPorUsuario (Guid idUsuario) {
+            const string query = @"ObtenerPlanificacionesPorUsuario";
 
-            var resultadoConsulta = await _sqlConnection.QueryAsync<PlanificacionResponse>(
+            return await _sqlConnection.QueryAsync<PlanificacionResponse>(
                 query,
-                new
-                {
-                    IdUsuario = idUsuario
-                },
-                commandType: CommandType.StoredProcedure
-            );
-
-            return resultadoConsulta;
+                new { IdUsuario = idUsuario },
+                commandType: CommandType.StoredProcedure);
         }
 
-        public async Task AgregarCursoPlanificado(CursoPlanificadoRequest cursoPlanificado)
-        {
-            string query = @"AgregarCursoPlanificado";
+        public async Task<PlanificacionResponse?> ObtenerPlanificacionPorId (Guid idPlanificacion) {
+            const string query = @"ObtenerPlanificacionPorId";
+
+            var resultado = await _sqlConnection.QueryAsync<PlanificacionResponse>(
+                query,
+                new { IdPlanificacion = idPlanificacion },
+                commandType: CommandType.StoredProcedure);
+
+            return resultado.FirstOrDefault();
+        }
+
+        public async Task<bool> ExistePlanificacionUsuarioPeriodo (Guid idUsuario, int numeroPeriodo) {
+            const string query = @"ExistePlanificacionUsuarioPeriodo";
+
+            return await _sqlConnection.ExecuteScalarAsync<bool>(
+                query,
+                new {
+                    IdUsuario = idUsuario,
+                    NumeroPeriodo = numeroPeriodo
+                },
+                commandType: CommandType.StoredProcedure);
+        }
+
+        public async Task AgregarCursoPlanificado (CursoPlanificadoRequest cursoPlanificado) {
+            const string query = @"AgregarCursoPlanificado";
 
             await _sqlConnection.ExecuteAsync(
                 query,
-                new
-                {
+                new {
                     IdPlanificacion = cursoPlanificado.IdPlanificacion,
                     IdCurso = cursoPlanificado.IdCurso,
                     IdGrupoHorario = cursoPlanificado.IdGrupoHorario,
                     ColorHex = cursoPlanificado.ColorHex
                 },
-                commandType: CommandType.StoredProcedure
-            );
+                commandType: CommandType.StoredProcedure);
         }
 
-        public async Task<IEnumerable<HorarioUsuarioResponse>> ObtenerHorarioUsuario(Guid idUsuario)
-        {
-            string query = @"ObtenerHorarioUsuario";
+        public async Task EliminarCursoPlanificado (Guid idPlanificacion, Guid idCurso) {
+            const string query = @"EliminarCursoPlanificado";
 
-            var resultadoConsulta = await _sqlConnection.QueryAsync<HorarioUsuarioResponse>(
+            await _sqlConnection.ExecuteAsync(
                 query,
-                new
-                {
-                    IdUsuario = idUsuario
+                new {
+                    IdPlanificacion = idPlanificacion,
+                    IdCurso = idCurso
                 },
-                commandType: CommandType.StoredProcedure
-            );
+                commandType: CommandType.StoredProcedure);
+        }
 
-            return resultadoConsulta;
+        public async Task<IEnumerable<CursoPlanificadoHorarioResponse>> ObtenerCursosPlanificadosPorPlanificacion (Guid idPlanificacion) {
+            const string query = @"ObtenerCursosPlanificadosPorPlanificacion";
+
+            return await _sqlConnection.QueryAsync<CursoPlanificadoHorarioResponse>(
+                query,
+                new { IdPlanificacion = idPlanificacion },
+                commandType: CommandType.StoredProcedure);
+        }
+
+        public async Task<IEnumerable<HorarioUsuarioResponse>> ObtenerHorarioUsuario (Guid idUsuario) {
+            const string query = @"ObtenerHorarioUsuario";
+
+            return await _sqlConnection.QueryAsync<HorarioUsuarioResponse>(
+                query,
+                new { IdUsuario = idUsuario },
+                commandType: CommandType.StoredProcedure);
         }
     }
 }

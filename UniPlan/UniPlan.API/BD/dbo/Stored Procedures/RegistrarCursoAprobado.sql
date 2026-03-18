@@ -1,4 +1,6 @@
-﻿CREATE PROCEDURE RegistrarCursoAprobado
+﻿
+/* ---------- Cursos aprobados ---------- */
+CREATE   PROCEDURE dbo.RegistrarCursoAprobado
     @IdUsuario UNIQUEIDENTIFIER,
     @IdCurso UNIQUEIDENTIFIER
 AS
@@ -7,16 +9,15 @@ BEGIN
 
     IF EXISTS (
         SELECT 1
-        FROM CursoAprobado
+        FROM dbo.CursoAprobado
         WHERE IdUsuario = @IdUsuario
           AND IdCurso = @IdCurso
     )
     BEGIN
-        RAISERROR('Ese curso ya fue registrado como aprobado.', 16, 1);
-        RETURN;
-    END
+        THROW 50040, 'Ese curso ya fue registrado como aprobado.', 1;
+    END;
 
-    INSERT INTO CursoAprobado
+    INSERT INTO dbo.CursoAprobado
     (
         Id,
         IdUsuario,

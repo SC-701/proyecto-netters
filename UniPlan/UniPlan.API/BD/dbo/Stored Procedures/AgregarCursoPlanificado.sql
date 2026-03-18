@@ -1,7 +1,8 @@
-﻿CREATE PROCEDURE AgregarCursoPlanificado
+﻿
+CREATE   PROCEDURE dbo.AgregarCursoPlanificado
     @IdPlanificacion UNIQUEIDENTIFIER,
     @IdCurso UNIQUEIDENTIFIER,
-    @IdGrupoHorario UNIQUEIDENTIFIER = NULL,
+    @IdGrupoHorario UNIQUEIDENTIFIER,
     @ColorHex VARCHAR(20) = NULL
 AS
 BEGIN
@@ -9,16 +10,15 @@ BEGIN
 
     IF EXISTS (
         SELECT 1
-        FROM CursoPlanificado
+        FROM dbo.CursoPlanificado
         WHERE IdPlanificacion = @IdPlanificacion
           AND IdCurso = @IdCurso
     )
     BEGIN
-        RAISERROR('El curso ya fue agregado a la planificación.', 16, 1);
-        RETURN;
-    END
+        THROW 50030, 'El curso ya fue agregado a la planificación.', 1;
+    END;
 
-    INSERT INTO CursoPlanificado
+    INSERT INTO dbo.CursoPlanificado
     (
         Id,
         IdPlanificacion,

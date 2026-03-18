@@ -9,7 +9,8 @@ namespace Abstracciones.Interfaces.Flujo
 {
     public interface ICursoFlujo
     {
-
-        Task<IEnumerable<CursoResponse>> ObtenerCursosPorPrograma(Guid idPrograma);
+        Task<IEnumerable<CursoResponse>> ObtenerCursosPorPrograma (Guid idPrograma);
+        Task<CursoDetalleResponse?> ObtenerCursoDetalle (Guid idCurso);
+        Task<IEnumerable<CursoDisponibleResponse>> ObtenerCursosDisponiblesParaUsuario (Guid idUsuario);
     }
 }

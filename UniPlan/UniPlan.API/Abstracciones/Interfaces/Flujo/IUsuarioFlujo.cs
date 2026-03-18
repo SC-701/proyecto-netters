@@ -9,7 +9,8 @@ namespace Abstracciones.Interfaces.Flujo
 {
     public interface IUsuarioFlujo
     {
-        Task<Guid> RegistrarUsuario(UsuarioRequest usuario);
-        Task<UsuarioResponse?> IniciarSesion(string correo, string contrasenna);
+        Task<Guid> RegistrarUsuario (UsuarioRequest usuario);
+        Task<UsuarioResponse?> IniciarSesion (string correo, string contrasenna);
+        Task<UsuarioResponse?> ObtenerUsuarioPorId (Guid idUsuario);
     }
 }
