@@ -1,30 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Abstracciones.Modelos
 {
     public class PlanificacionBase
     {
-        public Guid IdUsuario { get; set; }
+        [Required(ErrorMessage = "El período es requerido")]
+        [StringLength(50, ErrorMessage = "El período debe tener entre 2 y 50 caracteres", MinimumLength = 2)]
+        public string Periodo { get; set; }
 
-        public int NumeroPeriodo { get; set; }
+        [Required(ErrorMessage = "El año es requerido")]
+        [RegularExpression(@"(19|20)\d\d", ErrorMessage = "El formato del año no es válido")]
+        public int Anio { get; set; }
 
-        public string NombrePeriodo { get; set; } = string.Empty;
+        [Required(ErrorMessage = "El estado es requerido")]
+        [StringLength(50, ErrorMessage = "El estado debe tener entre 2 y 50 caracteres", MinimumLength = 2)]
+        public string Estado { get; set; }
     }
 
     public class PlanificacionRequest : PlanificacionBase
     {
+        [Required(ErrorMessage = "El Id del usuario es requerido")]
+        public Guid IdUsuario { get; set; }
     }
 
     public class PlanificacionResponse : PlanificacionBase
     {
         public Guid Id { get; set; }
-
-        public DateTime FechaCreacion { get; set; }
-
-        public bool Estado { get; set; }
+        public Guid IdUsuario { get; set; }
+        public string Usuario { get; set; }
+        public bool Activo { get; set; }
     }
 }
