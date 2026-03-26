@@ -70,30 +70,17 @@
     <Build Include="dbo\Tables\CursoPlanificado.sql" />
     <Build Include="dbo\Tables\CursoAprobado.sql" />
     <Build Include="dbo\Tables\Curso.sql" />
-    <Build Include="dbo\Stored Procedures\RegistrarUsuario.sql" />
-    <Build Include="dbo\Stored Procedures\RegistrarCursoAprobado.sql" />
-    <Build Include="dbo\Stored Procedures\ObtenerProgramas.sql" />
-    <Build Include="dbo\Stored Procedures\ObtenerHorarioUsuario.sql" />
-    <Build Include="dbo\Stored Procedures\ObtenerCursosPorPrograma.sql" />
-    <Build Include="dbo\Stored Procedures\IniciarSesion.sql" />
-    <Build Include="dbo\Stored Procedures\CrearPlanificacion.sql" />
-    <Build Include="dbo\Stored Procedures\AgregarCursoPlanificado.sql" />
     <Build Include="dbo\Tables\Usuarios.sql" />
     <Build Include="dbo\Tables\PerfilesxUsuario.sql" />
     <Build Include="dbo\Tables\Perfiles.sql" />
     <Build Include="dbo\Stored Procedures\ObtenerUsuario.sql" />
-    <Build Include="dbo\Stored Procedures\ObtenerPlanificacionesPorUsuario.sql" />
     <Build Include="dbo\Stored Procedures\ObtenerPerfilesxUsuario.sql" />
     <Build Include="dbo\Stored Procedures\AgregarUsuario.sql" />
-    <Build Include="dbo\Stored Procedures\ObtenerUsuarioPorId.sql" />
-    <Build Include="dbo\Stored Procedures\ObtenerRequisitosPorCurso.sql" />
-    <Build Include="dbo\Stored Procedures\ObtenerPlanificacionPorId.sql" />
-    <Build Include="dbo\Stored Procedures\ObtenerGruposHorarioPorCurso.sql" />
-    <Build Include="dbo\Stored Procedures\ObtenerCursosPlanificadosPorPlanificacion.sql" />
-    <Build Include="dbo\Stored Procedures\ObtenerCursosAprobadosPorUsuario.sql" />
-    <Build Include="dbo\Stored Procedures\ObtenerCursoPorId.sql" />
-    <Build Include="dbo\Stored Procedures\ObtenerBloquesHorarioGrupo.sql" />
-    <Build Include="dbo\Stored Procedures\ExistePlanificacionUsuarioPeriodo.sql" />
-    <Build Include="dbo\Stored Procedures\EliminarCursoPlanificado.sql" />
+    <Build Include="dbo\Tables\Requisitos_1.sql" />
+    <Build Include="dbo\Tables\Horario_1.sql" />
+    <Build Include="dbo\Tables\Escuela_1.sql" />
+    <Build Include="dbo\Tables\CursoPlanificacion_1.sql" />
+    <Build Include="dbo\Tables\CarreraCurso_1.sql" />
+    <Build Include="dbo\Tables\Carrera_1.sql" />
   </ItemGroup>
 </Project>
