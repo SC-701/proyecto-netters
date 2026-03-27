@@ -3,16 +3,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <Name>BD</Name>
+    <Name>DB</Name>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectVersion>4.1</ProjectVersion>
-    <ProjectGuid>{ff71e4a9-6b3d-4555-a4ea-67a8fcc318bc}</ProjectGuid>
+    <ProjectGuid>{ed5ae5ab-44e4-4d0b-9804-1840b0f14a09}</ProjectGuid>
     <DSP>Microsoft.Data.Tools.Schema.Sql.Sql160DatabaseSchemaProvider</DSP>
     <OutputType>Database</OutputType>
     <RootPath>
     </RootPath>
-    <RootNamespace>BD</RootNamespace>
-    <AssemblyName>BD</AssemblyName>
+    <RootNamespace>DB</RootNamespace>
+    <AssemblyName>DB</AssemblyName>
     <ModelCollation>1033, CI</ModelCollation>
     <DefaultFileStructure>BySchemaAndSchemaType</DefaultFileStructure>
     <DeployToDatabase>True</DeployToDatabase>
@@ -61,27 +61,17 @@
     <Folder Include="dbo\Stored Procedures\" />
   </ItemGroup>
   <ItemGroup>
-    <Build Include="dbo\Tables\Usuario.sql" />
-    <Build Include="dbo\Tables\RequisitoCurso.sql" />
-    <Build Include="dbo\Tables\Programa.sql" />
-    <Build Include="dbo\Tables\Planificacion.sql" />
-    <Build Include="dbo\Tables\HorarioDetalle.sql" />
-    <Build Include="dbo\Tables\GrupoHorario.sql" />
-    <Build Include="dbo\Tables\CursoPlanificado.sql" />
-    <Build Include="dbo\Tables\CursoAprobado.sql" />
-    <Build Include="dbo\Tables\Curso.sql" />
     <Build Include="dbo\Tables\Usuarios.sql" />
+    <Build Include="dbo\Tables\Requisitos.sql" />
+    <Build Include="dbo\Tables\Planificacion.sql" />
     <Build Include="dbo\Tables\PerfilesxUsuario.sql" />
     <Build Include="dbo\Tables\Perfiles.sql" />
-    <Build Include="dbo\Stored Procedures\ObtenerUsuario.sql" />
-    <Build Include="dbo\Stored Procedures\ObtenerPerfilesxUsuario.sql" />
-    <Build Include="dbo\Stored Procedures\AgregarUsuario.sql" />
-    <Build Include="dbo\Tables\Requisitos_1.sql" />
-    <Build Include="dbo\Tables\Horario_1.sql" />
-    <Build Include="dbo\Tables\Escuela_1.sql" />
-    <Build Include="dbo\Tables\CursoPlanificacion_1.sql" />
-    <Build Include="dbo\Tables\CarreraCurso_1.sql" />
-    <Build Include="dbo\Tables\Carrera_1.sql" />
+    <Build Include="dbo\Tables\Horario.sql" />
+    <Build Include="dbo\Tables\Escuela.sql" />
+    <Build Include="dbo\Tables\CursoPlanificacion.sql" />
+    <Build Include="dbo\Tables\Curso.sql" />
+    <Build Include="dbo\Tables\CarreraCurso.sql" />
+    <Build Include="dbo\Tables\Carrera.sql" />
     <Build Include="dbo\Stored Procedures\SP_Requisitos_ObtenerPorCurso.sql" />
     <Build Include="dbo\Stored Procedures\SP_Requisitos_ObtenerCursosQueLoRequieren.sql" />
     <Build Include="dbo\Stored Procedures\SP_Requisitos_Eliminar.sql" />
@@ -123,5 +113,8 @@
     <Build Include="dbo\Stored Procedures\SP_Carrera_Eliminar.sql" />
     <Build Include="dbo\Stored Procedures\SP_Carrera_Agregar.sql" />
     <Build Include="dbo\Stored Procedures\SP_Carrera_Actualizar.sql" />
+    <Build Include="dbo\Stored Procedures\ObtenerUsuario.sql" />
+    <Build Include="dbo\Stored Procedures\ObtenerPerfilesxUsuario.sql" />
+    <Build Include="dbo\Stored Procedures\AgregarUsuario.sql" />
   </ItemGroup>
 </Project>
