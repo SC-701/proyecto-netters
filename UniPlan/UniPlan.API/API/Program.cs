@@ -35,24 +35,15 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-//PARA PROGRAMA
 builder.Services.AddScoped<IRepositorioDapper, RepositorioDapper>();
-builder.Services.AddScoped<IProgramaDA, ProgramaDA>();
-builder.Services.AddScoped<IProgramaFlujo, ProgramaFlujo>();
 
-
-//PARA USUARIO
-builder.Services.AddScoped<IUsuarioDA, UsuarioDA>();
-builder.Services.AddScoped<IUsuarioFlujo, UsuarioFlujo>();
-
+//PARA CARRERA
+builder.Services.AddScoped<ICarreraDA, CarreraDA>();
+builder.Services.AddScoped<ICarreraFlujo, CarreraFlujo>();
 
 //PARA CURSO
 builder.Services.AddScoped<ICursoDA, CursoDA>();
 builder.Services.AddScoped<ICursoFlujo, CursoFlujo>();
-
-//PARA CURSO APROBADO
-builder.Services.AddScoped<ICursoAprobadoDA, CursoAprobadoDA>();
-builder.Services.AddScoped<ICursoAprobadoFlujo, CursoAprobadoFlujo>();
 
 
 //Para SEGURIDAD
@@ -62,10 +53,6 @@ builder.Services.AddTransient<Autorizacion.Abstracciones.DA.ISeguridadDA,
                                Autorizacion.DA.SeguridadDA>();
 builder.Services.AddTransient<Autorizacion.Abstracciones.DA.IRepositorioDapper,
                                Autorizacion.DA.Repositorios.RepositorioDapper>();
-
-// PARA HORARIOS 
-builder.Services.AddScoped<IPlanificacionDA, PlanificacionDA>();
-builder.Services.AddScoped<IPlanificacionFlujo, PlanificacionFlujo>();
 
 var app = builder.Build();
 
