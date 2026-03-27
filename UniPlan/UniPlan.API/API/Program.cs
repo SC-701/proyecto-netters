@@ -53,6 +53,10 @@ builder.Services.AddScoped<IEscuelaFlujo, EscuelaFlujo>();
 builder.Services.AddScoped<IPerfilDA, PerfilDA>();
 builder.Services.AddScoped<IPerfilFlujo, PerfilFlujo>();
 
+//PARA PERFIL X USUARIO
+builder.Services.AddScoped<IPerfilxUsuarioDA, PerfilxUsuarioDA>();
+builder.Services.AddScoped<IPerfilxUsuarioFlujo, PerfilxUsuarioFlujo>();
+
 //Para SEGURIDAD
 builder.Services.AddTransient<Autorizacion.Abstracciones.Flujo.IAutorizacionFlujo,
                                Autorizacion.Flujo.AutorizacionFlujo>();
