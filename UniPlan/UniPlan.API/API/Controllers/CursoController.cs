@@ -62,7 +62,7 @@ namespace API.Controllers {
             return Ok(resultado);
         }
 
-        [HttpGet("{Sigla}")]
+        [HttpGet("Sigla/{Sigla}")]
         [Authorize(Roles = "1")]
         public async Task<IActionResult> ObtenerSigla ([FromRoute] string Sigla) {
             var resultado = await _cursoFlujo.ObtenerSigla(Sigla);
