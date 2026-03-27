@@ -8,5 +8,6 @@ BEGIN
     SET NOCOUNT ON;
 
     SELECT Id, Nombre, Activo
-    FROM Carrera;
+    FROM Carrera
+    WHERE Id = @Id;
 END;
