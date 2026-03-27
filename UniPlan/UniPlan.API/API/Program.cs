@@ -45,6 +45,10 @@ builder.Services.AddScoped<ICarreraFlujo, CarreraFlujo>();
 builder.Services.AddScoped<ICursoDA, CursoDA>();
 builder.Services.AddScoped<ICursoFlujo, CursoFlujo>();
 
+//PARA ESCUELA
+builder.Services.AddScoped<IEscuelaDA, EscuelaDA>();
+builder.Services.AddScoped<IEscuelaFlujo, EscuelaFlujo>();
+
 
 //Para SEGURIDAD
 builder.Services.AddTransient<Autorizacion.Abstracciones.Flujo.IAutorizacionFlujo,
