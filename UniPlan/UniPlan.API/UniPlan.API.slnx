@@ -7,4 +7,5 @@
     <Deploy />
   </Project>
   <Project Path="Flujo/Flujo.csproj" />
+  <Project Path="Reglas/Reglas.csproj" Id="e38e0ac4-10c1-43c5-9289-871c3b32e937" />
 </Solution>
