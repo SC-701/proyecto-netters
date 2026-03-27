@@ -1,6 +1,4 @@
-﻿// NUEVO archivo: Abstracciones/Modelos/Token.cs
-
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Abstracciones.Modelos
 {

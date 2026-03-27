@@ -116,5 +116,10 @@
     <Build Include="dbo\Stored Procedures\ObtenerUsuario.sql" />
     <Build Include="dbo\Stored Procedures\ObtenerPerfilesxUsuario.sql" />
     <Build Include="dbo\Stored Procedures\AgregarUsuario.sql" />
+    <Build Include="dbo\Stored Procedures\SP_Perfil_Agregar.sql" />
+    <Build Include="dbo\Stored Procedures\SP_Perfil_Actualizar.sql" />
+    <Build Include="dbo\Stored Procedures\SP_Perfil_Eliminar.sql" />
+    <Build Include="dbo\Stored Procedures\SP_Perfil_ObtenerTodos.sql" />
+    <Build Include="dbo\Stored Procedures\SP_Perfil_ObtenerPorId.sql" />
   </ItemGroup>
 </Project>
