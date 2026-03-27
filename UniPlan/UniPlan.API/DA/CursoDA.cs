@@ -17,7 +17,6 @@ namespace DA {
         public async Task<Guid> Agregar (CursoRequest curso) {
             string query = @"SP_Curso_Agregar";
             var resultadoConsulta = await _sqlConnection.ExecuteScalarAsync<Guid>(query, new {
-                Id = Guid.NewGuid(),
                 Sigla = curso.Sigla,
                 Nombre = curso.Nombre,
                 Creditos = curso.Creditos,
