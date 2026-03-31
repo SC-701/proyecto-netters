@@ -34,5 +34,70 @@ namespace API.Controllers
             }, null);
         }
 
+        [HttpPut]
+        [Authorize(Roles = "2")]
+        public async Task<IActionResult> Editar([FromBody] RequisitosRequest requisito)
+        {
+            if (!await VerificarRequisitoExiste(requisito.IdCarrera, requisito.IdCurso, requisito.IdCursoRequisito))
+                return NotFound("El requisito no existe.");
 
+            var resultado = await _requisitosFlujo.Editar(requisito);
+            return Ok(resultado);
+        }
+
+        [HttpDelete]
+        [Authorize(Roles = "2")]
+        public async Task<IActionResult> Eliminar([FromBody] RequisitosEliminarRequest requisito)
+        {
+            if (!await VerificarRequisitoExiste(requisito.IdCarrera, requisito.IdCurso, requisito.IdCursoRequisito))
+                return NotFound("El requisito no existe.");
+
+            var resultado = await _requisitosFlujo.Eliminar(requisito);
+            return NoContent();
+        }
+
+        [HttpGet("PorCurso/{IdCarrera}/{IdCurso}")]
+        [Authorize(Roles = "1")]
+        public async Task<IActionResult> ObtenerPorCurso([FromRoute] Guid IdCarrera, [FromRoute] Guid IdCurso)
+        {
+            var resultado = await _requisitosFlujo.ObtenerPorCurso(IdCarrera, IdCurso);
+            if (!resultado.Any())
+                return NoContent();
+
+            return Ok(resultado);
+        }
+
+        [HttpGet("CursosQueLoRequieren/{IdCursoRequisito}")]
+        [Authorize(Roles = "1")]
+        public async Task<IActionResult> ObtenerCursosQueLoRequieren([FromRoute] Guid IdCursoRequisito)
+        {
+            var resultado = await _requisitosFlujo.ObtenerCursosQueLoRequieren(IdCursoRequisito);
+            if (!resultado.Any())
+                return NoContent();
+
+            return Ok(resultado);
+        }
+
+        #endregion
+
+        #region Helpers
+
+        private async Task<bool> VerificarRequisitoExiste(Guid IdCarrera, Guid IdCurso, Guid IdCursoRequisito)
+        {
+            var resultadoValidacion = false;
+            var resultadoRequisitos = await _requisitosFlujo.ObtenerPorCurso(IdCarrera, IdCurso);
+
+            if (resultadoRequisitos.Any(x =>
+                x.IdCarrera == IdCarrera &&
+                x.IdCurso == IdCurso &&
+                x.IdCursoRequisito == IdCursoRequisito))
+            {
+                resultadoValidacion = true;
+            }
+
+            return resultadoValidacion;
+        }
+
+        #endregion
     }
+}
