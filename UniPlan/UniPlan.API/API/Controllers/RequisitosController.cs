@@ -57,7 +57,7 @@ namespace API.Controllers
         }
 
         [HttpGet("PorCurso/{IdCarrera}/{IdCurso}")]
-        [Authorize(Roles = "1")]
+        [Authorize(Roles = "2")]
         public async Task<IActionResult> ObtenerPorCurso([FromRoute] Guid IdCarrera, [FromRoute] Guid IdCurso)
         {
             var resultado = await _requisitosFlujo.ObtenerPorCurso(IdCarrera, IdCurso);
@@ -68,7 +68,7 @@ namespace API.Controllers
         }
 
         [HttpGet("CursosQueLoRequieren/{IdCursoRequisito}")]
-        [Authorize(Roles = "1")]
+        [Authorize(Roles = "2")]
         public async Task<IActionResult> ObtenerCursosQueLoRequieren([FromRoute] Guid IdCursoRequisito)
         {
             var resultado = await _requisitosFlujo.ObtenerCursosQueLoRequieren(IdCursoRequisito);
