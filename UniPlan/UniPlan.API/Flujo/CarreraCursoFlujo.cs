@@ -38,9 +38,9 @@ namespace Flujo
             return await _carreraCursoDA.Obtener();
         }
 
-        public async Task<CarreraCursoDetalle> Obtener(Guid IdCarrera, Guid IdCurso)
+        public async Task<CarreraCursoDetalle> Obtener(Guid IdCarrera)
         {
-            return await _carreraCursoDA.Obtener(IdCarrera, IdCurso);
+            return await _carreraCursoDA.Obtener(IdCarrera);
         }
 
     }

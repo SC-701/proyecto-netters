@@ -10,7 +10,7 @@ namespace Abstracciones.Interfaces.DA
     public interface ICarreraCursoDA
     {
         Task<IEnumerable<CarreraCursoResponse>> Obtener();
-        Task<CarreraCursoDetalle> Obtener(Guid IdCarrera, Guid IdCurso);
+        Task<CarreraCursoDetalle> Obtener(Guid IdCarrera);
         Task<Guid> Agregar(CarreraCursoRequest carreraCurso);
         Task<Guid> Editar(Guid IdCarrera, Guid IdCurso, CarreraCursoRequest carreraCurso);
         Task<Guid> Eliminar(Guid IdCarrera, Guid IdCurso);

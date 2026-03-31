@@ -27,35 +27,33 @@ namespace DA
         #region Operaciones
         public async Task<Guid> Agregar(CarreraCursoRequest carreraCurso)
         {
-            string query = @"AgregarCarreraCurso";
+            string query = @"SP_CarreraCurso_Agregar";
             var resultadoConsulta = await _sqlConnection.ExecuteScalarAsync<Guid>(query, new
             {
                 IdCarrera = carreraCurso.IdCarrera,
                 IdCurso = carreraCurso.IdCurso,
                 Cuatrimestre = carreraCurso.Cuatrimestre,
-                Activo = carreraCurso.Activo
             });
             return resultadoConsulta;
         }
 
         public async Task<Guid> Editar(Guid IdCarrera, Guid IdCurso, CarreraCursoRequest carreraCurso)
         {
-            await verificarCarreraCursoExiste(IdCarrera, IdCurso);
-            string query = @"EditarCarreraCurso";
+            await verificarCarreraExiste(IdCarrera);
+            string query = @"SP_CarreraCurso_Actualizar";
             var resultadoConsulta = await _sqlConnection.ExecuteScalarAsync<Guid>(query, new
             {
                 IdCarrera = IdCarrera,
                 IdCurso = IdCurso,
                 Cuatrimestre = carreraCurso.Cuatrimestre,
-                Activo = carreraCurso.Activo
             });
             return resultadoConsulta;
         }
 
         public async Task<Guid> Eliminar(Guid IdCarrera, Guid IdCurso)
         {
-            await verificarCarreraCursoExiste(IdCarrera, IdCurso);
-            string query = @"EliminarCarreraCurso";
+            await verificarCarreraExiste(IdCarrera);
+            string query = @"SP_CarreraCurso_Eliminar";
             var resultadoConsulta = await _sqlConnection.ExecuteScalarAsync<Guid>(query, new
             {
                 IdCarrera = IdCarrera,
@@ -66,28 +64,27 @@ namespace DA
 
         public async Task<IEnumerable<CarreraCursoResponse>> Obtener()
         {
-            string query = @"ObtenerCarreraCurso";
+            string query = @"SP_CarreraCurso_ObtenerTodos";
             var resultadoConsulta = await _sqlConnection.QueryAsync<CarreraCursoResponse>(query);
             return resultadoConsulta;
         }
 
-        public async Task<CarreraCursoDetalle> Obtener(Guid IdCarrera, Guid IdCurso)
+        public async Task<CarreraCursoDetalle> Obtener(Guid IdCarrera)
         {
-            string query = @"ObtenerCarreraCursoPorId";
+            string query = @"SP_CarreraCurso_ObtenerPorIdCarrera";
             var resultadoConsulta = await _sqlConnection.QueryAsync<CarreraCursoDetalle>(query,
                 new
                 {
-                    IdCarrera = IdCarrera,
-                    IdCurso = IdCurso
+                    IdCarrera = IdCarrera
                 });
             return resultadoConsulta.FirstOrDefault();
         }
         #endregion
 
         #region Helpers
-        private async Task verificarCarreraCursoExiste(Guid IdCarrera, Guid IdCurso)
+        private async Task verificarCarreraExiste(Guid IdCarrera)
         {
-            CarreraCursoResponse? resultadoConsultaCarreraCurso = await Obtener(IdCarrera, IdCurso);
+            CarreraCursoResponse? resultadoConsultaCarreraCurso = await Obtener(IdCarrera);
             if (resultadoConsultaCarreraCurso == null)
                 throw new Exception("No se encontro la relacion CarreraCurso");
         }

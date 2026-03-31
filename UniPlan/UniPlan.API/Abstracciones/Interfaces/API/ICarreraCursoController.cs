@@ -14,6 +14,6 @@ namespace Abstracciones.Interfaces.API
         Task<IActionResult> Editar(Guid IdCarrera, Guid IdCurso, CarreraCursoRequest carreraCurso);
         Task<IActionResult> Eliminar(Guid IdCarrera, Guid IdCurso);
         Task<IActionResult> Obtener();
-        Task<IActionResult> Obtener(Guid IdCarrera, Guid IdCurso);
+        Task<IActionResult> Obtener(Guid IdCarrera);
     }
 }

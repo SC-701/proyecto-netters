@@ -22,7 +22,7 @@ namespace API.Controllers
 
         #region "Operaciones"
         [HttpPost]
-        [Authorize(Roles = "1")]
+        [Authorize(Roles = "2")]
         public async Task<IActionResult> Agregar([FromBody] CarreraCursoRequest carreraCurso)
         {
             var resultado = await _carreraCursoFlujo.Agregar(carreraCurso);
@@ -31,10 +31,10 @@ namespace API.Controllers
         }
 
         [HttpPut("{IdCarrera}/{IdCurso}")]
-        [Authorize(Roles = "1")]
+        [Authorize(Roles = "2")]
         public async Task<IActionResult> Editar([FromRoute] Guid IdCarrera, [FromRoute] Guid IdCurso, [FromBody] CarreraCursoRequest carreraCurso)
         {
-            if (!await VerificarCarreraCursoExiste(IdCarrera, IdCurso))
+            if (!await VerificarCarreraExiste(IdCarrera))
                 return NotFound("La relación CarreraCurso no existe");
 
             var resultado = await _carreraCursoFlujo.Editar(IdCarrera, IdCurso, carreraCurso);
@@ -42,10 +42,10 @@ namespace API.Controllers
         }
 
         [HttpDelete("{IdCarrera}/{IdCurso}")]
-        [Authorize(Roles = "1")]
+        [Authorize(Roles = "2")]
         public async Task<IActionResult> Eliminar([FromRoute] Guid IdCarrera, [FromRoute] Guid IdCurso)
         {
-            if (!await VerificarCarreraCursoExiste(IdCarrera, IdCurso))
+            if (!await VerificarCarreraExiste(IdCarrera))
                 return NotFound("La relación CarreraCurso no existe");
 
             var resultado = await _carreraCursoFlujo.Eliminar(IdCarrera, IdCurso);
@@ -53,7 +53,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "1")]
+        [Authorize(Roles = "2")]
         public async Task<IActionResult> Obtener()
         {
             var resultado = await _carreraCursoFlujo.Obtener();
@@ -63,19 +63,19 @@ namespace API.Controllers
         }
 
         [HttpGet("{IdCarrera}/{IdCurso}")]
-        [Authorize(Roles = "1")]
-        public async Task<IActionResult> Obtener([FromRoute] Guid IdCarrera, [FromRoute] Guid IdCurso)
+        [Authorize(Roles = "2")]
+        public async Task<IActionResult> Obtener([FromRoute] Guid IdCarrera)
         {
-            var resultado = await _carreraCursoFlujo.Obtener(IdCarrera, IdCurso);
+            var resultado = await _carreraCursoFlujo.Obtener(IdCarrera);
             return Ok(resultado);
         }
         #endregion "Operaciones"
 
         #region "Helpers"
-        private async Task<bool> VerificarCarreraCursoExiste(Guid IdCarrera, Guid IdCurso)
+        private async Task<bool> VerificarCarreraExiste(Guid IdCarrera)
         {
             var resultadoValidacion = false;
-            var resultadoCarreraCursoExiste = await _carreraCursoFlujo.Obtener(IdCarrera, IdCurso);
+            var resultadoCarreraCursoExiste = await _carreraCursoFlujo.Obtener(IdCarrera);
             if (resultadoCarreraCursoExiste != null)
                 resultadoValidacion = true;
             return resultadoValidacion;
