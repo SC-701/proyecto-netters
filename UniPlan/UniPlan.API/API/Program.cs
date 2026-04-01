@@ -61,9 +61,11 @@ builder.Services.AddScoped<IPerfilFlujo, PerfilFlujo>();
 builder.Services.AddScoped<IPerfilxUsuarioDA, PerfilxUsuarioDA>();
 builder.Services.AddScoped<IPerfilxUsuarioFlujo, PerfilxUsuarioFlujo>();
 
+//PARA REQUISITOS
+builder.Services.AddScoped<IRequisitosDA, RequisitosDA>();
+builder.Services.AddScoped<IRequisitosFlujo, RequisitosFlujo>();
 
 //PARA PLANIFICACION
-builder.Services.AddScoped<IRepositorioDapper, RepositorioDapper>();
 builder.Services.AddScoped<IPlanificacionDA, PlanificacionDA>();
 builder.Services.AddScoped<IPlanificacionFlujo, PlanificacionFlujo>();
 
