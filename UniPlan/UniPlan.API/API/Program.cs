@@ -57,6 +57,12 @@ builder.Services.AddScoped<IPerfilFlujo, PerfilFlujo>();
 builder.Services.AddScoped<IPerfilxUsuarioDA, PerfilxUsuarioDA>();
 builder.Services.AddScoped<IPerfilxUsuarioFlujo, PerfilxUsuarioFlujo>();
 
+
+//PARA PLANIFICACION
+builder.Services.AddScoped<IRepositorioDapper, RepositorioDapper>();
+builder.Services.AddScoped<IPlanificacionDA, PlanificacionDA>();
+builder.Services.AddScoped<IPlanificacionFlujo, PlanificacionFlujo>();
+
 //Para SEGURIDAD
 builder.Services.AddTransient<Autorizacion.Abstracciones.Flujo.IAutorizacionFlujo,
                                Autorizacion.Flujo.AutorizacionFlujo>();
