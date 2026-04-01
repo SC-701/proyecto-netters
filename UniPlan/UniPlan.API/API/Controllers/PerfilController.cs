@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace API.Controllers {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "2")]
     public class PerfilController : Controller, IPerfilController {
         private IPerfilFlujo _perfilFlujo;
         private ILogger<PerfilController> _logger;
@@ -22,7 +21,6 @@ namespace API.Controllers {
         // Roles: 1 - Usuario, 2 - Administrador (también tiene 1)
 
         [HttpPost]
-        [Authorize(Roles = "2")]
         public async Task<IActionResult> Agregar ([FromBody] PerfilRequest perfil) {
             var resultado = await _perfilFlujo.Agregar(perfil);
             return CreatedAtAction(nameof(Obtener), new { Id = resultado }, null);
@@ -47,7 +45,6 @@ namespace API.Controllers {
         }
 
         [HttpGet]
-        [Authorize(Roles = "2")]
         public async Task<IActionResult> Obtener () {
             var resultado = await _perfilFlujo.Obtener();
             if(!resultado.Any())
@@ -56,7 +53,6 @@ namespace API.Controllers {
         }
 
         [HttpGet("{Id}")]
-        [Authorize(Roles = "2")]
         public async Task<IActionResult> Obtener ([FromRoute] int Id) {
             var resultado = await _perfilFlujo.Obtener(Id);
             return Ok(resultado);

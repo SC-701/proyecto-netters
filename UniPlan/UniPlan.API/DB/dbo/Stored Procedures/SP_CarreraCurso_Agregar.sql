@@ -1,11 +1,4 @@
-﻿
-
--- ============================================================
---  CARRERA CURSO
---  ObtenerPorId = todos los cursos de una carrera
--- ============================================================
-
-CREATE   PROCEDURE SP_CarreraCurso_Agregar
+﻿CREATE   PROCEDURE [dbo].[SP_CarreraCurso_Agregar]
     @IdCarrera   UNIQUEIDENTIFIER,
     @IdCurso     UNIQUEIDENTIFIER,
     @Cuatrimestre INT
@@ -16,5 +9,5 @@ BEGIN
     INSERT INTO CarreraCurso (IdCarrera, IdCurso, Cuatrimestre, Activo)
     VALUES (@IdCarrera, @IdCurso, @Cuatrimestre, 1);
 
-    SELECT @IdCarrera AS IdCarrera, @IdCurso AS IdCurso;
+    SELECT @IdCarrera;
 END;

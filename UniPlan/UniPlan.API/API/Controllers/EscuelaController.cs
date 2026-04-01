@@ -47,7 +47,7 @@ namespace API.Controllers {
         }
 
         [HttpGet]
-        [Authorize(Roles = "1")]
+        [Authorize(Roles = "2")]
         public async Task<IActionResult> Obtener () {
             var resultado = await _escuelaFlujo.Obtener();
             if (!resultado.Any())
