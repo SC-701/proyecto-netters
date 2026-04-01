@@ -2,16 +2,6 @@
 
 namespace Abstracciones.Modelos
 {
-
-
-    
-        public class Planificacion : PlanificacionBase
-        {
-            public Guid Id { get; set; }
-            public Guid IdUsuario { get; set; }
-            public bool Activo { get; set; }
-        }
-    
     public class PlanificacionBase
     {
         [Required(ErrorMessage = "El período es requerido")]
@@ -29,7 +19,8 @@ namespace Abstracciones.Modelos
 
     public class PlanificacionRequest : PlanificacionBase
     {
-       
+        [Required(ErrorMessage = "El Id del usuario es requerido")]
+        public Guid IdUsuario { get; set; }
     }
 
     public class PlanificacionResponse : PlanificacionBase

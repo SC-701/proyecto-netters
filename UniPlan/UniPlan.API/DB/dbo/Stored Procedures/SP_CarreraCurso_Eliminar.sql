@@ -1,7 +1,4 @@
-﻿
--- -----------------------------------------------------------
-
-CREATE   PROCEDURE SP_CarreraCurso_Eliminar
+﻿CREATE PROCEDURE [dbo].[SP_CarreraCurso_Eliminar]
     @IdCarrera UNIQUEIDENTIFIER,
     @IdCurso   UNIQUEIDENTIFIER
 AS
@@ -10,7 +7,8 @@ BEGIN
 
     UPDATE CarreraCurso
     SET Activo = 0
-    WHERE IdCarrera = @IdCarrera AND IdCurso = @IdCurso;
+    WHERE IdCarrera = @IdCarrera 
+      AND IdCurso = @IdCurso;
 
-    SELECT @IdCarrera AS IdCarrera, @IdCurso AS IdCurso;
+    SELECT @IdCarrera;
 END;
