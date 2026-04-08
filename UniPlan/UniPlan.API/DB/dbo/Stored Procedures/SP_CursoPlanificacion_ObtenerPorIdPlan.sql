@@ -16,9 +16,13 @@ BEGIN
             cu.Creditos,
             cp.Estado,
             cp.IdHorario,
-            h.Dia,
-            h.HoraEntrada,
-            h.HoraSalida,
+            CONCAT(
+                h.Dia,
+                ' de ',
+                CONVERT(VARCHAR(5), h.HoraEntrada, 108),
+                ' a ',
+                CONVERT(VARCHAR(5), h.HoraSalida, 108)
+            ) AS Horario,
             cp.Activo
     FROM  CursoPlanificacion cp
     JOIN  Curso              cu ON cu.Id = cp.IdCurso

@@ -124,5 +124,6 @@
     <Build Include="dbo\Stored Procedures\SP_Perfil_ObtenerPorId.sql" />
     <Build Include="dbo\Stored Procedures\SP_PerfilxUsuario_Agregar.sql" />
     <Build Include="dbo\Stored Procedures\SP_PerfilxUsuario_Eliminar.sql" />
+    <Build Include="dbo\Stored Procedures\SP_CursoPlanificacion_ObtenerUno.sql" />
   </ItemGroup>
 </Project>
