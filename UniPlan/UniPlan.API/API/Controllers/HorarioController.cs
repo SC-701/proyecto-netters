@@ -66,6 +66,16 @@ namespace API.Controllers
             var resultado = await _horarioFlujo.Obtener(Id);
             return Ok(resultado);
         }
+
+        [HttpPatch("{Id}/activar")]
+        [Authorize(Roles = "2")]
+        public async Task<IActionResult> Activar([FromRoute] Guid Id)
+        {
+            if (!await VerificarHorarioExiste(Id))
+                return NotFound("El horario no existe.");
+            var resultado = await _horarioFlujo.Activar(Id);
+            return Ok(resultado);
+        }
         #endregion
 
         #region Helpers

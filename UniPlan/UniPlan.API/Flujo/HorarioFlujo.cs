@@ -18,6 +18,11 @@ namespace Flujo
             _horarioDA = horarioDA;
         }
 
+        public async Task<Guid> Activar(Guid Id)
+        {
+            return await _horarioDA.Activar(Id);
+        }
+
         public async Task<Guid> Agregar(HorarioRequest horario)
         {
             return await _horarioDA.Agregar(horario);

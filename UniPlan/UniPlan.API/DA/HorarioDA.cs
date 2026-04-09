@@ -70,6 +70,17 @@ namespace DA
             });
             return resultadoConsulta.FirstOrDefault();
         }
+
+        public async Task<Guid> Activar(Guid Id)
+        {
+            await verificarHorarioExiste(Id);
+            string query = @"SP_Horario_Activar";
+            var resultadoConsulta = await _sqlConnection.ExecuteScalarAsync<Guid>(query, new
+            {
+                Id = Id
+            });
+            return resultadoConsulta;
+        }
         #endregion
 
         #region Helpers

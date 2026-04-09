@@ -14,5 +14,6 @@ namespace Abstracciones.Interfaces.DA
         Task<Guid> Agregar(HorarioRequest horario);
         Task<Guid> Editar(Guid Id, HorarioRequest horario);
         Task<Guid> Eliminar(Guid Id);
+        Task<Guid> Activar(Guid Id);
     }
 }
