@@ -12,18 +12,30 @@ namespace Abstracciones.Modelos
 
         [Required(ErrorMessage = "El Id del curso requisito es requerido")]
         public Guid IdCursoRequisito { get; set; }
+    }
 
-        [Required(ErrorMessage = "Debe indicar si es corequisito")]
+    public class RequisitosRequest : RequisitosBase
+    {
+        [Required(ErrorMessage = "El valor de EsCorequisito es requerido")]
         public bool EsCorequisito { get; set; }
     }
 
-    public class RequisitosRequest : RequisitosBase { }
+    public class RequisitosEliminarRequest : RequisitosBase
+    {
+    }
+
+    public class RequisitosKeyResponse : RequisitosBase
+    {
+    }
 
     public class RequisitosResponse : RequisitosBase
     {
         public string Carrera { get; set; }
+        public string SiglaCurso { get; set; }
         public string Curso { get; set; }
+        public string SiglaRequisito { get; set; }
         public string CursoRequisito { get; set; }
+        public bool EsCorequisito { get; set; }
         public bool Activo { get; set; }
     }
 }

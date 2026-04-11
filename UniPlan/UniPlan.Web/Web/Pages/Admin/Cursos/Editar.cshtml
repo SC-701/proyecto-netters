@@ -1,0 +1,105 @@
+﻿@page "/Admin/Cursos/Editar/{id:guid}"
+@model Web.Pages.Admin.Cursos.EditarModel
+@{
+    ViewData["Title"] = "Editar Curso";
+    ViewData["ActivePage"] = "Cursos";
+    ViewData["AdminName"] = Model.AdminName;
+    ViewData["AdminEmail"] = Model.AdminEmail;
+    Layout = "_AdminLayout";
+}
+
+<div class="max-w-2xl mx-auto">
+
+    <!-- Header -->
+    <header class="mb-10 text-center">
+        <h2 class="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight">Editar Curso</h2>
+        <p class="text-slate-500 dark:text-slate-400 mt-2 text-sm">Modifique los detalles del curso académico seleccionado.</p>
+    </header>
+
+    <div class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-8">
+        <form method="post" class="space-y-10">
+            @Html.AntiForgeryToken()
+
+            <!-- Sección: Información General -->
+            <div class="space-y-6">
+                <div class="flex items-center gap-2 border-b border-slate-200 dark:border-slate-800 pb-2">
+                    <span class="material-symbols-outlined text-[18px] text-primary">info</span>
+                    <h3 class="text-[11px] font-bold uppercase tracking-widest text-slate-400">Información General</h3>
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <label asp-for="Input.Nombre"
+                               class="block text-[11px] font-bold uppercase tracking-widest text-slate-400 mb-2">
+                            Nombre del Curso
+                        </label>
+                        <input asp-for="Input.Nombre"
+                               class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-2 focus:ring-primary/30 focus:border-primary px-4 py-2.5 transition-all placeholder:text-slate-400 outline-none"
+                               placeholder="Introducción a las Ciencias Computacionales" />
+                        <span asp-validation-for="Input.Nombre" class="text-xs text-red-500 mt-1 block"></span>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label asp-for="Input.Sigla"
+                                   class="block text-[11px] font-bold uppercase tracking-widest text-slate-400 mb-2">
+                                Sigla
+                            </label>
+                            <input asp-for="Input.Sigla"
+                                   class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-2 focus:ring-primary/30 focus:border-primary px-4 py-2.5 transition-all placeholder:text-slate-400 outline-none"
+                                   placeholder="CS101" />
+                            <span asp-validation-for="Input.Sigla" class="text-xs text-red-500 mt-1 block"></span>
+                        </div>
+                        <div>
+                            <label asp-for="Input.Creditos"
+                                   class="block text-[11px] font-bold uppercase tracking-widest text-slate-400 mb-2">
+                                Créditos
+                            </label>
+                            <div class="relative">
+                                <input asp-for="Input.Creditos" type="number" min="1" max="20"
+                                       class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-2 focus:ring-primary/30 focus:border-primary px-4 py-2.5 pr-14 transition-all placeholder:text-slate-400 outline-none"
+                                       placeholder="4" />
+                                <span class="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-slate-400 font-medium">UCA</span>
+                            </div>
+                            <span asp-validation-for="Input.Creditos" class="text-xs text-red-500 mt-1 block"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sección: Contexto Académico -->
+            <div class="space-y-6">
+                <div class="flex items-center gap-2 border-b border-slate-200 dark:border-slate-800 pb-2">
+                    <span class="material-symbols-outlined text-[18px] text-primary">account_balance</span>
+                    <h3 class="text-[11px] font-bold uppercase tracking-widest text-slate-400">Contexto Académico</h3>
+                </div>
+                <div>
+                    <label asp-for="Input.IdEscuela"
+                           class="block text-[11px] font-bold uppercase tracking-widest text-slate-400 mb-2">
+                        Escuela
+                    </label>
+                    <select asp-for="Input.IdEscuela"
+                            asp-items="Model.EscuelaOptions"
+                            class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-2 focus:ring-primary/30 focus:border-primary px-4 py-2.5 transition-all outline-none">
+                        <option value="">Seleccione una escuela</option>
+                    </select>
+                    <span asp-validation-for="Input.IdEscuela" class="text-xs text-red-500 mt-1 block"></span>
+                </div>
+            </div>
+
+            <!-- Botones -->
+            <div class="flex items-center justify-end gap-4 pt-8 border-t border-slate-200 dark:border-slate-800">
+                <a asp-page="/Admin/Cursos/Index"
+                   class="px-6 py-2.5 text-sm font-semibold text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-all">
+                    Cancelar
+                </a>
+                <button type="submit"
+                        class="px-8 py-2.5 text-sm font-bold text-white bg-primary rounded-xl shadow-lg shadow-primary/20 hover:bg-blue-700 transition-all active:scale-[0.98]">
+                    Guardar Cambios
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

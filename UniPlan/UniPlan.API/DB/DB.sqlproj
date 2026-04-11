@@ -22,6 +22,7 @@
     <SqlServerVerification>False</SqlServerVerification>
     <IncludeCompositeObjects>True</IncludeCompositeObjects>
     <TargetDatabaseSet>True</TargetDatabaseSet>
+    <GenerateCreateScript>True</GenerateCreateScript>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>bin\Release\</OutputPath>
@@ -123,5 +124,7 @@
     <Build Include="dbo\Stored Procedures\SP_Perfil_ObtenerPorId.sql" />
     <Build Include="dbo\Stored Procedures\SP_PerfilxUsuario_Agregar.sql" />
     <Build Include="dbo\Stored Procedures\SP_PerfilxUsuario_Eliminar.sql" />
+    <Build Include="dbo\Stored Procedures\SP_CursoPlanificacion_ObtenerUno.sql" />
+    <Build Include="dbo\Stored Procedures\SP_Horario_Activar.sql" />
   </ItemGroup>
 </Project>
