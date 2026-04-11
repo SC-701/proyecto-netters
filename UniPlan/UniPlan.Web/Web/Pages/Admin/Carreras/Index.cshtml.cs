@@ -46,6 +46,6 @@ public class IndexModel : PageModel
             new() { Id = Guid.NewGuid(), Nombre = "Derecho y Ciencias Políticas",   Activo = false },
             new() { Id = Guid.NewGuid(), Nombre = "Psicología Organizacional",      Activo = true  },
         };
-        TotalCarreras = 4;
+        TotalCarreras = 11;
     }
 }

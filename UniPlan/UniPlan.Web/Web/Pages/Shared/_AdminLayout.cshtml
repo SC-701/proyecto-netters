@@ -64,31 +64,31 @@
 
             <!-- Nav -->
             <nav class="flex-1 px-4 py-4 space-y-1">
-                <a asp-page="/Admin/Carreras"
+                <a href="/Admin/Carreras"
                    class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors
                       @(ViewData["ActivePage"]?.ToString() == "Carreras" ? "active-link font-semibold" : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800")">
                     <span class="material-symbols-outlined mr-3 text-[20px]">work</span>
                     <span class="text-sm font-medium">Carreras</span>
                 </a>
-                <a asp-page="/Admin/Cursos"
+                <a href="/Admin/Cursos"
                    class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors
                       @(ViewData["ActivePage"]?.ToString() == "Cursos" ? "active-link font-semibold" : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800")">
                     <span class="material-symbols-outlined mr-3 text-[20px]">book</span>
                     <span class="text-sm font-medium">Cursos</span>
                 </a>
-                <a asp-page="/Admin/Escuelas"
+                <a href="/Admin/Escuelas"
                    class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors
                       @(ViewData["ActivePage"]?.ToString() == "Escuelas" ? "active-link" : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800")">
                     <span class="material-symbols-outlined mr-3 text-[20px]">account_balance</span>
                     <span class="text-sm font-medium">Escuelas</span>
                 </a>
-                <a asp-page="/Admin/Horarios"
+                <a href="/Admin/Horarios"
                    class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors
                       @(ViewData["ActivePage"]?.ToString() == "Horarios" ? "active-link font-semibold" : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800")">
                     <span class="material-symbols-outlined mr-3 text-[20px]">calendar_today</span>
                     <span class="text-sm font-medium">Horarios</span>
                 </a>
-                <a asp-page="/Admin/Requisitos"
+                <a href="/Admin/Requisitos"
                    class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors
                       @(ViewData["ActivePage"]?.ToString() == "Requisitos" ? "active-link font-semibold" : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800")">
                     <span class="material-symbols-outlined mr-3 text-[20px]">fact_check</span>

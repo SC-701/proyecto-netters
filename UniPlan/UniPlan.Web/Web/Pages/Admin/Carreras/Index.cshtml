@@ -12,7 +12,7 @@
 <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
     <div>
         <nav class="flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-slate-400 mb-3">
-            <span>Admin</span>
+            <a asp-page="/Admin/Index" class="hover:text-primary transition-colors">Admin</a>
             <span class="material-symbols-outlined text-[14px]">chevron_right</span>
             <span class="text-primary">Carreras</span>
         </nav>
@@ -26,39 +26,39 @@
 </div>
 
 <!-- Filtros -->
-<form method="get" class="grid grid-cols-1 md:grid-cols-12 gap-4 mb-8">
+<form method="get" class="flex flex-col md:flex-row gap-4 items-center mb-6">
     <!-- Búsqueda -->
-    <div class="bg-white dark:bg-slate-900 p-1 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 flex items-center md:col-span-9">
-        <div class="pl-4 pr-2 text-slate-400">
-            <span class="material-symbols-outlined">search</span>
-        </div>
+    <div class="relative flex-1 w-full">
+        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
         <input asp-for="Busqueda"
-               class="w-full bg-transparent border-none focus:ring-0 text-sm py-3 placeholder:text-slate-400 outline-none"
-               placeholder="Buscar carreras..." />
+               class="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg focus:ring-2 focus:ring-primary/20 text-sm outline-none"
+               placeholder="Buscar por nombre o área..." />
     </div>
 
     <!-- Filtro estado -->
-    <div class="md:col-span-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl flex items-center px-4 relative">
-        <span class="material-symbols-outlined text-slate-400 mr-3">filter_list</span>
+    <div class="flex items-center gap-3 w-full md:w-auto">
         <select asp-for="FiltroEstado"
-                class="w-full bg-transparent border-none focus:ring-0 text-sm font-medium appearance-none cursor-pointer py-3 pr-8 outline-none">
+                class="w-full md:w-48 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg py-2.5 px-3 text-sm text-slate-500 font-medium focus:ring-2 focus:ring-primary/20 outline-none">
             <option value="">Todos los estados</option>
             <option value="true">Activo</option>
             <option value="false">Inactivo</option>
         </select>
-        
+        <button type="submit"
+                class="px-4 py-2.5 bg-primary text-white text-sm font-bold rounded-lg hover:bg-blue-700 transition-all">
+            Buscar
+        </button>
     </div>
 </form>
 
 <!-- Tabla -->
 <div class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
     <div class="overflow-x-auto">
-        <table class="w-full text-left border-collapse">
+        <table class="w-full border-collapse text-left">
             <thead>
                 <tr class="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800">
-                    <th class="px-6 py-4 text-[11px] font-bold uppercase tracking-widest text-slate-400">Nombre</th>
-                    <th class="px-6 py-4 text-[11px] font-bold uppercase tracking-widest text-slate-400 text-center">Estado</th>
-                    <th class="px-6 py-4 text-[11px] font-bold uppercase tracking-widest text-slate-400 text-right">Acciones</th>
+                    <th class="px-6 py-4 text-[11px] uppercase tracking-widest font-bold text-slate-400">Nombre</th>
+                    <th class="px-6 py-4 text-[11px] uppercase tracking-widest font-bold text-slate-400 text-center">Estado</th>
+                    <th class="px-6 py-4 text-[11px] uppercase tracking-widest font-bold text-slate-400 text-right">Acciones</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-slate-200 dark:divide-slate-800">
@@ -67,7 +67,7 @@
                     <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
                         <td class="px-6 py-5">
                             <div class="flex items-center gap-3">
-                                <div class="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
+                                <div class="w-7 h-7 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
                                     <span class="material-symbols-outlined text-primary text-sm">school</span>
                                 </div>
                                 <span class="font-semibold text-slate-900 dark:text-white">@carrera.Nombre</span>
@@ -76,28 +76,28 @@
                         <td class="px-6 py-5 text-center">
                             @if (carrera.Activo)
                             {
-                                <div class="flex items-center justify-center gap-2">
-                                    <div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
-                                    <span class="text-xs font-bold text-emerald-700 dark:text-emerald-400 uppercase">Activo</span>
+                                <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                    <span class="text-[11px] font-bold uppercase tracking-wider">Activo</span>
                                 </div>
                             }
                             else
                             {
-                                <div class="flex items-center justify-center gap-2">
-                                    <div class="w-2 h-2 rounded-full bg-slate-400"></div>
-                                    <span class="text-xs font-bold text-slate-500 uppercase">Inactivo</span>
+                                <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
+                                    <span class="text-[11px] font-bold uppercase tracking-wider">Inactivo</span>
                                 </div>
                             }
                         </td>
                         <td class="px-6 py-5 text-right">
-                            <div class="flex items-center justify-end gap-2">
+                            <div class="flex justify-end gap-3 text-slate-400">
                                 <a asp-page="/Admin/Carreras/Editar" asp-route-id="@carrera.Id"
-                                   class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-500 transition-all hover:scale-110">
-                                    <span class="material-symbols-outlined text-[18px]">edit</span>
+                                   class="hover:text-slate-600 dark:hover:text-slate-200 transition-colors">
+                                    <span class="material-symbols-outlined text-[20px]">edit</span>
                                 </a>
                                 <a asp-page="/Admin/Carreras/Eliminar" asp-route-id="@carrera.Id"
-                                   class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-red-100 dark:hover:bg-red-900/20 text-slate-500 hover:text-red-500 transition-all hover:scale-110">
-                                    <span class="material-symbols-outlined text-[18px]">delete</span>
+                                   class="hover:text-red-500 transition-colors">
+                                    <span class="material-symbols-outlined text-[20px]">delete</span>
                                 </a>
                             </div>
                         </td>
@@ -108,16 +108,17 @@
     </div>
 
     <!-- Paginación -->
-    <div class="px-6 py-4 bg-slate-50 dark:bg-slate-800/50 flex items-center justify-between border-t border-slate-200 dark:border-slate-800">
+    <div class="px-6 py-4 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
         <span class="text-xs text-slate-500 font-medium">
-            Mostrando @Model.PaginaInicio a @Model.PaginaFin de @Model.TotalCarreras entradas
+            Mostrando <span class="text-slate-900 dark:text-white">@Model.PaginaInicio-@Model.PaginaFin</span> de 
+            <span class="text-slate-900 dark:text-white">@Model.TotalCarreras</span> entradas
         </span>
         <div class="flex items-center gap-1">
             <a asp-page="/Admin/Carreras"
                asp-route-pagina="@(Model.PaginaActual - 1)"
                asp-route-busqueda="@Model.Busqueda"
                asp-route-filtroEstado="@Model.FiltroEstado"
-               class="w-8 h-8 rounded-lg border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-400 hover:bg-white dark:hover:bg-slate-800 transition-colors
+               class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 dark:border-slate-700 text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors
                       @(Model.PaginaActual <= 1 ? "pointer-events-none opacity-40" : "")">
                 <span class="material-symbols-outlined text-[18px]">chevron_left</span>
             </a>
@@ -127,8 +128,8 @@
                    asp-route-pagina="@i"
                    asp-route-busqueda="@Model.Busqueda"
                    asp-route-filtroEstado="@Model.FiltroEstado"
-                   class="w-8 h-8 rounded-lg text-xs font-bold transition-colors
-                              @(i == Model.PaginaActual ? "bg-primary text-white" : "border border-slate-200 dark:border-slate-700 text-slate-500 hover:bg-white dark:hover:bg-slate-800")">
+                   class="w-8 h-8 flex items-center justify-center rounded-lg text-xs font-bold transition-colors
+                                  @(i == Model.PaginaActual ? "bg-primary text-white" : "border border-slate-200 dark:border-slate-700 text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800")">
                     @i
                 </a>
             }
@@ -136,7 +137,7 @@
                asp-route-pagina="@(Model.PaginaActual + 1)"
                asp-route-busqueda="@Model.Busqueda"
                asp-route-filtroEstado="@Model.FiltroEstado"
-               class="w-8 h-8 rounded-lg border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-400 hover:bg-white dark:hover:bg-slate-800 transition-colors
+               class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 dark:border-slate-700 text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors
                       @(Model.PaginaActual >= Model.TotalPaginas ? "pointer-events-none opacity-40" : "")">
                 <span class="material-symbols-outlined text-[18px]">chevron_right</span>
             </a>

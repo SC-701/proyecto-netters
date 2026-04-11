@@ -46,6 +46,6 @@ public class IndexModel : PageModel
             new() { Id = Guid.NewGuid(), Dia = "Martes",    HoraEntrada = 11, HoraSalida = 13, Activo = false },
             new() { Id = Guid.NewGuid(), Dia = "Miércoles", HoraEntrada = 14, HoraSalida = 16, Activo = true  },
         };
-        TotalHorarios = 42;
+        TotalHorarios = 11;
     }
 }

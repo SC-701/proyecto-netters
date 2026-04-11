@@ -12,11 +12,11 @@
 <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
     <div>
         <nav class="flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-slate-400 mb-3">
-            <span>Admin</span>
+            <a asp-page="/Admin/Index" class="hover:text-primary transition-colors">Admin</a>
             <span class="material-symbols-outlined text-[14px]">chevron_right</span>
             <span class="text-primary">Gestión de Horarios</span>
         </nav>
-        <h2 class="text-4xl font-extrabold text-slate-900 dark:text-white tracking-tighter">Horarios</h2>
+        <h2 class="text-4xl font-extrabold text-slate-900 dark:text-white tracking-tighter">Gestión de Horarios</h2>
     </div>
     <a asp-page="/Admin/Horarios/Crear"
        class="bg-primary text-white px-6 py-3 rounded-xl font-semibold shadow-lg shadow-primary/20 flex items-center gap-2 hover:scale-[1.02] transition-transform active:scale-95">
@@ -26,45 +26,40 @@
 </div>
 
 <!-- Filtros -->
-<form method="get" class="grid grid-cols-1 md:grid-cols-12 gap-4 mb-8">
+<form method="get" class="flex flex-col md:flex-row gap-4 items-center mb-6">
     <!-- Búsqueda -->
-    <div class="bg-white dark:bg-slate-900 p-1 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 flex items-center md:col-span-6">
-        <div class="pl-4 pr-2 text-slate-400">
-            <span class="material-symbols-outlined">search</span>
-        </div>
+    <div class="relative flex-1">
+        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
         <input asp-for="Busqueda"
-               class="w-full bg-transparent border-none focus:ring-0 text-sm py-3 placeholder:text-slate-400 outline-none"
+               class="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 focus:ring-2 focus:ring-primary/20 focus:border-primary rounded-lg text-sm transition-all outline-none"
                placeholder="Buscar por día u hora..." />
     </div>
 
     <!-- Filtro día -->
-    <div class="md:col-span-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl flex items-center px-4 relative">
-        <span class="material-symbols-outlined text-slate-400 mr-3">calendar_month</span>
-        <select asp-for="FiltroDia"
-                class="w-full bg-transparent border-none focus:ring-0 text-sm font-medium appearance-none cursor-pointer py-3 pr-8 outline-none">
-            <option value="">Todos los días</option>
-            <option>Lunes</option>
-            <option>Martes</option>
-            <option>Miércoles</option>
-            <option>Jueves</option>
-            <option>Viernes</option>
-            <option>Sábado</option>
-            <option>Domingo</option>
-        </select>
-        <span class="material-symbols-outlined absolute right-4 pointer-events-none text-slate-400">expand_more</span>
-    </div>
+    <select asp-for="FiltroDia"
+            class="min-w-[200px] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-sm font-medium py-2.5 pl-3 pr-10 focus:ring-2 focus:ring-primary/20 focus:border-primary text-slate-600 outline-none">
+        <option value="">Todos los días</option>
+        <option>Lunes</option>
+        <option>Martes</option>
+        <option>Miércoles</option>
+        <option>Jueves</option>
+        <option>Viernes</option>
+        <option>Sábado</option>
+        <option>Domingo</option>
+    </select>
 
     <!-- Filtro estado -->
-    <div class="md:col-span-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl flex items-center px-4 relative">
-        <span class="material-symbols-outlined text-slate-400 mr-3">filter_list</span>
-        <select asp-for="FiltroEstado"
-                class="w-full bg-transparent border-none focus:ring-0 text-sm font-medium appearance-none cursor-pointer py-3 pr-8 outline-none">
-            <option value="">Todos los estados</option>
-            <option value="true">Activo</option>
-            <option value="false">Inactivo</option>
-        </select>
-        <span class="material-symbols-outlined absolute right-4 pointer-events-none text-slate-400">expand_more</span>
-    </div>
+    <select asp-for="FiltroEstado"
+            class="min-w-[160px] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-sm font-medium py-2.5 pl-3 pr-10 focus:ring-2 focus:ring-primary/20 focus:border-primary text-slate-600 outline-none">
+        <option value="">Todos los estados</option>
+        <option value="true">Activo</option>
+        <option value="false">Inactivo</option>
+    </select>
+
+    <button type="submit"
+            class="px-4 py-2.5 bg-primary text-white text-sm font-bold rounded-lg hover:bg-blue-700 transition-all">
+        Buscar
+    </button>
 </form>
 
 <!-- Tabla -->
@@ -84,7 +79,7 @@
                 {
                     <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
                         <td class="px-6 py-5">
-                            <span class="font-bold text-slate-900 dark:text-white text-sm">@horario.Dia</span>
+                            <span class="font-semibold text-slate-900 dark:text-white">@horario.Dia</span>
                         </td>
                         <td class="px-6 py-5">
                             <span class="bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 px-3 py-1 rounded-full text-xs font-bold tracking-tight">
@@ -94,28 +89,28 @@
                         <td class="px-6 py-5 text-center">
                             @if (horario.Activo)
                             {
-                                <div class="flex items-center justify-center gap-2">
-                                    <div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
-                                    <span class="text-xs font-bold text-emerald-700 dark:text-emerald-400 uppercase">Activo</span>
+                                <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                    <span class="text-[11px] font-bold uppercase tracking-wider">Activo</span>
                                 </div>
                             }
                             else
                             {
-                                <div class="flex items-center justify-center gap-2">
-                                    <div class="w-2 h-2 rounded-full bg-slate-400"></div>
-                                    <span class="text-xs font-bold text-slate-500 uppercase">Inactivo</span>
+                                <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
+                                    <span class="text-[11px] font-bold uppercase tracking-wider">Inactivo</span>
                                 </div>
                             }
                         </td>
                         <td class="px-6 py-5 text-right">
-                            <div class="flex items-center justify-end gap-2">
+                            <div class="flex justify-end gap-3 text-slate-400">
                                 <a asp-page="/Admin/Horarios/Editar" asp-route-id="@horario.Id"
-                                   class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-500 transition-all hover:scale-110">
-                                    <span class="material-symbols-outlined text-[18px]">edit</span>
+                                   class="hover:text-slate-600 dark:hover:text-slate-200 transition-colors">
+                                    <span class="material-symbols-outlined text-[20px]">edit</span>
                                 </a>
                                 <a asp-page="/Admin/Horarios/Eliminar" asp-route-id="@horario.Id"
-                                   class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-red-100 dark:hover:bg-red-900/20 text-slate-500 hover:text-red-500 transition-all hover:scale-110">
-                                    <span class="material-symbols-outlined text-[18px]">delete</span>
+                                   class="hover:text-red-500 transition-colors">
+                                    <span class="material-symbols-outlined text-[20px]">delete</span>
                                 </a>
                             </div>
                         </td>
@@ -126,9 +121,10 @@
     </div>
 
     <!-- Paginación -->
-    <div class="px-6 py-4 bg-slate-50 dark:bg-slate-800/50 flex items-center justify-between border-t border-slate-200 dark:border-slate-800">
+    <div class="px-6 py-4 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
         <span class="text-xs text-slate-500 font-medium">
-            Mostrando @Model.PaginaInicio a @Model.PaginaFin de @Model.TotalHorarios entradas
+            Mostrando <span class="text-slate-900 dark:text-white"> @Model.PaginaInicio-@Model.PaginaFin</span> de 
+            <span class="text-slate-900 dark:text-white">@Model.TotalHorarios</span> entradas
         </span>
         <div class="flex items-center gap-1">
             <a asp-page="/Admin/Horarios"
@@ -136,7 +132,7 @@
                asp-route-busqueda="@Model.Busqueda"
                asp-route-filtroDia="@Model.FiltroDia"
                asp-route-filtroEstado="@Model.FiltroEstado"
-               class="w-8 h-8 rounded-lg border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-400 hover:bg-white dark:hover:bg-slate-800 transition-colors
+               class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 dark:border-slate-700 text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors
                       @(Model.PaginaActual <= 1 ? "pointer-events-none opacity-40" : "")">
                 <span class="material-symbols-outlined text-[18px]">chevron_left</span>
             </a>
@@ -147,8 +143,8 @@
                    asp-route-busqueda="@Model.Busqueda"
                    asp-route-filtroDia="@Model.FiltroDia"
                    asp-route-filtroEstado="@Model.FiltroEstado"
-                   class="w-8 h-8 rounded-lg text-xs font-bold transition-colors
-                              @(i == Model.PaginaActual ? "bg-primary text-white" : "border border-slate-200 dark:border-slate-700 text-slate-500 hover:bg-white dark:hover:bg-slate-800")">
+                   class="w-8 h-8 flex items-center justify-center rounded-lg text-xs font-bold transition-colors
+                                  @(i == Model.PaginaActual ? "bg-primary text-white" : "border border-slate-200 dark:border-slate-700 text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800")">
                     @i
                 </a>
             }
@@ -157,7 +153,7 @@
                asp-route-busqueda="@Model.Busqueda"
                asp-route-filtroDia="@Model.FiltroDia"
                asp-route-filtroEstado="@Model.FiltroEstado"
-               class="w-8 h-8 rounded-lg border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-400 hover:bg-white dark:hover:bg-slate-800 transition-colors
+               class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 dark:border-slate-700 text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors
                       @(Model.PaginaActual >= Model.TotalPaginas ? "pointer-events-none opacity-40" : "")">
                 <span class="material-symbols-outlined text-[18px]">chevron_right</span>
             </a>

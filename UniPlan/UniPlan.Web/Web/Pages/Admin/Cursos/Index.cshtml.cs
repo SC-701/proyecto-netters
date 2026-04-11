@@ -41,6 +41,6 @@ public class IndexModel : PageModel
             new() { Id = Guid.NewGuid(), Sigla = "HIS-110", Nombre = "Historia Global: Siglo XVIII",               Creditos = 3, Escuela = "Humanidades",             Activo = false },
             new() { Id = Guid.NewGuid(), Sigla = "DES-302", Nombre = "Diseño de Interfaces Interactivas",          Creditos = 4, Escuela = "Arte y Diseño",           Activo = true  },
         };
-        TotalCursos = 45;
+        TotalCursos = 11;
     }
 }
