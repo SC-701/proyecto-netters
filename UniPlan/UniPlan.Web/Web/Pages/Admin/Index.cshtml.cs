@@ -1,12 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace Web.Pages
+namespace Web.Pages.Admin
 {
-    public class DashboardModel : PageModel
+    public class IndexModel : PageModel
     {
-
-        public string StudentName { get; set; } = "Alex";
         public void OnGet()
         {
         }

@@ -64,35 +64,35 @@
 
             <!-- Nav -->
             <nav class="flex-1 px-4 py-4 space-y-1">
-                <a asp-page="/Admin/Dashboard"
+                <a href="/Admin/Carreras"
                    class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors
-                      @(ViewData["ActivePage"]?.ToString() == "Dashboard" ? "active-link" : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800")">
-                    <span class="material-symbols-outlined">grid_view</span>
-                    <span class="text-sm font-medium">Dashboard</span>
-                </a>
-                <a asp-page="/Admin/Careers"
-                   class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors
-                      @(ViewData["ActivePage"]?.ToString() == "Careers" ? "active-link font-semibold" : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800")">
-                    <span class="material-symbols-outlined">school</span>
+                      @(ViewData["ActivePage"]?.ToString() == "Carreras" ? "active-link font-semibold" : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800")">
+                    <span class="material-symbols-outlined mr-3 text-[20px]">work</span>
                     <span class="text-sm font-medium">Carreras</span>
                 </a>
-                <a asp-page="/Admin/Subjects"
+                <a href="/Admin/Cursos"
                    class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors
-                      @(ViewData["ActivePage"]?.ToString() == "Subjects" ? "active-link font-semibold" : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800")">
-                    <span class="material-symbols-outlined">book</span>
-                    <span class="text-sm font-medium">Asignaturas</span>
+                      @(ViewData["ActivePage"]?.ToString() == "Cursos" ? "active-link font-semibold" : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800")">
+                    <span class="material-symbols-outlined mr-3 text-[20px]">book</span>
+                    <span class="text-sm font-medium">Cursos</span>
                 </a>
-                <a asp-page="/Admin/Requirements"
+                <a href="/Admin/Escuelas"
                    class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors
-                      @(ViewData["ActivePage"]?.ToString() == "Requirements" ? "active-link font-semibold" : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800")">
-                    <span class="material-symbols-outlined">account_tree</span>
+                      @(ViewData["ActivePage"]?.ToString() == "Escuelas" ? "active-link" : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800")">
+                    <span class="material-symbols-outlined mr-3 text-[20px]">account_balance</span>
+                    <span class="text-sm font-medium">Escuelas</span>
+                </a>
+                <a href="/Admin/Horarios"
+                   class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors
+                      @(ViewData["ActivePage"]?.ToString() == "Horarios" ? "active-link font-semibold" : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800")">
+                    <span class="material-symbols-outlined mr-3 text-[20px]">calendar_today</span>
+                    <span class="text-sm font-medium">Horarios</span>
+                </a>
+                <a href="/Admin/Requisitos"
+                   class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors
+                      @(ViewData["ActivePage"]?.ToString() == "Requisitos" ? "active-link font-semibold" : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800")">
+                    <span class="material-symbols-outlined mr-3 text-[20px]">fact_check</span>
                     <span class="text-sm font-medium">Requisitos</span>
-                </a>
-                <a asp-page="/Admin/Schedules"
-                   class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors
-                      @(ViewData["ActivePage"]?.ToString() == "Schedules" ? "active-link font-semibold" : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800")">
-                    <span class="material-symbols-outlined">calendar_today</span>
-                    <span class="text-sm font-medium">Grupos y Horarios</span>
                 </a>
             </nav>
 
