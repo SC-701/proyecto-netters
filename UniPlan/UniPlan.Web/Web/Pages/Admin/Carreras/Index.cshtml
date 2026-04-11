@@ -1,0 +1,145 @@
+﻿@page "/Admin/Carreras"
+@model Web.Pages.Admin.Carreras.IndexModel
+@{
+    ViewData["Title"] = "Gestión de Carreras";
+    ViewData["ActivePage"] = "Carreras";
+    ViewData["AdminName"] = Model.AdminName;
+    ViewData["AdminEmail"] = Model.AdminEmail;
+    Layout = "_AdminLayout";
+}
+
+<!-- Breadcrumb + Título -->
+<div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
+    <div>
+        <nav class="flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-slate-400 mb-3">
+            <span>Admin</span>
+            <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+            <span class="text-primary">Carreras</span>
+        </nav>
+        <h2 class="text-4xl font-extrabold text-slate-900 dark:text-white tracking-tighter">Gestión de Carreras</h2>
+    </div>
+    <a asp-page="/Admin/Carreras/Crear"
+       class="bg-primary text-white px-6 py-3 rounded-xl font-semibold shadow-lg shadow-primary/20 flex items-center gap-2 hover:scale-[1.02] transition-transform active:scale-95">
+        <span class="material-symbols-outlined">add</span>
+        Nueva Carrera
+    </a>
+</div>
+
+<!-- Filtros -->
+<form method="get" class="grid grid-cols-1 md:grid-cols-12 gap-4 mb-8">
+    <!-- Búsqueda -->
+    <div class="bg-white dark:bg-slate-900 p-1 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 flex items-center md:col-span-9">
+        <div class="pl-4 pr-2 text-slate-400">
+            <span class="material-symbols-outlined">search</span>
+        </div>
+        <input asp-for="Busqueda"
+               class="w-full bg-transparent border-none focus:ring-0 text-sm py-3 placeholder:text-slate-400 outline-none"
+               placeholder="Buscar carreras..." />
+    </div>
+
+    <!-- Filtro estado -->
+    <div class="md:col-span-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl flex items-center px-4 relative">
+        <span class="material-symbols-outlined text-slate-400 mr-3">filter_list</span>
+        <select asp-for="FiltroEstado"
+                class="w-full bg-transparent border-none focus:ring-0 text-sm font-medium appearance-none cursor-pointer py-3 pr-8 outline-none">
+            <option value="">Todos los estados</option>
+            <option value="true">Activo</option>
+            <option value="false">Inactivo</option>
+        </select>
+        
+    </div>
+</form>
+
+<!-- Tabla -->
+<div class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
+    <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+            <thead>
+                <tr class="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800">
+                    <th class="px-6 py-4 text-[11px] font-bold uppercase tracking-widest text-slate-400">Nombre</th>
+                    <th class="px-6 py-4 text-[11px] font-bold uppercase tracking-widest text-slate-400 text-center">Estado</th>
+                    <th class="px-6 py-4 text-[11px] font-bold uppercase tracking-widest text-slate-400 text-right">Acciones</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-200 dark:divide-slate-800">
+                @foreach (var carrera in Model.Carreras)
+                {
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+                        <td class="px-6 py-5">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
+                                    <span class="material-symbols-outlined text-primary text-sm">school</span>
+                                </div>
+                                <span class="font-semibold text-slate-900 dark:text-white">@carrera.Nombre</span>
+                            </div>
+                        </td>
+                        <td class="px-6 py-5 text-center">
+                            @if (carrera.Activo)
+                            {
+                                <div class="flex items-center justify-center gap-2">
+                                    <div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
+                                    <span class="text-xs font-bold text-emerald-700 dark:text-emerald-400 uppercase">Activo</span>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="flex items-center justify-center gap-2">
+                                    <div class="w-2 h-2 rounded-full bg-slate-400"></div>
+                                    <span class="text-xs font-bold text-slate-500 uppercase">Inactivo</span>
+                                </div>
+                            }
+                        </td>
+                        <td class="px-6 py-5 text-right">
+                            <div class="flex items-center justify-end gap-2">
+                                <a asp-page="/Admin/Carreras/Editar" asp-route-id="@carrera.Id"
+                                   class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-500 transition-all hover:scale-110">
+                                    <span class="material-symbols-outlined text-[18px]">edit</span>
+                                </a>
+                                <a asp-page="/Admin/Carreras/Eliminar" asp-route-id="@carrera.Id"
+                                   class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-red-100 dark:hover:bg-red-900/20 text-slate-500 hover:text-red-500 transition-all hover:scale-110">
+                                    <span class="material-symbols-outlined text-[18px]">delete</span>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Paginación -->
+    <div class="px-6 py-4 bg-slate-50 dark:bg-slate-800/50 flex items-center justify-between border-t border-slate-200 dark:border-slate-800">
+        <span class="text-xs text-slate-500 font-medium">
+            Mostrando @Model.PaginaInicio a @Model.PaginaFin de @Model.TotalCarreras entradas
+        </span>
+        <div class="flex items-center gap-1">
+            <a asp-page="/Admin/Carreras"
+               asp-route-pagina="@(Model.PaginaActual - 1)"
+               asp-route-busqueda="@Model.Busqueda"
+               asp-route-filtroEstado="@Model.FiltroEstado"
+               class="w-8 h-8 rounded-lg border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-400 hover:bg-white dark:hover:bg-slate-800 transition-colors
+                      @(Model.PaginaActual <= 1 ? "pointer-events-none opacity-40" : "")">
+                <span class="material-symbols-outlined text-[18px]">chevron_left</span>
+            </a>
+            @for (int i = 1; i <= Model.TotalPaginas; i++)
+            {
+                <a asp-page="/Admin/Carreras"
+                   asp-route-pagina="@i"
+                   asp-route-busqueda="@Model.Busqueda"
+                   asp-route-filtroEstado="@Model.FiltroEstado"
+                   class="w-8 h-8 rounded-lg text-xs font-bold transition-colors
+                              @(i == Model.PaginaActual ? "bg-primary text-white" : "border border-slate-200 dark:border-slate-700 text-slate-500 hover:bg-white dark:hover:bg-slate-800")">
+                    @i
+                </a>
+            }
+            <a asp-page="/Admin/Carreras"
+               asp-route-pagina="@(Model.PaginaActual + 1)"
+               asp-route-busqueda="@Model.Busqueda"
+               asp-route-filtroEstado="@Model.FiltroEstado"
+               class="w-8 h-8 rounded-lg border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-400 hover:bg-white dark:hover:bg-slate-800 transition-colors
+                      @(Model.PaginaActual >= Model.TotalPaginas ? "pointer-events-none opacity-40" : "")">
+                <span class="material-symbols-outlined text-[18px]">chevron_right</span>
+            </a>
+        </div>
+    </div>
+</div>
