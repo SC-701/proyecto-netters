@@ -1,0 +1,84 @@
+﻿@page "/Admin/Horarios/Eliminar/{id:guid}"
+@model Web.Pages.Admin.Horarios.EliminarModel
+@{
+    ViewData["Title"] = "Eliminar Horario";
+    ViewData["ActivePage"] = "Horarios";
+    ViewData["AdminName"] = Model.AdminName;
+    ViewData["AdminEmail"] = Model.AdminEmail;
+    Layout = "_AdminLayout";
+}
+
+<div class="w-full max-w-md mx-auto">
+    <div class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-8 relative z-10">
+
+        <!-- Header -->
+        <div class="flex items-center justify-between mb-6">
+            <h2 class="text-2xl font-extrabold tracking-tight text-slate-900 dark:text-white">Eliminar Horario</h2>
+            <div class="w-10 h-10 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center text-red-500">
+                <span class="material-symbols-outlined" style='font-variation-settings: "FILL" 1;'>delete_forever</span>
+            </div>
+        </div>
+
+        <p class="text-slate-500 dark:text-slate-400 text-sm mb-6 leading-relaxed">
+            Estás a punto de eliminar permanentemente un horario del sistema. Esta acción no se puede deshacer.
+        </p>
+
+        <!-- Datos del horario -->
+        <div class="bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700 p-5 mb-6">
+            <div class="flex flex-col gap-4">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <span class="text-[11px] uppercase tracking-widest text-slate-400 font-bold block mb-1">Día Académico</span>
+                        <span class="text-slate-900 dark:text-white font-semibold">@Model.Horario.Dia</span>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-[11px] uppercase tracking-widest text-slate-400 font-bold block mb-1">Franja Horaria</span>
+                        <span class="text-slate-900 dark:text-white font-semibold">@Model.Horario.HoraEntrada:00 - @Model.Horario.HoraSalida:00</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Advertencia -->
+        <div class="bg-red-50 dark:bg-red-900/10 rounded-xl p-4 flex gap-3 mb-8 border border-red-100 dark:border-red-900/20">
+            <span class="material-symbols-outlined text-red-500" style='font-variation-settings: "FILL" 1;'>warning</span>
+            <p class="text-red-700 dark:text-red-400 text-xs font-medium leading-relaxed">
+                Al confirmar la eliminación, todos los estudiantes inscritos en esta sección serán notificados y la asistencia histórica será archivada.
+            </p>
+        </div>
+
+        <form method="post" class="space-y-6">
+            @Html.AntiForgeryToken()
+
+            <!-- Checkbox de confirmación -->
+            <label class="flex items-start gap-3 cursor-pointer group">
+                <input id="confirmCheck" type="checkbox"
+                       class="h-5 w-5 rounded border-slate-300 text-red-500 focus:ring-red-500 focus:ring-offset-0 transition-all cursor-pointer mt-0.5" />
+                <span class="text-sm text-slate-500 group-hover:text-slate-900 dark:group-hover:text-slate-100 transition-colors">
+                    Confirmo que deseo proceder con la eliminación definitiva de este registro académico.
+                </span>
+            </label>
+
+            <!-- Botones -->
+            <div class="grid grid-cols-2 gap-4">
+                <a asp-page="/Admin/Horarios/Index"
+                   class="px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 font-semibold text-sm hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-center">
+                    Cancelar
+                </a>
+                <button id="btnEliminar" type="submit" disabled
+                        class="px-4 py-3 rounded-xl bg-red-500 text-white font-semibold text-sm shadow-lg shadow-red-500/20 hover:bg-red-600 active:scale-95 transition-all
+                               disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-red-500">
+                    Confirmar Eliminación
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const check = document.getElementById('confirmCheck');
+        const btn   = document.getElementById('btnEliminar');
+        check.addEventListener('change', () => btn.disabled = !check.checked);
+    </script>
+}

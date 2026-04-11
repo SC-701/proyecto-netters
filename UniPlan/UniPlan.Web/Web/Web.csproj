@@ -10,8 +10,4 @@
     <ProjectReference Include="..\Abstracciones\Abstracciones.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Pages\Admin\Horarios\" />
-  </ItemGroup>
-
 </Project>

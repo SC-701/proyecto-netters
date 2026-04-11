@@ -1,0 +1,118 @@
+﻿@page "/Admin/Horarios/Editar/{id:guid}"
+@model Web.Pages.Admin.Horarios.EditarModel
+@{
+    ViewData["Title"] = "Editar Horario";
+    ViewData["ActivePage"] = "Horarios";
+    ViewData["AdminName"] = Model.AdminName;
+    ViewData["AdminEmail"] = Model.AdminEmail;
+    Layout = "_AdminLayout";
+}
+
+<div class="max-w-2xl mx-auto">
+
+    <!-- Header -->
+    <header class="mb-8 text-center">
+        <h2 class="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white mb-2">Editar Horario</h2>
+        <p class="text-slate-500 dark:text-slate-400 text-sm">Modifique los detalles del bloque académico seleccionado.</p>
+    </header>
+
+    <!-- Card del formulario -->
+    <div class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden mb-6">
+
+        <div class="px-8 pt-8 pb-4">
+            <h3 class="flex items-center gap-2 text-[11px] uppercase tracking-widest text-slate-400 font-bold">
+                <span class="material-symbols-outlined text-[16px]">info</span>
+                Información General
+            </h3>
+            <div class="mt-4 border-b border-slate-200 dark:border-slate-800"></div>
+        </div>
+
+        <form method="post" class="px-8 pb-8 pt-4 space-y-6">
+            @Html.AntiForgeryToken()
+
+            <!-- Día de la semana -->
+            <div class="space-y-2">
+                <label asp-for="Input.Dia"
+                       class="text-[11px] uppercase tracking-widest text-slate-400 font-bold block">
+                    Día de la Semana
+                </label>
+                <div class="relative">
+                    <select asp-for="Input.Dia"
+                            class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg py-3 px-4 text-sm appearance-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all cursor-pointer outline-none">
+                        <option value="">Seleccione un día</option>
+                        <option>Lunes</option>
+                        <option>Martes</option>
+                        <option>Miércoles</option>
+                        <option>Jueves</option>
+                        <option>Viernes</option>
+                        <option>Sábado</option>
+                        <option>Domingo</option>
+                    </select>
+                    <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">expand_more</span>
+                </div>
+                <span asp-validation-for="Input.Dia" class="text-xs text-red-500 mt-1 block"></span>
+            </div>
+
+            <!-- Horas -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="space-y-2">
+                    <label asp-for="Input.HoraEntrada"
+                           class="text-[11px] uppercase tracking-widest text-slate-400 font-bold block">
+                        Hora de Entrada (0-23)
+                    </label>
+                    <div class="relative">
+                        <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-[20px]">login</span>
+                        <input asp-for="Input.HoraEntrada"
+                               type="number" min="0" max="23"
+                               class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg py-3 pl-12 pr-4 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none"
+                               placeholder="Ej. 8" />
+                    </div>
+                    <span asp-validation-for="Input.HoraEntrada" class="text-xs text-red-500 mt-1 block"></span>
+                </div>
+
+                <div class="space-y-2">
+                    <label asp-for="Input.HoraSalida"
+                           class="text-[11px] uppercase tracking-widest text-slate-400 font-bold block">
+                        Hora de Salida (0-23)
+                    </label>
+                    <div class="relative">
+                        <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-[20px]">logout</span>
+                        <input asp-for="Input.HoraSalida"
+                               type="number" min="0" max="23"
+                               class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg py-3 pl-12 pr-4 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none"
+                               placeholder="Ej. 18" />
+                    </div>
+                    <span asp-validation-for="Input.HoraSalida" class="text-xs text-red-500 mt-1 block"></span>
+                </div>
+            </div>
+
+            <!-- Botones -->
+            <div class="pt-6 flex justify-end items-center gap-3 border-t border-slate-200 dark:border-slate-800">
+                <a asp-page="/Admin/Horarios/Index"
+                   class="px-6 py-2.5 text-sm font-semibold text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-all">
+                    Cancelar
+                </a>
+                <button type="submit"
+                        class="px-8 py-2.5 text-sm font-bold text-white bg-primary rounded-xl shadow-lg shadow-primary/20 hover:bg-blue-700 transition-all active:scale-[0.98] flex items-center gap-2">
+                    Guardar Cambios
+                    <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <style>
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+    </style>
+}
