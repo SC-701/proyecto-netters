@@ -1,65 +1,35 @@
-using System.ComponentModel.DataAnnotations;
+using Abstracciones.Interfaces.Reglas;
+using Abstracciones.Modelos.Seguridad;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Reglas;
+using System.ComponentModel.DataAnnotations;
 
-namespace Web.Pages.Account;
+namespace Web.Pages.Seguridad;
 
 public class RegisterModel : PageModel
 {
     [BindProperty]
-    public InputModel Input { get; set; } = new();
+    public Usuario usuario { get; set; } = default!;
+    private IConfiguracion _configuracion;
 
-    // Lista de carreras para el <select> — puede venir de tu API
-    public List<SelectListItem> CareerOptions { get; set; } = new()
+    public RegisterModel(IConfiguracion configuracion)
     {
-        new SelectListItem("Ingeniería de Software",    "software"),
-        new SelectListItem("Administración de Empresas","admin"),
-        new SelectListItem("Derecho",                   "derecho"),
-        new SelectListItem("Medicina",                  "medicina"),
-        new SelectListItem("Diseño Gráfico",            "diseno"),
-        new SelectListItem("Psicología",                "psicologia"),
-    };
-
-    public class InputModel
-    {
-        [Required(ErrorMessage = "El nombre es obligatorio.")]
-        [Display(Name = "Nombre completo")]
-        public string FullName { get; set; } = "";
-
-        [Required(ErrorMessage = "El correo es obligatorio.")]
-        [EmailAddress(ErrorMessage = "Ingresa un correo válido.")]
-        [Display(Name = "Correo electrónico")]
-        public string Email { get; set; } = "";
-
-        [Required(ErrorMessage = "Selecciona tu carrera.")]
-        [Display(Name = "Carrera")]
-        public string Career { get; set; } = "";
-
-        [Required(ErrorMessage = "La contraseña es obligatoria.")]
-        [MinLength(8, ErrorMessage = "Mínimo 8 caracteres.")]
-        [DataType(DataType.Password)]
-        [Display(Name = "Contraseña")]
-        public string Password { get; set; } = "";
-
-        [Required(ErrorMessage = "Confirma tu contraseña.")]
-        [DataType(DataType.Password)]
-        [Compare("Password", ErrorMessage = "Las contraseñas no coinciden.")]
-        [Display(Name = "Confirmar")]
-        public string ConfirmPassword { get; set; } = "";
+        _configuracion = configuracion;
     }
 
-    public void OnGet() { }
-
-    public async Task<IActionResult> OnPostAsync()
+    public async Task<IActionResult> OnPost()
     {
-        if (!ModelState.IsValid)
-            return Page();
+        if (!ModelState.IsValid) return Page();
 
-        // TODO: conectar con tu API de registro
-        // var result = await _authService.RegisterAsync(Input);
-        // if (!result.Success) { ModelState.AddModelError("", result.Message); return Page(); }
+        var hash = Autenticacion.GenerarHash(usuario.Password);
+        usuario.PasswordHash = Autenticacion.ObtenerHash(hash);
 
-        return RedirectToPage("/Account/Login");
+        string endpoint = _configuracion.ObtenerMetodo("ApiEndPointsSeguridad", "Registro");
+        var cliente = new HttpClient();
+        var respuesta = await cliente.PostAsJsonAsync<UsuarioBase>(endpoint, usuario);
+        respuesta.EnsureSuccessStatusCode();
+        return RedirectToPage("../index");
     }
 }
