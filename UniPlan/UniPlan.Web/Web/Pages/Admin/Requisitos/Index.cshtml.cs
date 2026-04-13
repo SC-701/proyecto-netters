@@ -1,7 +1,9 @@
+using Abstracciones.Interfaces.Reglas;
 using Abstracciones.Modelos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Text.Json;
 
 namespace Web.Pages.Admin.Requisitos;
 
@@ -10,48 +12,93 @@ public class IndexModel : PageModel
     public string AdminName { get; set; } = "Admin User";
     public string AdminEmail { get; set; } = "admin@uniplan.edu";
 
-    [BindProperty(SupportsGet = true)]
-    public string? Busqueda { get; set; }
+    private readonly IConfiguracion _configuracion;
+
+    public IList<RequisitosResponse> requisitos { get; set; } = new List<RequisitosResponse>();
+    public IList<CarreraResponse> carreras { get; set; } = new List<CarreraResponse>();
+    public IList<CursoResponse> cursos { get; set; } = new List<CursoResponse>();
 
     [BindProperty(SupportsGet = true)]
-    public string? FiltroCarreraId { get; set; }
+    public Guid? IdCarrera { get; set; }
 
     [BindProperty(SupportsGet = true)]
-    public string? FiltroEstado { get; set; }
+    public Guid? IdCurso { get; set; }
 
-    [BindProperty(SupportsGet = true)]
-    public int PaginaActual { get; set; } = 1;
-    public int TamañoPagina { get; set; } = 10;
-    public int TotalRequisitos { get; set; }
-    public int TotalPaginas => (int)Math.Ceiling((double)TotalRequisitos / TamañoPagina);
-    public int PaginaInicio => (PaginaActual - 1) * TamañoPagina + 1;
-    public int PaginaFin => Math.Min(PaginaActual * TamañoPagina, TotalRequisitos);
+    public SelectList ListaCarreras { get; set; }
+    public SelectList ListaCursos { get; set; }
 
-    // TODO: cargar desde API
-    public List<SelectListItem> CarreraOptions { get; set; } = new()
+    public IndexModel(IConfiguracion configuracion)
     {
-        new("Ingeniería de Sistemas",    Guid.NewGuid().ToString()),
-        new("Ingeniería Estructural",    Guid.NewGuid().ToString()),
-        new("Análisis de Negocios",      Guid.NewGuid().ToString()),
-    };
+        _configuracion = configuracion;
+    }
 
-    public List<RequisitosResponse> Requisitos { get; set; } = new();
-
-    public void OnGet()
+    public async Task OnGet()
     {
-        PaginaActual = Math.Max(1, PaginaActual);
+        await CargarCombos();
 
-        // TODO: bool? activo = FiltroEstado == "true" ? true : FiltroEstado == "false" ? false : null;
-        // TODO: Requisitos      = await _requisitoService.ObtenerAsync(Busqueda, FiltroCarreraId, activo, PaginaActual, TamañoPagina);
-        // TODO: TotalRequisitos = await _requisitoService.ContarAsync(Busqueda, FiltroCarreraId, activo);
-
-        // Datos de ejemplo
-        Requisitos = new List<RequisitosResponse>
+        if (IdCarrera.HasValue && IdCurso.HasValue)
         {
-            new() { IdCarrera = Guid.NewGuid(), IdCurso = Guid.NewGuid(), IdCursoRequisito = Guid.NewGuid(), Carrera = "Ingeniería de Sistemas",  Curso = "CS302: Sistemas Operativos",    CursoRequisito = "CS201: Estructura de Datos",    EsCorequisito = false, Activo = true  },
-            new() { IdCarrera = Guid.NewGuid(), IdCurso = Guid.NewGuid(), IdCursoRequisito = Guid.NewGuid(), Carrera = "Ingeniería Estructural",   Curso = "ENG405: Diseño en Concreto",     CursoRequisito = "ENG302: Resistencia de Mat.",   EsCorequisito = false, Activo = true  },
-            new() { IdCarrera = Guid.NewGuid(), IdCurso = Guid.NewGuid(), IdCursoRequisito = Guid.NewGuid(), Carrera = "Análisis de Negocios",     Curso = "BA201: Modelos Predictivos",     CursoRequisito = "STAT101: Estadística Básica",   EsCorequisito = true,  Activo = false },
-        };
-        TotalRequisitos = 11;
+            string endpoint = _configuracion.ObtenerMetodo("ApiEndPoints", "ObtenerRequisitosPorCurso");
+            using var cliente = ObtenerClienteConToken();
+            var solicitud = new HttpRequestMessage(HttpMethod.Get, string.Format(endpoint, IdCarrera, IdCurso));
+
+            var respuesta = await cliente.SendAsync(solicitud);
+
+            if (respuesta.IsSuccessStatusCode)
+            {
+                var resultado = await respuesta.Content.ReadAsStringAsync();
+                var opciones = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                requisitos = JsonSerializer.Deserialize<List<RequisitosResponse>>(resultado, opciones) ?? new List<RequisitosResponse>();
+            }
+        }
+    }
+
+    private async Task CargarCombos()
+    {
+        using var cliente = ObtenerClienteConToken();
+        var opciones = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+
+        string endpointCarreras = _configuracion.ObtenerMetodo("ApiEndPoints", "ObtenerCarreras");
+        var respuestaCarreras = await cliente.GetAsync(endpointCarreras);
+        if (respuestaCarreras.IsSuccessStatusCode)
+        {
+            var resultadoCarreras = await respuestaCarreras.Content.ReadAsStringAsync();
+            carreras = JsonSerializer.Deserialize<List<CarreraResponse>>(resultadoCarreras, opciones) ?? new List<CarreraResponse>();
+        }
+
+        string endpointCursos = _configuracion.ObtenerMetodo("ApiEndPoints", "ObtenerCursos");
+        var respuestaCursos = await cliente.GetAsync(endpointCursos);
+
+        if (respuestaCursos.IsSuccessStatusCode)
+        {
+            var resultadoCursos = await respuestaCursos.Content.ReadAsStringAsync();
+
+            if (!string.IsNullOrWhiteSpace(resultadoCursos))
+            {
+                cursos = JsonSerializer.Deserialize<List<CursoResponse>>(resultadoCursos, opciones) ?? new List<CursoResponse>();
+            }
+            else
+            {
+                cursos = new List<CursoResponse>();
+            }
+        }
+        else
+        {
+            cursos = new List<CursoResponse>();
+        }
+    }
+
+    private HttpClient ObtenerClienteConToken()
+    {
+        var tokenClaim = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "Token");
+        var cliente = new HttpClient();
+
+        if (tokenClaim != null)
+        {
+            cliente.DefaultRequestHeaders.Authorization =
+                new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", tokenClaim.Value);
+        }
+
+        return cliente;
     }
 }

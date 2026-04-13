@@ -1,7 +1,9 @@
+using Abstracciones.Interfaces.Reglas;
 using Abstracciones.Modelos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Text.Json;
 
 namespace Web.Pages.Admin.Requisitos;
 
@@ -10,41 +12,78 @@ public class CrearModel : PageModel
     public string AdminName { get; set; } = "Admin User";
     public string AdminEmail { get; set; } = "admin@uniplan.edu";
 
+    private readonly IConfiguracion _configuracion;
+
     [BindProperty]
-    public RequisitosRequest Input { get; set; } = new();
+    public RequisitosRequest requisito { get; set; } = new();
 
-    // TODO: cargar desde API
-    public List<SelectListItem> CarreraOptions { get; set; } = new()
+    public IList<CarreraResponse> carreras { get; set; } = new List<CarreraResponse>();
+    public IList<CursoResponse> cursos { get; set; } = new List<CursoResponse>();
+
+    public SelectList ListaCarreras { get; set; }
+    public SelectList ListaCursos { get; set; }
+
+    public CrearModel(IConfiguracion configuracion)
     {
-        new("Ingeniería de Sistemas",    Guid.NewGuid().ToString()),
-        new("Administración de Empresas",Guid.NewGuid().ToString()),
-        new("Psicología Organizacional", Guid.NewGuid().ToString()),
-    };
+        _configuracion = configuracion;
+    }
 
-    public List<SelectListItem> CursoOptions { get; set; } = new()
+    public async Task OnGet()
     {
-        new("Cálculo Integral",    Guid.NewGuid().ToString()),
-        new("Estructura de Datos", Guid.NewGuid().ToString()),
-        new("Física General II",   Guid.NewGuid().ToString()),
-    };
+        await CargarCombos();
+    }
 
-    public List<SelectListItem> CursoRequisitoOptions { get; set; } = new()
+    public async Task<ActionResult> OnPost()
     {
-        new("Cálculo Diferencial", Guid.NewGuid().ToString()),
-        new("Programación Básica", Guid.NewGuid().ToString()),
-        new("Física General I",    Guid.NewGuid().ToString()),
-    };
+        await CargarCombos();
 
-    public void OnGet() { }
-
-    public async Task<IActionResult> OnPostAsync()
-    {
         if (!ModelState.IsValid)
             return Page();
 
-        // TODO: await _requisitoService.CrearAsync(Input);
+        string endpoint = _configuracion.ObtenerMetodo("ApiEndPoints", "AgregarRequisito");
+        var cliente = ObtenerClienteConToken();
+        var respuesta = await cliente.PostAsJsonAsync(endpoint, requisito);
+        respuesta.EnsureSuccessStatusCode();
 
-        TempData["Exito"] = "Requisito creado correctamente.";
-        return RedirectToPage("/Admin/Requisitos/Index");
+        return RedirectToPage("./Index", new { idCarrera = requisito.IdCarrera, idCurso = requisito.IdCurso });
+    }
+
+    private async Task CargarCombos()
+    {
+        using var cliente = ObtenerClienteConToken();
+        var opciones = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+
+        string endpointCarreras = _configuracion.ObtenerMetodo("ApiEndPoints", "ObtenerCarreras");
+        var respuestaCarreras = await cliente.GetAsync(endpointCarreras);
+        if (respuestaCarreras.IsSuccessStatusCode)
+        {
+            var resultadoCarreras = await respuestaCarreras.Content.ReadAsStringAsync();
+            carreras = JsonSerializer.Deserialize<List<CarreraResponse>>(resultadoCarreras, opciones) ?? new List<CarreraResponse>();
+        }
+
+        string endpointCursos = _configuracion.ObtenerMetodo("ApiEndPoints", "ObtenerCursos");
+        var respuestaCursos = await cliente.GetAsync(endpointCursos);
+        if (respuestaCursos.IsSuccessStatusCode)
+        {
+            var resultadoCursos = await respuestaCursos.Content.ReadAsStringAsync();
+            cursos = JsonSerializer.Deserialize<List<CursoResponse>>(resultadoCursos, opciones) ?? new List<CursoResponse>();
+        }
+
+        ListaCarreras = new SelectList(carreras, "Id", "Nombre");
+        ListaCursos = new SelectList(cursos, "Id", "Nombre");
+    }
+
+    private HttpClient ObtenerClienteConToken()
+    {
+        var tokenClaim = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "Token");
+        var cliente = new HttpClient();
+
+        if (tokenClaim != null)
+        {
+            cliente.DefaultRequestHeaders.Authorization =
+                new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", tokenClaim.Value);
+        }
+
+        return cliente;
     }
 }
