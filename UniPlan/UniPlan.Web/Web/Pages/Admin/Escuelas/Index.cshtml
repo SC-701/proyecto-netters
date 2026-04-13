@@ -8,140 +8,213 @@
     Layout = "_AdminLayout";
 }
 
-<!-- Breadcrumb + Título -->
-<div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
-    <div>
-        <nav class="flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-slate-400 mb-3">
-            <a asp-page="/Admin/Index" class="hover:text-primary transition-colors">Admin</a>
-            <span class="material-symbols-outlined text-[14px]">chevron_right</span>
-            <span class="text-primary">Escuelas</span>
-        </nav>
-        <h2 class="text-4xl font-extrabold text-slate-900 dark:text-white tracking-tighter">Gestión de Escuelas</h2>
-    </div>
-    <a asp-page="/Admin/Escuelas/Crear"
-       class="bg-primary text-white px-6 py-3 rounded-xl font-semibold shadow-lg shadow-primary/20 flex items-center gap-2 hover:scale-[1.02] transition-transform active:scale-95">
-        <span class="material-symbols-outlined">add</span>
-        Nueva Escuela
-    </a>
-</div>
+<div class="space-y-6">
 
-<!-- Filtros -->
-<form method="get" class="flex flex-col md:flex-row gap-4 items-center mb-6">
-    <!-- Búsqueda -->
-    <div class="relative flex-1 w-full">
-        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
-        <input asp-for="Busqueda"
-               class="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg focus:ring-2 focus:ring-primary/20 text-sm outline-none"
-               placeholder="Buscar por nombre o área..." />
+    <!-- Breadcrumb + Título -->
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+        <div>
+            <nav class="flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-slate-400 mb-3">
+                <a asp-page="/Admin/Index" class="hover:text-primary transition-colors">Admin</a>
+                <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+                <span class="text-primary">Escuelas</span>
+            </nav>
+
+            <h2 class="text-4xl font-extrabold text-slate-900 dark:text-white tracking-tighter">
+                Gestión de Escuelas
+            </h2>
+            <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">
+                Administre las escuelas y facultades registradas en la institución.
+            </p>
+        </div>
+
+        <a asp-page="/Admin/Escuelas/Crear"
+           class="bg-primary text-white px-6 py-3 rounded-xl font-semibold shadow-lg shadow-primary/20 flex items-center gap-2 hover:scale-[1.02] transition-transform active:scale-95">
+            <span class="material-symbols-outlined">add</span>
+            Nueva Escuela
+        </a>
     </div>
 
-    <!-- Filtro estado -->
-    <div class="flex items-center gap-3 w-full md:w-auto">
-        <select asp-for="FiltroEstado"
-                class="w-full md:w-48 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg py-2.5 px-3 text-sm text-slate-500 font-medium focus:ring-2 focus:ring-primary/20 outline-none">
-            <option value="">Todos los estados</option>
-            <option value="true">Activo</option>
-            <option value="false">Inactivo</option>
-        </select>
-        <button type="submit"
-                class="px-4 py-2.5 bg-primary text-white text-sm font-bold rounded-lg hover:bg-blue-700 transition-all">
-            Buscar
-        </button>
-    </div>
-</form>
+    <!-- Filtros -->
+    <div class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-4 md:p-5">
+        <form method="get" class="flex flex-col lg:flex-row gap-4 items-stretch lg:items-center">
+            <!-- Búsqueda -->
+            <div class="relative flex-1 w-full">
+                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+                <input asp-for="Busqueda"
+                       class="w-full pl-10 pr-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm outline-none transition-all"
+                       placeholder="Buscar por nombre o área..." />
+            </div>
 
-<!-- Tabla -->
-<div class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
-    <div class="overflow-x-auto">
-        <table class="w-full border-collapse text-left">
-            <thead>
-                <tr class="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800">
-                    <th class="px-6 py-4 text-[11px] uppercase tracking-widest font-bold text-slate-400">Nombre</th>
-                    <th class="px-6 py-4 text-[11px] uppercase tracking-widest font-bold text-slate-400">Área de Conocimiento</th>
-                    <th class="px-6 py-4 text-[11px] uppercase tracking-widest font-bold text-slate-400">Estado</th>
-                    <th class="px-6 py-4 text-[11px] uppercase tracking-widest font-bold text-slate-400 text-right">Acciones</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-slate-200 dark:divide-slate-800">
-                @foreach (var escuela in Model.Escuelas)
-                {
-                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
-                        <td class="px-6 py-5">
-                            <span class="font-semibold text-slate-900 dark:text-white">@escuela.Nombre</span>
-                        </td>
-                        <td class="px-6 py-5">
-                            <span class="bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 px-3 py-1 rounded-full text-xs font-bold tracking-tight">
-                                @escuela.Area
-                            </span>
-                        </td>
-                        <td class="px-6 py-5">
-                            @if (escuela.Activo)
-                            {
-                                <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                                    <span class="text-[11px] font-bold uppercase tracking-wider">Activo</span>
-                                </div>
-                            }
-                            else
-                            {
-                                <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
-                                    <span class="text-[11px] font-bold uppercase tracking-wider">Inactivo</span>
-                                </div>
-                            }
-                        </td>
-                        <td class="px-6 py-5 text-right">
-                            <div class="flex justify-end gap-3 text-slate-400">
-                                <a asp-page="/Admin/Escuelas/Editar" asp-route-id="@escuela.Id"
-                                   class="hover:text-slate-600 dark:hover:text-slate-200 transition-colors">
-                                    <span class="material-symbols-outlined text-[20px]">edit</span>
-                                </a>
-                                <a asp-page="/Admin/Escuelas/Eliminar" asp-route-id="@escuela.Id"
-                                   class="hover:text-red-500 transition-colors">
-                                    <span class="material-symbols-outlined text-[20px]">delete</span>
-                                </a>
-                            </div>
-                        </td>
+            <!-- Filtro estado -->
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full lg:w-auto">
+                <select asp-for="FiltroEstado"
+                        class="w-full sm:w-52 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl py-3 px-3 text-sm text-slate-600 dark:text-slate-300 font-medium focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all">
+                    <option value="">Todos los estados</option>
+                    <option value="true">Activo</option>
+                    <option value="false">Inactivo</option>
+                </select>
+
+                <button type="submit"
+                        class="px-5 py-3 bg-primary text-white text-sm font-bold rounded-xl hover:bg-blue-700 transition-all shadow-lg shadow-primary/20">
+                    Buscar
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Tabla -->
+    <div class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full border-collapse text-left">
+                <thead>
+                    <tr class="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800">
+                        <th class="px-6 py-4 text-[11px] uppercase tracking-widest font-bold text-slate-400">Nombre</th>
+                        <th class="px-6 py-4 text-[11px] uppercase tracking-widest font-bold text-slate-400">Área de Conocimiento</th>
+                        <th class="px-6 py-4 text-[11px] uppercase tracking-widest font-bold text-slate-400">Estado</th>
+                        <th class="px-6 py-4 text-[11px] uppercase tracking-widest font-bold text-slate-400 text-right">Acciones</th>
                     </tr>
-                }
-            </tbody>
-        </table>
-    </div>
+                </thead>
 
-    <!-- Paginación -->
-    <div class="px-6 py-4 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
-        <p class="text-xs text-slate-500 font-medium">
-            Mostrando <span class="text-slate-900 dark:text-white">@Model.PaginaFin</span> de
-            <span class="text-slate-900 dark:text-white">@Model.TotalEscuelas</span> escuelas
-        </p>
-        <div class="flex items-center gap-1">
-            <a asp-page="/Admin/Escuelas"
-               asp-route-pagina="@(Model.PaginaActual - 1)"
-               asp-route-busqueda="@Model.Busqueda"
-               asp-route-filtroEstado="@Model.FiltroEstado"
-               class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 dark:border-slate-700 text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors
-                      @(Model.PaginaActual <= 1 ? "pointer-events-none opacity-40" : "")">
-                <span class="material-symbols-outlined text-sm">chevron_left</span>
-            </a>
-            @for (int i = 1; i <= Model.TotalPaginas; i++)
-            {
+                <tbody class="divide-y divide-slate-200 dark:divide-slate-800">
+                    @if (Model.Escuelas != null && Model.Escuelas.Any())
+                    {
+                        @foreach (var escuela in Model.Escuelas)
+                        {
+                            var area = escuela.Area?.ToLower() ?? "";
+                            var claseArea = "bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300";
+
+                            if (area.Contains("salud"))
+                            {
+                                claseArea = "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300";
+                            }
+                            else if (area.Contains("social"))
+                            {
+                                claseArea = "bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-300";
+                            }
+                            else if (area.Contains("human"))
+                            {
+                                claseArea = "bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300";
+                            }
+                            else if (area.Contains("tecno") || area.Contains("ingen"))
+                            {
+                                claseArea = "bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300";
+                            }
+
+                            <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+                                <td class="px-6 py-5">
+                                    <div class="flex flex-col">
+                                        <span class="font-semibold text-slate-900 dark:text-white">
+                                            @escuela.Nombre
+                                        </span>
+                                    </div>
+                                </td>
+
+                                <td class="px-6 py-5">
+                                    <span class="@claseArea px-3 py-1 rounded-full text-xs font-bold tracking-tight inline-flex items-center">
+                                        @escuela.Area
+                                    </span>
+                                </td>
+
+                                <td class="px-6 py-5">
+                                    @if (escuela.Activo)
+                                    {
+                                        <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                            <span class="text-[11px] font-bold uppercase tracking-wider">Activo</span>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
+                                            <span class="text-[11px] font-bold uppercase tracking-wider">Inactivo</span>
+                                        </div>
+                                    }
+                                </td>
+
+                                <td class="px-6 py-5 text-right">
+                                    <div class="flex justify-end gap-2">
+                                        <a asp-page="/Admin/Escuelas/Editar"
+                                           asp-route-id="@escuela.Id"
+                                           class="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-all">
+                                            <span class="material-symbols-outlined text-[20px]">edit</span>
+                                        </a>
+
+                                        <a asp-page="/Admin/Escuelas/Eliminar"
+                                           asp-route-id="@escuela.Id"
+                                           class="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 text-slate-400 hover:text-red-500 transition-all">
+                                            <span class="material-symbols-outlined text-[20px]">delete</span>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="4" class="px-6 py-12 text-center">
+                                <div class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400">
+                                    <span class="material-symbols-outlined text-4xl mb-3 text-slate-300 dark:text-slate-600">school</span>
+                                    <p class="font-semibold text-slate-700 dark:text-slate-300">No se encontraron escuelas</p>
+                                    <p class="text-sm mt-1">Intente con otro filtro o registre una nueva escuela.</p>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Paginación -->
+        <div class="px-6 py-4 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 flex flex-col md:flex-row items-center justify-between gap-4">
+            <p class="text-xs text-slate-500 font-medium">
+                @if (Model.TotalEscuelas > 0)
+                {
+                    <span>
+                        Mostrando
+                        <span class="text-slate-900 dark:text-white">@Model.PaginaInicio</span>–
+                        <span class="text-slate-900 dark:text-white">@Model.PaginaFin</span>
+                        de
+                        <span class="text-slate-900 dark:text-white">@Model.TotalEscuelas</span> escuelas
+                    </span>
+                }
+                else
+                {
+                    <span>
+                        Mostrando <span class="text-slate-900 dark:text-white">0</span> resultados
+                    </span>
+                }
+            </p>
+
+            <div class="flex items-center gap-1">
                 <a asp-page="/Admin/Escuelas"
-                   asp-route-pagina="@i"
-                   asp-route-busqueda="@Model.Busqueda"
-                   asp-route-filtroEstado="@Model.FiltroEstado"
-                   class="w-8 h-8 flex items-center justify-center rounded-lg text-xs font-bold transition-colors
-                              @(i == Model.PaginaActual ? "bg-primary text-white" : "border border-slate-200 dark:border-slate-700 text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800")">
-                    @i
+                   asp-route-PaginaActual="@(Model.PaginaActual - 1)"
+                   asp-route-Busqueda="@Model.Busqueda"
+                   asp-route-FiltroEstado="@Model.FiltroEstado"
+                   class="w-9 h-9 flex items-center justify-center rounded-lg border border-slate-200 dark:border-slate-700 text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors @(Model.PaginaActual <= 1 ? "pointer-events-none opacity-40" : "")">
+                    <span class="material-symbols-outlined text-sm">chevron_left</span>
                 </a>
-            }
-            <a asp-page="/Admin/Escuelas"
-               asp-route-pagina="@(Model.PaginaActual + 1)"
-               asp-route-busqueda="@Model.Busqueda"
-               asp-route-filtroEstado="@Model.FiltroEstado"
-               class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 dark:border-slate-700 text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors
-                      @(Model.PaginaActual >= Model.TotalPaginas ? "pointer-events-none opacity-40" : "")">
-                <span class="material-symbols-outlined text-sm">chevron_right</span>
-            </a>
+
+                @for (int i = 1; i <= Model.TotalPaginas; i++)
+                {
+                    <a asp-page="/Admin/Escuelas"
+                       asp-route-PaginaActual="@i"
+                       asp-route-Busqueda="@Model.Busqueda"
+                       asp-route-FiltroEstado="@Model.FiltroEstado"
+                       class="w-9 h-9 flex items-center justify-center rounded-lg text-xs font-bold transition-colors @(i == Model.PaginaActual ? "bg-primary text-white shadow-md shadow-primary/20" : "border border-slate-200 dark:border-slate-700 text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800")">
+                        @i
+                    </a>
+                }
+
+                <a asp-page="/Admin/Escuelas"
+                   asp-route-PaginaActual="@(Model.PaginaActual + 1)"
+                   asp-route-Busqueda="@Model.Busqueda"
+                   asp-route-FiltroEstado="@Model.FiltroEstado"
+                   class="w-9 h-9 flex items-center justify-center rounded-lg border border-slate-200 dark:border-slate-700 text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors @(Model.PaginaActual >= Model.TotalPaginas ? "pointer-events-none opacity-40" : "")">
+                    <span class="material-symbols-outlined text-sm">chevron_right</span>
+                </a>
+            </div>
         </div>
     </div>
 </div>
