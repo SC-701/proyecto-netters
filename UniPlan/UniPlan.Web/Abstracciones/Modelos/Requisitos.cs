@@ -21,6 +21,18 @@ namespace Abstracciones.Modelos
     {
     }
 
+    public class RequisitosEliminarRequest
+    {
+        [Required(ErrorMessage = "El Id de la carrera es requerido")]
+        public Guid IdCarrera { get; set; }
+
+        [Required(ErrorMessage = "El Id del curso es requerido")]
+        public Guid IdCurso { get; set; }
+
+        [Required(ErrorMessage = "El Id del curso requisito es requerido")]
+        public Guid IdCursoRequisito { get; set; }
+    }
+
     public class RequisitosResponse : RequisitosBase
     {
         public string Carrera { get; set; }
