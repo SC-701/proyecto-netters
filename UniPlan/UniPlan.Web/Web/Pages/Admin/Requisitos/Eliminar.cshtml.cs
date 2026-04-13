@@ -1,6 +1,9 @@
+using Abstracciones.Interfaces.Reglas;
 using Abstracciones.Modelos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Net;
+using System.Text.Json;
 
 namespace Web.Pages.Admin.Requisitos;
 
@@ -9,43 +12,95 @@ public class EliminarModel : PageModel
     public string AdminName { get; set; } = "Admin User";
     public string AdminEmail { get; set; } = "admin@uniplan.edu";
 
-    [BindProperty(SupportsGet = true)]
-    public Guid IdCarrera { get; set; }
+    private readonly IConfiguracion _configuracion;
 
-    [BindProperty(SupportsGet = true)]
-    public Guid IdCurso { get; set; }
+    public RequisitosResponse requisitoMostrar { get; set; } = new();
 
-    [BindProperty(SupportsGet = true)]
-    public Guid IdCursoRequisito { get; set; }
+    [BindProperty]
+    public RequisitosEliminarRequest requisitoEliminar { get; set; } = new();
 
-    public RequisitosResponse Requisito { get; set; } = new();
-
-    public async Task<IActionResult> OnGetAsync()
+    public EliminarModel(IConfiguracion configuracion)
     {
-        // TODO: Requisito = await _requisitoService.ObtenerAsync(IdCarrera, IdCurso, IdCursoRequisito);
-        // if (Requisito is null) return NotFound();
+        _configuracion = configuracion;
+    }
 
-        // Datos de ejemplo
-        Requisito = new RequisitosResponse
+    public async Task<ActionResult> OnGet(Guid idCarrera, Guid idCurso, Guid idCursoRequisito)
+    {
+        if (idCarrera == Guid.Empty || idCurso == Guid.Empty || idCursoRequisito == Guid.Empty)
+            return NotFound();
+
+        string endpoint = _configuracion.ObtenerMetodo("ApiEndPoints", "ObtenerRequisitosPorCurso");
+        var cliente = ObtenerClienteConToken();
+        var solicitud = new HttpRequestMessage(HttpMethod.Get, string.Format(endpoint, idCarrera, idCurso));
+
+        var respuesta = await cliente.SendAsync(solicitud);
+
+        if (respuesta.StatusCode == HttpStatusCode.NoContent)
+            return NotFound();
+
+        respuesta.EnsureSuccessStatusCode();
+
+        var resultado = await respuesta.Content.ReadAsStringAsync();
+        var opciones = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+
+        var lista = new List<RequisitosResponse>();
+
+        if (!string.IsNullOrWhiteSpace(resultado))
         {
-            IdCarrera = IdCarrera,
-            IdCurso = IdCurso,
-            IdCursoRequisito = IdCursoRequisito,
-            Carrera = "Ingeniería de Sistemas",
-            Curso = "Advanced Physics II",
-            CursoRequisito = "Calculus III",
-            EsCorequisito = false,
-            Activo = true,
+            lista = JsonSerializer.Deserialize<List<RequisitosResponse>>(resultado, opciones) ?? new List<RequisitosResponse>();
+        }
+
+        var requisitoEncontrado = lista.FirstOrDefault(x =>
+            x.IdCarrera == idCarrera &&
+            x.IdCurso == idCurso &&
+            x.IdCursoRequisito == idCursoRequisito);
+
+        if (requisitoEncontrado == null)
+            return NotFound();
+
+        requisitoMostrar = requisitoEncontrado;
+
+        requisitoEliminar = new RequisitosEliminarRequest
+        {
+            IdCarrera = requisitoEncontrado.IdCarrera,
+            IdCurso = requisitoEncontrado.IdCurso,
+            IdCursoRequisito = requisitoEncontrado.IdCursoRequisito
         };
 
         return Page();
     }
 
-    public async Task<IActionResult> OnPostAsync()
+    public async Task<ActionResult> OnPost()
     {
-        // TODO: await _requisitoService.EliminarAsync(IdCarrera, IdCurso, IdCursoRequisito);
+        string endpoint = _configuracion.ObtenerMetodo("ApiEndPoints", "EliminarRequisito");
+        var cliente = ObtenerClienteConToken();
 
-        TempData["Exito"] = "Requisito eliminado correctamente.";
-        return RedirectToPage("/Admin/Requisitos/Index");
+        var request = new HttpRequestMessage(HttpMethod.Delete, endpoint)
+        {
+            Content = JsonContent.Create(requisitoEliminar)
+        };
+
+        var respuesta = await cliente.SendAsync(request);
+        respuesta.EnsureSuccessStatusCode();
+
+        return RedirectToPage("./Index", new
+        {
+            idCarrera = requisitoEliminar.IdCarrera,
+            idCurso = requisitoEliminar.IdCurso
+        });
+    }
+
+    private HttpClient ObtenerClienteConToken()
+    {
+        var tokenClaim = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "Token");
+        var cliente = new HttpClient();
+
+        if (tokenClaim != null)
+        {
+            cliente.DefaultRequestHeaders.Authorization =
+                new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", tokenClaim.Value);
+        }
+
+        return cliente;
     }
 }
