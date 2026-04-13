@@ -17,12 +17,16 @@ namespace Abstracciones.Modelos
         public bool EsCorequisito { get; set; }
     }
 
-    public class RequisitosRequest : RequisitosBase { }
+    public class RequisitosRequest : RequisitosBase
+    {
+    }
 
     public class RequisitosResponse : RequisitosBase
     {
         public string Carrera { get; set; }
+        public string SiglaCurso { get; set; }
         public string Curso { get; set; }
+        public string SiglaRequisito { get; set; }
         public string CursoRequisito { get; set; }
         public bool Activo { get; set; }
     }
