@@ -1,6 +1,11 @@
+using Abstracciones.Interfaces.Reglas;
 using Abstracciones.Modelos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Reflection;
+using System.Text.Json;
+using System.Text.RegularExpressions;
 
 namespace Web.Pages.Admin.Carreras;
 
@@ -10,19 +15,41 @@ public class CrearModel : PageModel
     public string AdminName { get; set; } = "Admin User";
     public string AdminEmail { get; set; } = "admin@uniplan.edu";
 
-    [BindProperty]
-    public CarreraRequest Input { get; set; } = new();
+    //[BindProperty]
+    //public CarreraRequest Input { get; set; } = new();
 
-    public void OnGet() { }
+    private readonly IConfiguracion _configuracion;
 
-    public async Task<IActionResult> OnPostAsync()
+    public CrearModel(IConfiguracion configuracion)
     {
+        _configuracion = configuracion;
+    }
+    [BindProperty]
+    public CarreraRequest carrera { get; set; }
+
+    public async Task<ActionResult> OnPost()
+    {
+
         if (!ModelState.IsValid)
             return Page();
+        string endpoint = _configuracion.ObtenerMetodo("ApiEndPoints", "AgregarCarrera");
+        var cliente = ObtenerClienteConToken();
+        var solicitud = new HttpRequestMessage(HttpMethod.Post, endpoint);
+        var respuesta = await cliente.PostAsJsonAsync(endpoint, carrera);
+        respuesta.EnsureSuccessStatusCode();
+        return RedirectToPage("./Index");
 
-        // TODO: await _carreraService.CrearAsync(Input);
+    }
 
-        TempData["Exito"] = "Carrera creada correctamente.";
-        return RedirectToPage("/Admin/Carreras/Index");
+    private HttpClient ObtenerClienteConToken()
+    {
+        var tokenClaim = HttpContext.User.Claims
+            .FirstOrDefault(c => c.Type == "Token");
+        var cliente = new HttpClient();
+        if (tokenClaim != null)
+            cliente.DefaultRequestHeaders.Authorization =
+                new System.Net.Http.Headers.AuthenticationHeaderValue(
+                    "Bearer", tokenClaim.Value);
+        return cliente;
     }
 }

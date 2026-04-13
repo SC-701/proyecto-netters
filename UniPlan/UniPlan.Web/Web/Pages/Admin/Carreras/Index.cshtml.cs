@@ -1,6 +1,8 @@
+using Abstracciones.Interfaces.Reglas;
 using Abstracciones.Modelos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Text.Json;
 
 namespace Web.Pages.Admin.Carreras;
 
@@ -14,8 +16,8 @@ public class IndexModel : PageModel
     [BindProperty(SupportsGet = true)]
     public string? Busqueda { get; set; }
 
-    [BindProperty(SupportsGet = true)]
-    public string? FiltroEstado { get; set; }
+    //[BindProperty(SupportsGet = true)]
+   public string? FiltroEstado { get; set; }
 
     // Paginación
     [BindProperty(SupportsGet = true)]
@@ -27,25 +29,38 @@ public class IndexModel : PageModel
     public int PaginaFin => Math.Min(PaginaActual * TamañoPagina, TotalCarreras);
 
     // Lista de carreras — se trabaja con CarreraResponse
-    public List<CarreraResponse> Carreras { get; set; } = new();
+    //public List<CarreraResponse> carreras { get; set; } = new();
 
-    public void OnGet()
+    private readonly IConfiguracion _configuracion;
+    public IList<CarreraResponse> carreras { get; set; } = default!;
+
+    public IndexModel(IConfiguracion configuracion)
     {
-        PaginaActual = Math.Max(1, PaginaActual);
+        _configuracion = configuracion;
+    }
 
-        // TODO: reemplazar con llamada real a tu servicio/API
-        // bool? activo = FiltroEstado == "true" ? true : FiltroEstado == "false" ? false : null;
-        // Carreras      = await _carreraService.ObtenerAsync(Busqueda, activo, PaginaActual, TamañoPagina);
-        // TotalCarreras = await _carreraService.ContarAsync(Busqueda, activo);
+    public async Task OnGet()
+    {
+        string endpoint = _configuracion.ObtenerMetodo("ApiEndPoints", "ObtenerCarreras");
+        using var cliente = ObtenerClienteConToken();
+        var solicitud = new HttpRequestMessage(HttpMethod.Get, endpoint);
 
-        // Datos de ejemplo
-        Carreras = new List<CarreraResponse>
-        {
-            new() { Id = Guid.NewGuid(), Nombre = "Arquitectura y Urbanismo",      Activo = true  },
-            new() { Id = Guid.NewGuid(), Nombre = "Ingeniería de Sistemas",         Activo = true  },
-            new() { Id = Guid.NewGuid(), Nombre = "Derecho y Ciencias Políticas",   Activo = false },
-            new() { Id = Guid.NewGuid(), Nombre = "Psicología Organizacional",      Activo = true  },
-        };
-        TotalCarreras = 11;
+        var respuesta = await cliente.SendAsync(solicitud);
+        respuesta.EnsureSuccessStatusCode();
+        var resultado = await respuesta.Content.ReadAsStringAsync();
+        var opciones = new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+        carreras = JsonSerializer.Deserialize<List<CarreraResponse>>(resultado, opciones);
+    }
+
+    private HttpClient ObtenerClienteConToken()
+    {
+        var tokenClaim = HttpContext.User.Claims
+            .FirstOrDefault(c => c.Type == "Token");
+        var cliente = new HttpClient();
+        if (tokenClaim != null)
+            cliente.DefaultRequestHeaders.Authorization =
+                new System.Net.Http.Headers.AuthenticationHeaderValue(
+                    "Bearer", tokenClaim.Value);
+        return cliente;
     }
 }
