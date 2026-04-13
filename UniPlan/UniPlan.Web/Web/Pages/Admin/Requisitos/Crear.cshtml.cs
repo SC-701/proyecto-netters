@@ -3,6 +3,7 @@ using Abstracciones.Modelos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Net;
 using System.Text.Json;
 
 namespace Web.Pages.Admin.Requisitos;
@@ -55,18 +56,46 @@ public class CrearModel : PageModel
 
         string endpointCarreras = _configuracion.ObtenerMetodo("ApiEndPoints", "ObtenerCarreras");
         var respuestaCarreras = await cliente.GetAsync(endpointCarreras);
-        if (respuestaCarreras.IsSuccessStatusCode)
+
+        if (respuestaCarreras.StatusCode == HttpStatusCode.NoContent)
         {
+            carreras = new List<CarreraResponse>();
+        }
+        else
+        {
+            respuestaCarreras.EnsureSuccessStatusCode();
             var resultadoCarreras = await respuestaCarreras.Content.ReadAsStringAsync();
-            carreras = JsonSerializer.Deserialize<List<CarreraResponse>>(resultadoCarreras, opciones) ?? new List<CarreraResponse>();
+
+            if (!string.IsNullOrWhiteSpace(resultadoCarreras))
+            {
+                carreras = JsonSerializer.Deserialize<List<CarreraResponse>>(resultadoCarreras, opciones) ?? new List<CarreraResponse>();
+            }
+            else
+            {
+                carreras = new List<CarreraResponse>();
+            }
         }
 
         string endpointCursos = _configuracion.ObtenerMetodo("ApiEndPoints", "ObtenerCursos");
         var respuestaCursos = await cliente.GetAsync(endpointCursos);
-        if (respuestaCursos.IsSuccessStatusCode)
+
+        if (respuestaCursos.StatusCode == HttpStatusCode.NoContent)
         {
+            cursos = new List<CursoResponse>();
+        }
+        else
+        {
+            respuestaCursos.EnsureSuccessStatusCode();
             var resultadoCursos = await respuestaCursos.Content.ReadAsStringAsync();
-            cursos = JsonSerializer.Deserialize<List<CursoResponse>>(resultadoCursos, opciones) ?? new List<CursoResponse>();
+
+            if (!string.IsNullOrWhiteSpace(resultadoCursos))
+            {
+                cursos = JsonSerializer.Deserialize<List<CursoResponse>>(resultadoCursos, opciones) ?? new List<CursoResponse>();
+            }
+            else
+            {
+                cursos = new List<CursoResponse>();
+            }
         }
 
         ListaCarreras = new SelectList(carreras, "Id", "Nombre");
