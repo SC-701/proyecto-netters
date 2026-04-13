@@ -12,6 +12,7 @@ namespace Abstracciones.Modelos
     public class CarreraRequest : CarreraBase {
 
         public Guid Id { get; set; }
+        public bool Activo { get; set; }
 
     }
 
