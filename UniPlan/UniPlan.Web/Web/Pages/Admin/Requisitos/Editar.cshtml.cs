@@ -1,7 +1,9 @@
+using Abstracciones.Interfaces.Reglas;
 using Abstracciones.Modelos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Net;
+using System.Text.Json;
 
 namespace Web.Pages.Admin.Requisitos;
 
@@ -10,67 +12,94 @@ public class EditarModel : PageModel
     public string AdminName { get; set; } = "Admin User";
     public string AdminEmail { get; set; } = "admin@uniplan.edu";
 
-    // Los 3 campos componen la clave compuesta del requisito
-    [BindProperty(SupportsGet = true)]
-    public Guid IdCarrera { get; set; }
-
-    [BindProperty(SupportsGet = true)]
-    public Guid IdCurso { get; set; }
-
-    [BindProperty(SupportsGet = true)]
-    public Guid IdCursoRequisito { get; set; }
+    private readonly IConfiguracion _configuracion;
 
     [BindProperty]
-    public RequisitosRequest Input { get; set; } = new();
+    public RequisitosRequest requisito { get; set; } = new();
 
-    // TODO: cargar desde API
-    public List<SelectListItem> CarreraOptions { get; set; } = new()
+    public string NombreCarrera { get; set; } = string.Empty;
+    public string NombreCurso { get; set; } = string.Empty;
+    public string NombreCursoRequisito { get; set; } = string.Empty;
+
+    public EditarModel(IConfiguracion configuracion)
     {
-        new("Ingeniería de Sistemas",    Guid.NewGuid().ToString()),
-        new("Administración de Empresas",Guid.NewGuid().ToString()),
-        new("Psicología Organizacional", Guid.NewGuid().ToString()),
-    };
+        _configuracion = configuracion;
+    }
 
-    public List<SelectListItem> CursoOptions { get; set; } = new()
+    public async Task<ActionResult> OnGet(Guid idCarrera, Guid idCurso, Guid idCursoRequisito)
     {
-        new("Cálculo Integral",    Guid.NewGuid().ToString()),
-        new("Estructura de Datos", Guid.NewGuid().ToString()),
-        new("Física General II",   Guid.NewGuid().ToString()),
-    };
+        if (idCarrera == Guid.Empty || idCurso == Guid.Empty || idCursoRequisito == Guid.Empty)
+            return NotFound();
 
-    public List<SelectListItem> CursoRequisitoOptions { get; set; } = new()
-    {
-        new("Cálculo Diferencial", Guid.NewGuid().ToString()),
-        new("Programación Básica", Guid.NewGuid().ToString()),
-        new("Física General I",    Guid.NewGuid().ToString()),
-    };
+        string endpoint = _configuracion.ObtenerMetodo("ApiEndPoints", "ObtenerRequisitosPorCurso");
+        var cliente = ObtenerClienteConToken();
+        var solicitud = new HttpRequestMessage(HttpMethod.Get, string.Format(endpoint, idCarrera, idCurso));
 
-    public async Task<IActionResult> OnGetAsync()
-    {
-        // TODO: var req = await _requisitoService.ObtenerAsync(IdCarrera, IdCurso, IdCursoRequisito);
-        // if (req is null) return NotFound();
-        // Input = new RequisitosRequest { IdCarrera = req.IdCarrera, IdCurso = req.IdCurso, IdCursoRequisito = req.IdCursoRequisito, EsCorequisito = req.EsCorequisito };
+        var respuesta = await cliente.SendAsync(solicitud);
 
-        // Datos de ejemplo
-        Input = new RequisitosRequest
+        if (respuesta.StatusCode == HttpStatusCode.NoContent)
+            return NotFound();
+
+        respuesta.EnsureSuccessStatusCode();
+
+        var resultado = await respuesta.Content.ReadAsStringAsync();
+        var opciones = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+
+        var lista = new List<RequisitosResponse>();
+
+        if (!string.IsNullOrWhiteSpace(resultado))
         {
-            IdCarrera = IdCarrera,
-            IdCurso = IdCurso,
-            IdCursoRequisito = IdCursoRequisito,
-            EsCorequisito = false,
+            lista = JsonSerializer.Deserialize<List<RequisitosResponse>>(resultado, opciones) ?? new List<RequisitosResponse>();
+        }
+
+        var requisitoEncontrado = lista.FirstOrDefault(x =>
+            x.IdCarrera == idCarrera &&
+            x.IdCurso == idCurso &&
+            x.IdCursoRequisito == idCursoRequisito);
+
+        if (requisitoEncontrado == null)
+            return NotFound();
+
+        requisito = new RequisitosRequest
+        {
+            IdCarrera = requisitoEncontrado.IdCarrera,
+            IdCurso = requisitoEncontrado.IdCurso,
+            IdCursoRequisito = requisitoEncontrado.IdCursoRequisito,
+            EsCorequisito = requisitoEncontrado.EsCorequisito
         };
+
+        NombreCarrera = requisitoEncontrado.Carrera;
+        NombreCurso = requisitoEncontrado.Curso;
+        NombreCursoRequisito = requisitoEncontrado.CursoRequisito;
 
         return Page();
     }
 
-    public async Task<IActionResult> OnPostAsync()
+    public async Task<ActionResult> OnPost()
     {
         if (!ModelState.IsValid)
             return Page();
 
-        // TODO: await _requisitoService.ActualizarAsync(IdCarrera, IdCurso, IdCursoRequisito, Input);
+        string endpoint = _configuracion.ObtenerMetodo("ApiEndPoints", "EditarRequisito");
+        var cliente = ObtenerClienteConToken();
 
-        TempData["Exito"] = "Requisito actualizado correctamente.";
-        return RedirectToPage("/Admin/Requisitos/Index");
+        var respuesta = await cliente.PutAsJsonAsync(endpoint, requisito);
+        respuesta.EnsureSuccessStatusCode();
+
+        return RedirectToPage("./Index", new { idCarrera = requisito.IdCarrera, idCurso = requisito.IdCurso });
+    }
+
+    private HttpClient ObtenerClienteConToken()
+    {
+        var tokenClaim = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "Token");
+        var cliente = new HttpClient();
+
+        if (tokenClaim != null)
+        {
+            cliente.DefaultRequestHeaders.Authorization =
+                new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", tokenClaim.Value);
+        }
+
+        return cliente;
     }
 }

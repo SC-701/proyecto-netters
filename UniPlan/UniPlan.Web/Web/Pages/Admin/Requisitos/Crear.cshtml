@@ -1,134 +1,68 @@
 ﻿@page "/Admin/Requisitos/Crear"
 @model Web.Pages.Admin.Requisitos.CrearModel
 @{
-    ViewData["Title"] = "Nuevo Requisito";
+    ViewData["Title"] = "Crear Requisito";
     ViewData["ActivePage"] = "Requisitos";
     ViewData["AdminName"] = Model.AdminName;
     ViewData["AdminEmail"] = Model.AdminEmail;
     Layout = "_AdminLayout";
 }
 
-<div class="w-full max-w-4xl mx-auto">
+<div class="max-w-2xl mx-auto">
+    <header class="mb-10 text-center">
+        <h2 class="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight">Crear Nuevo Requisito</h2>
+        <p class="text-slate-500 dark:text-slate-400 mt-2 text-sm">Asocie un curso con su requisito o corequisito.</p>
+    </header>
 
-    <!-- Header -->
-    <div class="text-center mb-10">
-        <h2 class="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight mb-2">Crear Nuevo Requisito</h2>
-        <p class="text-slate-500 dark:text-slate-400 text-sm max-w-2xl mx-auto">
-            Configure las dependencias académicas entre cursos para asegurar una progresión lógica en la malla curricular.
-        </p>
-    </div>
+    <div class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-8">
+        <form method="post" class="space-y-8">
+            @Html.AntiForgeryToken()
 
-    <!-- Card -->
-    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-sm overflow-hidden">
-        <div class="p-8 md:p-12">
-
-            <!-- Sección header -->
-            <div class="mb-8 space-y-3">
-                <div class="flex items-center gap-2">
-                    <span class="material-symbols-outlined text-primary text-[20px]">info</span>
-                    <span class="text-[11px] font-bold text-slate-400 uppercase tracking-widest">Información General</span>
-                </div>
-                <div class="h-px w-full bg-slate-200 dark:bg-slate-800"></div>
+            <div>
+                <label asp-for="requisito.IdCarrera" class="block text-[11px] font-bold uppercase tracking-widest text-slate-400 mb-2">Carrera</label>
+                <select asp-for="requisito.IdCarrera" asp-items="Model.ListaCarreras"
+                        class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-2.5">
+                    <option value="">Seleccione una carrera</option>
+                </select>
+                <span asp-validation-for="requisito.IdCarrera" class="text-xs text-red-500 mt-1 block"></span>
             </div>
 
-            <form method="post" class="space-y-6">
-                @Html.AntiForgeryToken()
+            <div>
+                <label asp-for="requisito.IdCurso" class="block text-[11px] font-bold uppercase tracking-widest text-slate-400 mb-2">Curso</label>
+                <select asp-for="requisito.IdCurso" asp-items="Model.ListaCursos"
+                        class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-2.5">
+                    <option value="">Seleccione un curso</option>
+                </select>
+                <span asp-validation-for="requisito.IdCurso" class="text-xs text-red-500 mt-1 block"></span>
+            </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+            <div>
+                <label asp-for="requisito.IdCursoRequisito" class="block text-[11px] font-bold uppercase tracking-widest text-slate-400 mb-2">Curso Requisito</label>
+                <select asp-for="requisito.IdCursoRequisito" asp-items="Model.ListaCursos"
+                        class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-2.5">
+                    <option value="">Seleccione un curso requisito</option>
+                </select>
+                <span asp-validation-for="requisito.IdCursoRequisito" class="text-xs text-red-500 mt-1 block"></span>
+            </div>
 
-                    <!-- Carrera -->
-                    <div class="space-y-2">
-                        <label asp-for="Input.IdCarrera"
-                               class="text-[11px] font-bold text-slate-900 dark:text-white uppercase tracking-widest block px-1">
-                            Carrera
-                        </label>
-                        <div class="relative">
-                            <select asp-for="Input.IdCarrera"
-                                    asp-items="Model.CarreraOptions"
-                                    id="selectCarrera"
-                                    class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl py-3.5 px-4 text-sm appearance-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all cursor-pointer outline-none">
-                                <option value="">Seleccione una carrera</option>
-                            </select>
-                            
-                        </div>
-                        <span asp-validation-for="Input.IdCarrera" class="text-xs text-red-500 mt-1 block"></span>
-                    </div>
+            <div class="flex items-center gap-3">
+                <input asp-for="requisito.EsCorequisito" class="h-4 w-4" />
+                <label asp-for="requisito.EsCorequisito" class="text-sm text-slate-600 dark:text-slate-300">
+                    Es corequisito
+                </label>
+            </div>
 
-                    <!-- Curso -->
-                    <div class="space-y-2">
-                        <label asp-for="Input.IdCurso"
-                               class="text-[11px] font-bold text-slate-900 dark:text-white uppercase tracking-widest block px-1">
-                            Curso
-                        </label>
-                        <div class="relative">
-                            <select asp-for="Input.IdCurso"
-                                    asp-items="Model.CursoOptions"
-                                    class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl py-3.5 px-4 text-sm appearance-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all cursor-pointer outline-none">
-                                <option value="">Seleccione un curso</option>
-                            </select>
-                            
-                        </div>
-                        <span asp-validation-for="Input.IdCurso" class="text-xs text-red-500 mt-1 block"></span>
-                    </div>
-
-                    <!-- Curso Requisito -->
-                    <div class="space-y-2 md:col-span-2">
-                        <label asp-for="Input.IdCursoRequisito"
-                               class="text-[11px] font-bold text-slate-900 dark:text-white uppercase tracking-widest block px-1">
-                            Curso Requisito
-                        </label>
-                        <div class="relative">
-                            <select asp-for="Input.IdCursoRequisito"
-                                    asp-items="Model.CursoRequisitoOptions"
-                                    class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl py-3.5 px-4 text-sm appearance-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all cursor-pointer outline-none">
-                                <option value="">Seleccione el curso requisito</option>
-                            </select>
-                            
-                        </div>
-                        <span asp-validation-for="Input.IdCursoRequisito" class="text-xs text-red-500 mt-1 block"></span>
-                    </div>
-
-                    <!-- Toggle Correquisito -->
-                    <div class="md:col-span-2 pt-2 flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700">
-                        <div class="flex flex-col">
-                            <span class="text-sm font-bold text-slate-900 dark:text-white">Es correquisito</span>
-                            <span class="text-[11px] text-slate-500 dark:text-slate-400">¿El curso debe llevarse simultáneamente con el requisito?</span>
-                        </div>
-                        <label class="relative inline-flex items-center cursor-pointer">
-                            <input asp-for="Input.EsCorequisito" type="checkbox" class="sr-only peer" />
-                            <div class="w-12 h-6 bg-slate-300 dark:bg-slate-600 peer-focus:outline-none rounded-full peer
-                                        peer-checked:after:translate-x-full peer-checked:after:border-white
-                                        after:content-[''] after:absolute after:top-[2px] after:left-[2px]
-                                        after:bg-white after:border after:rounded-full after:h-5 after:w-5
-                                        after:transition-all peer-checked:bg-primary"></div>
-                        </label>
-                    </div>
-                </div>
-
-                <!-- Botones -->
-                <div class="mt-12 pt-8 border-t border-slate-200 dark:border-slate-800 flex items-center justify-end gap-4">
-                    <a asp-page="/Admin/Requisitos/Index"
-                       class="px-6 py-3 text-sm font-semibold text-slate-500 hover:text-slate-900 dark:hover:text-slate-100 transition-colors">
-                        Cancelar
-                    </a>
-                    <button type="submit"
-                            class="px-8 py-3 bg-primary text-white rounded-xl text-sm font-bold shadow-lg shadow-primary/20 hover:bg-blue-700 active:scale-95 transition-all">
-                        Guardar Requisito
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Sugerencia del sistema -->
-    <div class="mt-8 p-6 bg-emerald-50 dark:bg-emerald-900/10 border border-emerald-200 dark:border-emerald-900/30 rounded-xl flex items-start gap-4">
-        <span class="material-symbols-outlined text-emerald-500 mt-0.5">lightbulb</span>
-        <div>
-            <h4 class="text-xs font-bold text-emerald-800 dark:text-emerald-400 uppercase tracking-wide">Sugerencia del sistema</h4>
-            <p class="text-sm text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
-                Los requisitos encadenados (A → B → C) se gestionan automáticamente. No es necesario añadir A como requisito de C si ya es requisito de B.
-            </p>
-        </div>
+            <div class="flex items-center justify-end gap-4 pt-8 border-t border-slate-200 dark:border-slate-800">
+                <a asp-page="/Admin/Requisitos/Index"
+                       class="px-6 py-2.5 text-sm font-semibold text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-all">
+                    Cancelar
+                </a>
+                <button type="submit"
+                        class="px-8 py-2.5 text-sm font-bold text-white bg-primary rounded-xl shadow-lg shadow-primary/20 hover:bg-blue-700 transition-all">
+                    Guardar Requisito
+                </button>
+            </div>
+        </form>
     </div>
 </div>
 

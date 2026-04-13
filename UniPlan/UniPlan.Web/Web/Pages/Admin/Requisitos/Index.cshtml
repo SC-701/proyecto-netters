@@ -8,162 +8,105 @@
     Layout = "_AdminLayout";
 }
 
-<!-- Breadcrumb + Título -->
 <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
     <div>
         <nav class="flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-slate-400 mb-3">
             <a asp-page="/Admin/Index" class="hover:text-primary transition-colors">Admin</a>
             <span class="material-symbols-outlined text-[14px]">chevron_right</span>
-            <span class="text-primary">Gestión de Requisitos</span>
+            <span class="text-primary">Requisitos</span>
         </nav>
         <h2 class="text-4xl font-extrabold text-slate-900 dark:text-white tracking-tighter">Gestión de Requisitos</h2>
     </div>
     <a asp-page="/Admin/Requisitos/Crear"
-       class="bg-primary text-white px-6 py-3 rounded-xl font-semibold shadow-lg shadow-primary/20 flex items-center gap-2 hover:scale-[1.02] transition-transform active:scale-95">
+           class="bg-primary text-white px-6 py-3 rounded-xl font-semibold shadow-lg shadow-primary/20 flex items-center gap-2 hover:scale-[1.02] transition-transform active:scale-95">
         <span class="material-symbols-outlined">add</span>
         Nuevo Requisito
     </a>
 </div>
 
-<!-- Filtros -->
-<form method="get" class="flex flex-col md:flex-row gap-4 items-center mb-6">
-    <!-- Búsqueda -->
-    <div class="relative flex-1">
-        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
-        <input asp-for="Busqueda"
-               class="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 focus:ring-2 focus:ring-primary/20 focus:border-primary rounded-lg text-sm transition-all outline-none"
-               placeholder="Buscar requisitos..." />
+<form method="get" class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end mb-6">
+    <div>
+        <label class="block text-[11px] font-bold uppercase tracking-widest text-slate-400 mb-2">Carrera</label>
+        <select asp-for="IdCarrera" asp-items="Model.ListaCarreras"
+                class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg py-2.5 px-3 text-sm outline-none">
+            <option value="">Seleccione una carrera</option>
+        </select>
     </div>
 
-    <!-- Filtro carrera -->
-    <select asp-for="FiltroCarreraId"
-            asp-items="Model.CarreraOptions"
-            class="min-w-[200px] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-sm font-medium py-2.5 pl-3 pr-10 focus:ring-2 focus:ring-primary/20 focus:border-primary text-slate-600 outline-none">
-        <option value="">Todas las Carreras</option>
-    </select>
+    <div>
+        <label class="block text-[11px] font-bold uppercase tracking-widest text-slate-400 mb-2">Curso</label>
+        <select asp-for="IdCurso" asp-items="Model.ListaCursos"
+                class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg py-2.5 px-3 text-sm outline-none">
+            <option value="">Seleccione un curso</option>
+        </select>
+    </div>
 
-    <!-- Filtro estado -->
-    <select asp-for="FiltroEstado"
-            class="min-w-[160px] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-sm font-medium py-2.5 pl-3 pr-10 focus:ring-2 focus:ring-primary/20 focus:border-primary text-slate-600 outline-none">
-        <option value="">Todos los estados</option>
-        <option value="true">Activo</option>
-        <option value="false">Inactivo</option>
-    </select>
-
-    <button type="submit"
-            class="px-4 py-2.5 bg-primary text-white text-sm font-bold rounded-lg hover:bg-blue-700 transition-all">
-        Buscar
-    </button>
+    <div>
+        <button type="submit"
+                class="px-4 py-2.5 bg-primary text-white text-sm font-bold rounded-lg hover:bg-blue-700 transition-all w-full">
+            Buscar
+        </button>
+    </div>
 </form>
 
-<!-- Tabla -->
 <div class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
-    <table class="w-full border-collapse text-left">
-        <thead>
-            <tr class="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800">
-                <th class="px-6 py-4 text-[11px] uppercase tracking-widest font-bold text-slate-400">Curso</th>
-                <th class="px-6 py-4 text-[11px] uppercase tracking-widest font-bold text-slate-400">Prerrequisito</th>
-                <th class="px-6 py-4 text-[11px] uppercase tracking-widest font-bold text-slate-400">Correquisito</th>
-                <th class="px-6 py-4 text-[11px] uppercase tracking-widest font-bold text-slate-400">Estado</th>
-                <th class="px-6 py-4 text-[11px] uppercase tracking-widest font-bold text-slate-400 text-right">Acciones</th>
-            </tr>
-        </thead>
-        <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
-            @foreach (var req in Model.Requisitos)
-            {
-                <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
-                    <td class="px-6 py-5">
-                        <div class="flex flex-col">
-                            <span class="text-sm font-semibold text-slate-900 dark:text-white leading-tight">@req.Curso</span>
-                            <span class="text-xs text-slate-400 mt-0.5">@req.Carrera</span>
-                        </div>
-                    </td>
-                    <td class="px-6 py-5">
-                        <span class="text-sm text-slate-600 dark:text-slate-400">@req.CursoRequisito</span>
-                    </td>
-                    <td class="px-6 py-5">
-                        @if (req.EsCorequisito)
-                        {
-                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 rounded-full text-[10px] font-bold">
-                                <span class="w-1.5 h-1.5 bg-blue-500 rounded-full"></span>
-                                SÍ
-                            </span>
-                        }
-                        else
-                        {
-                            <span class="text-xs text-slate-400">—</span>
-                        }
-                    </td>
-                    <td class="px-6 py-5">
-                        @if (req.Activo)
-                        {
-                            <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400">
-                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                                <span class="text-[11px] font-bold uppercase tracking-wider">Activo</span>
-                            </div>
-                        }
-                        else
-                        {
-                            <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500">
-                                <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
-                                <span class="text-[11px] font-bold uppercase tracking-wider">Inactivo</span>
-                            </div>
-                        }
-                    </td>
-                    <td class="px-6 py-5">
-                        <div class="flex justify-end gap-3 text-slate-400">
-                            <a asp-page="/Admin/Requisitos/Editar" asp-route-idCarrera="@req.IdCarrera" asp-route-idCurso="@req.IdCurso" asp-route-idCursoRequisito="@req.IdCursoRequisito"
-                               class="hover:text-slate-600 dark:hover:text-slate-200 transition-colors">
-                                <span class="material-symbols-outlined text-[20px]">edit</span>
-                            </a>
-                            <a asp-page="/Admin/Requisitos/Eliminar" asp-route-idCarrera="@req.IdCarrera" asp-route-idCurso="@req.IdCurso" asp-route-idCursoRequisito="@req.IdCursoRequisito"
-                               class="hover:text-red-500 transition-colors">
-                                <span class="material-symbols-outlined text-[20px]">delete</span>
-                            </a>
-                        </div>
-                    </td>
+    <div class="overflow-x-auto">
+        <table class="w-full border-collapse text-left">
+            <thead>
+                <tr class="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800">
+                    <th class="px-6 py-4 text-[11px] uppercase tracking-widest font-bold text-slate-400">Carrera</th>
+                    <th class="px-6 py-4 text-[11px] uppercase tracking-widest font-bold text-slate-400">Curso</th>
+                    <th class="px-6 py-4 text-[11px] uppercase tracking-widest font-bold text-slate-400">Requisito</th>
+                    <th class="px-6 py-4 text-[11px] uppercase tracking-widest font-bold text-slate-400 text-center">Tipo</th>
+                    <th class="px-6 py-4 text-[11px] uppercase tracking-widest font-bold text-slate-400 text-center">Estado</th>
+                    <th class="px-6 py-4 text-[11px] uppercase tracking-widest font-bold text-slate-400 text-right">Acciones</th>
                 </tr>
-            }
-        </tbody>
-    </table>
-
-    <!-- Paginación -->
-    <div class="px-6 py-4 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
-        <span class="text-xs text-slate-500 font-medium">
-            Mostrando <span class="text-slate-900 dark:text-white">@Model.PaginaInicio-@Model.PaginaFin</span> de 
-            <span class="text-slate-900 dark:text-white">@Model.TotalRequisitos</span> requisitos
-        </span>
-        <div class="flex gap-2">
-            <a asp-page="/Admin/Requisitos"
-               asp-route-pagina="@(Model.PaginaActual - 1)"
-               asp-route-busqueda="@Model.Busqueda"
-               asp-route-filtroCarreraId="@Model.FiltroCarreraId"
-               asp-route-filtroEstado="@Model.FiltroEstado"
-               class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 dark:border-slate-700 text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors
-                      @(Model.PaginaActual <= 1 ? "pointer-events-none opacity-40" : "")">
-                <span class="material-symbols-outlined text-sm">chevron_left</span>
-            </a>
-            @for (int i = 1; i <= Model.TotalPaginas; i++)
-            {
-                <a asp-page="/Admin/Requisitos"
-                   asp-route-pagina="@i"
-                   asp-route-busqueda="@Model.Busqueda"
-                   asp-route-filtroCarreraId="@Model.FiltroCarreraId"
-                   asp-route-filtroEstado="@Model.FiltroEstado"
-                   class="w-8 h-8 flex items-center justify-center rounded-lg text-xs font-bold transition-colors
-                                      @(i == Model.PaginaActual ? "bg-primary text-white" : "border border-slate-200 dark:border-slate-700 text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800")">
-                    @i
-                </a>
-            }
-            <a asp-page="/Admin/Requisitos"
-               asp-route-pagina="@(Model.PaginaActual + 1)"
-               asp-route-busqueda="@Model.Busqueda"
-               asp-route-filtroCarreraId="@Model.FiltroCarreraId"
-               asp-route-filtroEstado="@Model.FiltroEstado"
-               class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 dark:border-slate-700 text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors
-                      @(Model.PaginaActual >= Model.TotalPaginas ? "pointer-events-none opacity-40" : "")">
-                <span class="material-symbols-outlined text-sm">chevron_right</span>
-            </a>
-        </div>
+            </thead>
+            <tbody class="divide-y divide-slate-200 dark:divide-slate-800">
+                @if (Model.requisitos.Any())
+                {
+                    @foreach (var requisito in Model.requisitos)
+                    {
+                        <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+                            <td class="px-6 py-5">@requisito.Carrera</td>
+                            <td class="px-6 py-5">@requisito.SiglaCurso - @requisito.Curso</td>
+                            <td class="px-6 py-5">@requisito.SiglaRequisito - @requisito.CursoRequisito</td>
+                            <td class="px-6 py-5 text-center">
+                                @(requisito.EsCorequisito ? "Corequisito" : "Requisito")
+                            </td>
+                            <td class="px-6 py-5 text-center">
+                                @(requisito.Activo ? "Activo" : "Inactivo")
+                            </td>
+                            <td class="px-6 py-5 text-right">
+                                <div class="flex justify-end gap-3 text-slate-400">
+                                    <a asp-page="/Admin/Requisitos/Editar"
+                                           asp-route-idCarrera="@requisito.IdCarrera"
+                                           asp-route-idCurso="@requisito.IdCurso"
+                                           asp-route-idCursoRequisito="@requisito.IdCursoRequisito"
+                                           class="hover:text-slate-600 dark:hover:text-slate-200 transition-colors">
+                                        <span class="material-symbols-outlined text-[20px]">edit</span>
+                                    </a>
+                                    <a asp-page="/Admin/Requisitos/Eliminar"
+                                           asp-route-idCarrera="@requisito.IdCarrera"
+                                           asp-route-idCurso="@requisito.IdCurso"
+                                           asp-route-idCursoRequisito="@requisito.IdCursoRequisito"
+                                           class="hover:text-red-500 transition-colors">
+                                        <span class="material-symbols-outlined text-[20px]">delete</span>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="6" class="px-6 py-8 text-center text-slate-500">
+                            No hay requisitos para mostrar.
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
     </div>
 </div>

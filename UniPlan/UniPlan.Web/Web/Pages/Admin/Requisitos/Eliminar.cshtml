@@ -8,75 +8,93 @@
     Layout = "_AdminLayout";
 }
 
-<div class="w-full max-w-md mx-auto">
-    <div class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-8 relative z-10">
+<div class="w-full max-w-xl mx-auto">
+    <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
 
-        <!-- Header -->
-        <div class="flex items-center justify-between mb-6">
-            <h2 class="text-2xl font-extrabold tracking-tight text-slate-900 dark:text-white">Eliminar Requisito</h2>
-            <div class="w-10 h-10 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center text-red-500">
-                <span class="material-symbols-outlined" style='font-variation-settings: "FILL" 1;'>delete_forever</span>
-            </div>
-        </div>
-
-        <p class="text-slate-500 dark:text-slate-400 text-sm mb-6 leading-relaxed">
-            Estás a punto de eliminar permanentemente un requisito del sistema. Esta acción no se puede deshacer.
-        </p>
-
-        <!-- Datos del requisito -->
-        <div class="bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700 p-5 mb-6">
-            <div class="flex justify-between items-center">
-                <div>
-                    <span class="text-[11px] uppercase tracking-widest text-slate-400 font-bold block mb-1">Curso</span>
-                    <span class="text-slate-900 dark:text-white font-semibold">@Model.Requisito.Curso</span>
-                </div>
-                <div class="text-right">
-                    <span class="text-[11px] uppercase tracking-widest text-slate-400 font-bold block mb-1">Prerrequisito</span>
-                    <span class="text-slate-900 dark:text-white font-semibold">@Model.Requisito.CursoRequisito</span>
+        <div class="p-8 pb-4">
+            <div class="flex justify-between items-end mb-4">
+                <h2 class="text-2xl font-bold text-slate-900 dark:text-white">Eliminar Requisito</h2>
+                <div class="w-12 h-12 bg-red-100 dark:bg-red-900/30 text-red-500 rounded-full flex items-center justify-center">
+                    <span class="material-symbols-outlined text-2xl" style='font-variation-settings: "FILL" 1;'>delete</span>
                 </div>
             </div>
-        </div>
-
-        <!-- Advertencia -->
-        <div class="bg-red-50 dark:bg-red-900/10 rounded-xl p-4 flex gap-3 mb-8 border border-red-100 dark:border-red-900/20">
-            <span class="material-symbols-outlined text-red-500" style='font-variation-settings: "FILL" 1;'>warning</span>
-            <p class="text-red-700 dark:text-red-400 text-xs font-medium leading-relaxed">
-                Atención: Impacto en Estudiantes. Al confirmar la eliminación, las validaciones automáticas asociadas a este requisito serán eliminadas.
+            <p class="text-slate-500 dark:text-slate-400 text-sm pr-12">
+                ¿Estás seguro de que deseas eliminar este requisito? Esta acción desactivará la relación académica entre el curso y su requisito.
             </p>
         </div>
 
-        <form method="post" class="space-y-6">
-            @Html.AntiForgeryToken()
-
-            <!-- Checkbox -->
-            <label class="flex items-start gap-3 cursor-pointer group">
-                <input id="confirmCheck" type="checkbox"
-                       class="h-5 w-5 rounded border-slate-300 text-red-500 focus:ring-red-500 focus:ring-offset-0 transition-all cursor-pointer mt-0.5" />
-                <span class="text-sm text-slate-500 group-hover:text-slate-900 dark:group-hover:text-slate-100 transition-colors">
-                    Confirmo que deseo proceder con la eliminación definitiva de este registro académico.
-                </span>
-            </label>
-
-            <!-- Botones -->
-            <div class="grid grid-cols-2 gap-4">
-                <a asp-page="/Admin/Requisitos/Index"
-                   class="px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 font-semibold text-sm hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-center">
-                    Cancelar
-                </a>
-                <button id="btnEliminar" type="submit" disabled
-                        class="px-4 py-3 rounded-xl bg-red-500 text-white font-semibold text-sm shadow-lg shadow-red-500/20 hover:bg-red-600 active:scale-95 transition-all
-                               disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-red-500">
-                    Confirmar Eliminación
-                </button>
+        <div class="p-8">
+            <div class="bg-slate-50 dark:bg-slate-800/50 rounded-lg p-4 mb-6 border border-slate-200 dark:border-slate-700 space-y-3">
+                <div>
+                    <span class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Carrera</span>
+                    <p class="text-sm font-bold text-slate-900 dark:text-white">@Model.requisitoMostrar.Carrera</p>
+                </div>
+                <div>
+                    <span class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Curso</span>
+                    <p class="text-sm font-bold text-slate-900 dark:text-white">@Model.requisitoMostrar.Curso</p>
+                </div>
+                <div>
+                    <span class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Curso Requisito</span>
+                    <p class="text-sm font-bold text-slate-900 dark:text-white">@Model.requisitoMostrar.CursoRequisito</p>
+                </div>
+                <div>
+                    <span class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Tipo</span>
+                    <p class="text-sm font-bold text-slate-900 dark:text-white">
+                        @(Model.requisitoMostrar.EsCorequisito ? "Corequisito" : "Requisito")
+                    </p>
+                </div>
             </div>
-        </form>
+
+            <div class="bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-900/30 rounded-lg p-4 mb-6 flex gap-3 items-start">
+                <span class="material-symbols-outlined text-red-500 text-xl">warning</span>
+                <div>
+                    <p class="text-red-900 dark:text-red-400 font-bold text-sm mb-0.5">Acción Irreversible</p>
+                    <p class="text-red-700 dark:text-red-500/80 text-sm leading-relaxed">
+                        Esta acción desactivará el requisito en el sistema y dejará de mostrarse como vigente.
+                    </p>
+                </div>
+            </div>
+
+            <form method="post">
+                @Html.AntiForgeryToken()
+
+                <input type="hidden" asp-for="requisitoEliminar.IdCarrera" />
+                <input type="hidden" asp-for="requisitoEliminar.IdCurso" />
+                <input type="hidden" asp-for="requisitoEliminar.IdCursoRequisito" />
+
+                <div class="mb-8">
+                    <label class="flex items-center gap-3 cursor-pointer group">
+                        <input id="confirmCheck" type="checkbox"
+                               class="h-5 w-5 rounded border-slate-300 text-red-500 focus:ring-red-500 transition-all cursor-pointer" />
+                        <span class="text-sm text-slate-500 font-medium group-hover:text-slate-900 dark:group-hover:text-slate-100 transition-colors">
+                            Entiendo las consecuencias de eliminar este requisito
+                        </span>
+                    </label>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <a asp-page="/Admin/Requisitos/Index"
+                           asp-route-idCarrera="@Model.requisitoEliminar.IdCarrera"
+                           asp-route-idCurso="@Model.requisitoEliminar.IdCurso"
+                           class="w-full bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100 font-bold py-3 px-4 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-all active:scale-[0.98] text-sm text-center">
+                        Cancelar
+                    </a>
+                    <button id="btnEliminar" type="submit" disabled
+                            class="w-full bg-red-500 text-white font-bold py-3 px-4 rounded-lg shadow-sm hover:bg-red-600 transition-all active:scale-[0.98] flex items-center justify-center gap-2 text-sm
+                        disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-red-500">
+                        <span class="material-symbols-outlined text-lg">delete</span>
+                        Confirmar Eliminación
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
 @section Scripts {
     <script>
         const check = document.getElementById('confirmCheck');
-        const btn   = document.getElementById('btnEliminar');
+        const btn = document.getElementById('btnEliminar');
         check.addEventListener('change', () => btn.disabled = !check.checked);
     </script>
 }
