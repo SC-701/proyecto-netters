@@ -1,9 +1,10 @@
 ﻿@page
+@using Abstracciones.Modelos.Seguridad
 @model Web.Pages.App.DashboardModel
 @{
     ViewData["Title"] = "Dashboard";
     ViewData["ActivePage"] = "Dashboard";
-    ViewData["UserName"] = Model.UserName;
+    ViewData["UserName"] = Model.UserName; 
     ViewData["UserCareer"] = Model.UserCareer;
     ViewData["UserAvatar"] = Model.UserAvatarUrl;
     Layout = "_AppLayout";

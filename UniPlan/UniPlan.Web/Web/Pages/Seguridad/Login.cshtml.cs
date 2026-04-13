@@ -61,7 +61,7 @@ public class LoginModel : PageModel
                 // 5. Redirigir a ReturnUrl o al índice
                 var urlredirigir = $"{HttpContext.Request.Query["ReturnUrl"]}";
                 if (string.IsNullOrEmpty(urlredirigir))
-                    return Redirect("/");
+                    return Redirect("/App/Dashboard");
                 return Redirect(urlredirigir);
             }
         }
