@@ -69,6 +69,14 @@ builder.Services.AddScoped<IRequisitosFlujo, RequisitosFlujo>();
 builder.Services.AddScoped<IPlanificacionDA, PlanificacionDA>();
 builder.Services.AddScoped<IPlanificacionFlujo, PlanificacionFlujo>();
 
+// PARA CURSO-PLANIFICACION
+builder.Services.AddScoped<ICursoPlanificacionDA, CursoPlanificacionDA>();
+builder.Services.AddScoped<ICursoPlanificacionFlujo, CursoPlanificacionFlujo>();
+
+// PARA HORARIO
+builder.Services.AddScoped<IHorarioDA, HorarioDA>();
+builder.Services.AddScoped<IHorarioFlujo, HorarioFlujo>();
+
 //Para SEGURIDAD
 builder.Services.AddTransient<Autorizacion.Abstracciones.Flujo.IAutorizacionFlujo,
                                Autorizacion.Flujo.AutorizacionFlujo>();

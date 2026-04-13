@@ -9,7 +9,11 @@ namespace Abstracciones.Modelos
         public string Nombre { get; set; }
     }
 
-    public class CarreraRequest : CarreraBase { }
+    public class CarreraRequest : CarreraBase {
+
+        public Guid Id { get; set; }
+
+    }
 
     public class CarreraResponse : CarreraBase
     {
