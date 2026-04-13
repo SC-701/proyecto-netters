@@ -54,7 +54,8 @@ public class EditarModel : PageModel
             var cliente = ObtenerClienteConToken();
             var respuesta = await cliente.PutAsJsonAsync<CarreraRequest>(string.Format(endpoint, carreraResponse.Id), new CarreraRequest
             { 
-                Nombre = carreraResponse.Nombre
+                Nombre = carreraResponse.Nombre,
+                Activo = carreraResponse.Activo
 
             });
             respuesta.EnsureSuccessStatusCode();
