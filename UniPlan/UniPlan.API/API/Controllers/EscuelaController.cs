@@ -56,8 +56,9 @@ namespace API.Controllers {
         }
 
         [HttpGet("{Id}")]
-        [Authorize(Roles = "1")]
-        public async Task<IActionResult> Obtener ([FromRoute] Guid Id) {
+        [Authorize(Roles = "1,2")]
+        public async Task<IActionResult> Obtener([FromRoute] Guid Id)
+        {
             var resultado = await _escuelaFlujo.Obtener(Id);
             return Ok(resultado);
         }
