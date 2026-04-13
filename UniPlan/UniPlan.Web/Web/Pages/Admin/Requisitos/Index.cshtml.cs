@@ -3,6 +3,7 @@ using Abstracciones.Modelos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Net;
 using System.Text.Json;
 
 namespace Web.Pages.Admin.Requisitos;
@@ -44,11 +45,24 @@ public class IndexModel : PageModel
 
             var respuesta = await cliente.SendAsync(solicitud);
 
-            if (respuesta.IsSuccessStatusCode)
+            if (respuesta.StatusCode == HttpStatusCode.NoContent)
             {
-                var resultado = await respuesta.Content.ReadAsStringAsync();
-                var opciones = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                requisitos = new List<RequisitosResponse>();
+                return;
+            }
+
+            respuesta.EnsureSuccessStatusCode();
+
+            var resultado = await respuesta.Content.ReadAsStringAsync();
+            var opciones = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+
+            if (!string.IsNullOrWhiteSpace(resultado))
+            {
                 requisitos = JsonSerializer.Deserialize<List<RequisitosResponse>>(resultado, opciones) ?? new List<RequisitosResponse>();
+            }
+            else
+            {
+                requisitos = new List<RequisitosResponse>();
             }
         }
     }
@@ -60,17 +74,36 @@ public class IndexModel : PageModel
 
         string endpointCarreras = _configuracion.ObtenerMetodo("ApiEndPoints", "ObtenerCarreras");
         var respuestaCarreras = await cliente.GetAsync(endpointCarreras);
-        if (respuestaCarreras.IsSuccessStatusCode)
+
+        if (respuestaCarreras.StatusCode == HttpStatusCode.NoContent)
         {
+            carreras = new List<CarreraResponse>();
+        }
+        else
+        {
+            respuestaCarreras.EnsureSuccessStatusCode();
             var resultadoCarreras = await respuestaCarreras.Content.ReadAsStringAsync();
-            carreras = JsonSerializer.Deserialize<List<CarreraResponse>>(resultadoCarreras, opciones) ?? new List<CarreraResponse>();
+
+            if (!string.IsNullOrWhiteSpace(resultadoCarreras))
+            {
+                carreras = JsonSerializer.Deserialize<List<CarreraResponse>>(resultadoCarreras, opciones) ?? new List<CarreraResponse>();
+            }
+            else
+            {
+                carreras = new List<CarreraResponse>();
+            }
         }
 
         string endpointCursos = _configuracion.ObtenerMetodo("ApiEndPoints", "ObtenerCursos");
         var respuestaCursos = await cliente.GetAsync(endpointCursos);
 
-        if (respuestaCursos.IsSuccessStatusCode)
+        if (respuestaCursos.StatusCode == HttpStatusCode.NoContent)
         {
+            cursos = new List<CursoResponse>();
+        }
+        else
+        {
+            respuestaCursos.EnsureSuccessStatusCode();
             var resultadoCursos = await respuestaCursos.Content.ReadAsStringAsync();
 
             if (!string.IsNullOrWhiteSpace(resultadoCursos))
@@ -82,15 +115,16 @@ public class IndexModel : PageModel
                 cursos = new List<CursoResponse>();
             }
         }
-        else
-        {
-            cursos = new List<CursoResponse>();
-        }
+
+        ListaCarreras = new SelectList(carreras, "Id", "Nombre");
+        ListaCursos = new SelectList(cursos, "Id", "Nombre");
     }
 
     private HttpClient ObtenerClienteConToken()
     {
-        var tokenClaim = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "Token");
+        var tokenClaim = HttpContext.User.Claims
+            .FirstOrDefault(c => c.Type == "Token");
+
         var cliente = new HttpClient();
 
         if (tokenClaim != null)
