@@ -7,7 +7,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Autorizacion.Abstracciones.Netters" Version="1.0.0" />
+    <PackageReference Include="Autorizacion.DA.Netters" Version="1.0.0" />
+    <PackageReference Include="Autorizacion.Flujo.Netters" Version="1.0.0" />
+    <PackageReference Include="Autorizacion.Middleware.Netters" Version="1.0.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.17.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Abstracciones\Abstracciones.csproj" />
+    <ProjectReference Include="..\Reglas\Reglas.csproj" />
   </ItemGroup>
 
 </Project>

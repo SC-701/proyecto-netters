@@ -1,6 +1,8 @@
+using Abstracciones.Interfaces.Reglas;
 using Abstracciones.Modelos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Text.Json;
 
 namespace Web.Pages.Admin.Carreras;
 
@@ -10,32 +12,54 @@ public class EliminarModel : PageModel
     public string AdminName { get; set; } = "Admin User";
     public string AdminEmail { get; set; } = "admin@uniplan.edu";
 
-    [BindProperty(SupportsGet = true)]
-    public Guid Id { get; set; }
+    private readonly IConfiguracion _configuracion;
 
-    public CarreraResponse Carrera { get; set; } = new();
-
-    public async Task<IActionResult> OnGetAsync()
+    public EliminarModel(IConfiguracion configuracion)
     {
-        // TODO: Carrera = await _carreraService.ObtenerPorIdAsync(Id);
-        // if (Carrera is null) return NotFound();
+        _configuracion = configuracion;
+    }
 
-        // Datos de ejemplo
-        Carrera = new CarreraResponse
-        {
-            Id = Id,
-            Nombre = "Ingeniería en Sistemas Computacionales",
-            Activo = true,
-        };
+    public CarreraResponse carrera { get; set; } = default;
+    public async Task<ActionResult> OnGet(Guid? id)
+    {
+        if (id == Guid.Empty)
+            return NotFound();
+        string endpoint = _configuracion.ObtenerMetodo("ApiEndPoints", "ObtenerCarrera");
+        var cliente = ObtenerClienteConToken();
+        var solicitud = new HttpRequestMessage(HttpMethod.Get, string.Format(endpoint, id));
 
+        var respuesta = await cliente.SendAsync(solicitud);
+        respuesta.EnsureSuccessStatusCode();
+        var resultado = await respuesta.Content.ReadAsStringAsync();
+        var opciones = new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+        carrera = JsonSerializer.Deserialize<CarreraResponse>(resultado, opciones);
         return Page();
     }
 
-    public async Task<IActionResult> OnPostAsync()
+    public async Task<ActionResult> OnPost(Guid? id)
     {
-        // TODO: await _carreraService.EliminarAsync(Id);
+        if (id == Guid.Empty)
+            return NotFound();
+        if (!ModelState.IsValid)
+            return Page();
+        string endpoint = _configuracion.ObtenerMetodo("ApiEndPoints", "EliminarCarrera");
+        var cliente = ObtenerClienteConToken();
+        var solicitud = new HttpRequestMessage(HttpMethod.Delete, string.Format(endpoint, id));
+        var respuesta = await cliente.SendAsync(solicitud);
+        respuesta.EnsureSuccessStatusCode();
+        return RedirectToPage("./Index");
 
-        TempData["Exito"] = "Carrera eliminada correctamente.";
-        return RedirectToPage("/Admin/Carreras/Index");
+    }
+
+    private HttpClient ObtenerClienteConToken()
+    {
+        var tokenClaim = HttpContext.User.Claims
+            .FirstOrDefault(c => c.Type == "Token");
+        var cliente = new HttpClient();
+        if (tokenClaim != null)
+            cliente.DefaultRequestHeaders.Authorization =
+                new System.Net.Http.Headers.AuthenticationHeaderValue(
+                    "Bearer", tokenClaim.Value);
+        return cliente;
     }
 }

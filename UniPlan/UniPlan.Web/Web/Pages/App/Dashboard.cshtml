@@ -1,9 +1,10 @@
 ﻿@page
+@using Abstracciones.Modelos.Seguridad
 @model Web.Pages.App.DashboardModel
 @{
     ViewData["Title"] = "Dashboard";
     ViewData["ActivePage"] = "Dashboard";
-    ViewData["UserName"] = Model.UserName;
+    ViewData["UserName"] = Model.UserName; 
     ViewData["UserCareer"] = Model.UserCareer;
     ViewData["UserAvatar"] = Model.UserAvatarUrl;
     Layout = "_AppLayout";
@@ -25,6 +26,11 @@
            class="px-4 py-2 text-sm font-medium text-white bg-primary rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2 shadow-sm">
             <span class="material-symbols-outlined text-[20px]">add</span>
             Crear nuevo cuatrimestre
+        </a>
+        <a asp-page="/Admin/Carreras/Index"
+           class="px-4 py-2 text-sm font-medium text-white bg-slate-800 rounded-lg hover:bg-slate-900 transition-colors flex items-center gap-2">
+            <span class="material-symbols-outlined text-[20px]">school</span>
+            Ir a Carreras
         </a>
     </div>
 </header>

@@ -1,5 +1,5 @@
 ﻿@page
-@model Web.Pages.Account.RegisterModel
+@model Web.Pages.Seguridad.RegisterModel
 @{
     ViewData["Title"] = "Registro";
     Layout = "_AccountLayout";
@@ -30,74 +30,57 @@
 
             <!-- Nombre completo -->
             <div>
-                <label asp-for="Input.FullName" class="block text-slate-700 dark:text-slate-300 text-sm font-semibold mb-2">
+                <label asp-for="usuario.NombreUsuario" class="block text-slate-700 dark:text-slate-300 text-sm font-semibold mb-2">
                     Nombre completo
                 </label>
                 <div class="relative">
                     <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-[20px]">person</span>
-                    <input asp-for="Input.FullName"
+                    <input asp-for="usuario.NombreUsuario"
                            class="w-full pl-10 pr-4 py-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all placeholder:text-slate-400"
                            placeholder="Ej. Juan Pérez" />
                 </div>
-                <span asp-validation-for="Input.FullName" class="text-xs text-red-500 mt-1 block"></span>
+                <span asp-validation-for="usuario.NombreUsuario" class="text-xs text-red-500 mt-1 block"></span>
             </div>
 
             <!-- Email -->
             <div>
-                <label asp-for="Input.Email" class="block text-slate-700 dark:text-slate-300 text-sm font-semibold mb-2">
+                <label asp-for="usuario.CorreoElectronico" class="block text-slate-700 dark:text-slate-300 text-sm font-semibold mb-2">
                     Correo electrónico
                 </label>
                 <div class="relative">
                     <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-[20px]">mail</span>
-                    <input asp-for="Input.Email"
+                    <input asp-for="usuario.CorreoElectronico"
                            class="w-full pl-10 pr-4 py-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all placeholder:text-slate-400"
                            placeholder="usuario@universidad.edu" />
                 </div>
-                <span asp-validation-for="Input.Email" class="text-xs text-red-500 mt-1 block"></span>
-            </div>
-
-            <!-- Carrera -->
-            <div>
-                <label asp-for="Input.Career" class="block text-slate-700 dark:text-slate-300 text-sm font-semibold mb-2">
-                    Carrera / Programa académico
-                </label>
-                <div class="relative">
-                    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-[20px]">import_contacts</span>
-                    <select asp-for="Input.Career"
-                            asp-items="Model.CareerOptions"
-                            class="w-full pl-10 pr-4 py-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all appearance-none">
-                        <option value="" disabled selected>Selecciona tu carrera</option>
-                    </select>
-                    
-                </div>
-                <span asp-validation-for="Input.Career" class="text-xs text-red-500 mt-1 block"></span>
+                <span asp-validation-for="usuario.CorreoElectronico" class="text-xs text-red-500 mt-1 block"></span>
             </div>
 
             <!-- Contraseña y confirmación -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                    <label asp-for="Input.Password" class="block text-slate-700 dark:text-slate-300 text-sm font-semibold mb-2">
+                    <label asp-for="usuario.Password" class="block text-slate-700 dark:text-slate-300 text-sm font-semibold mb-2">
                         Contraseña
                     </label>
                     <div class="relative">
                         <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-[20px]">lock</span>
-                        <input asp-for="Input.Password"
+                        <input asp-for="usuario.Password"
                                class="w-full pl-10 pr-4 py-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all placeholder:text-slate-400"
                                placeholder="••••••••" />
                     </div>
-                    <span asp-validation-for="Input.Password" class="text-xs text-red-500 mt-1 block"></span>
+                    <span asp-validation-for="usuario.Password" class="text-xs text-red-500 mt-1 block"></span>
                 </div>
                 <div>
-                    <label asp-for="Input.ConfirmPassword" class="block text-slate-700 dark:text-slate-300 text-sm font-semibold mb-2">
+                    <label asp-for="usuario.ConfirmarPassword" class="block text-slate-700 dark:text-slate-300 text-sm font-semibold mb-2">
                         Confirmar
                     </label>
                     <div class="relative">
                         <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-[20px]">lock_clock</span>
-                        <input asp-for="Input.ConfirmPassword"
+                        <input asp-for="usuario.ConfirmarPassword"
                                class="w-full pl-10 pr-4 py-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all placeholder:text-slate-400"
                                placeholder="••••••••" />
                     </div>
-                    <span asp-validation-for="Input.ConfirmPassword" class="text-xs text-red-500 mt-1 block"></span>
+                    <span asp-validation-for="usuario.ConfirmarPassword" class="text-xs text-red-500 mt-1 block"></span>
                 </div>
             </div>
 
@@ -115,7 +98,7 @@
         <div class="mt-8 pt-6 border-t border-slate-100 dark:border-slate-800 text-center">
             <p class="text-slate-600 dark:text-slate-400 text-sm">
                 ¿Ya tienes una cuenta?
-                <a asp-page="/Account/Login" class="text-primary font-bold hover:underline">Iniciar sesión</a>
+                <a asp-page="/Seguridad/Login" class="text-primary font-bold hover:underline">Iniciar sesión</a>
             </p>
         </div>
     </div>
