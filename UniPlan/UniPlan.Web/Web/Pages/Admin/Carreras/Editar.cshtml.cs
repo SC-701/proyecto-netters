@@ -55,6 +55,7 @@ public class EditarModel : PageModel
             var respuesta = await cliente.PutAsJsonAsync<CarreraRequest>(string.Format(endpoint, carreraResponse.Id), new CarreraRequest
             { 
                 Nombre = carreraResponse.Nombre
+
             });
             respuesta.EnsureSuccessStatusCode();
             return RedirectToPage("./Index");
