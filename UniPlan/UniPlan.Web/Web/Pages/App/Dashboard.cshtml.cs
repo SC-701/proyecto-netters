@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Web.Pages.App;
@@ -38,7 +39,7 @@ public class UpcomingSubject
 // ---------------------------------------------------------------------------
 // PageModel
 // ---------------------------------------------------------------------------
-
+[Authorize]
 public class DashboardModel : PageModel
 {
     // Datos del usuario — TODO: cargar desde sesión / API

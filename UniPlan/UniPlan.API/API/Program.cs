@@ -45,6 +45,10 @@ builder.Services.AddScoped<ICarreraFlujo, CarreraFlujo>();
 builder.Services.AddScoped<ICursoDA, CursoDA>();
 builder.Services.AddScoped<ICursoFlujo, CursoFlujo>();
 
+//PARA CARRERACURSO
+builder.Services.AddScoped<ICarreraCursoDA, CarreraCursoDA>();
+builder.Services.AddScoped<ICarreraCursoFlujo, CarreraCursoFlujo>();
+
 //PARA ESCUELA
 builder.Services.AddScoped<IEscuelaDA, EscuelaDA>();
 builder.Services.AddScoped<IEscuelaFlujo, EscuelaFlujo>();
@@ -57,11 +61,21 @@ builder.Services.AddScoped<IPerfilFlujo, PerfilFlujo>();
 builder.Services.AddScoped<IPerfilxUsuarioDA, PerfilxUsuarioDA>();
 builder.Services.AddScoped<IPerfilxUsuarioFlujo, PerfilxUsuarioFlujo>();
 
+//PARA REQUISITOS
+builder.Services.AddScoped<IRequisitosDA, RequisitosDA>();
+builder.Services.AddScoped<IRequisitosFlujo, RequisitosFlujo>();
 
 //PARA PLANIFICACION
-builder.Services.AddScoped<IRepositorioDapper, RepositorioDapper>();
 builder.Services.AddScoped<IPlanificacionDA, PlanificacionDA>();
 builder.Services.AddScoped<IPlanificacionFlujo, PlanificacionFlujo>();
+
+// PARA CURSO-PLANIFICACION
+builder.Services.AddScoped<ICursoPlanificacionDA, CursoPlanificacionDA>();
+builder.Services.AddScoped<ICursoPlanificacionFlujo, CursoPlanificacionFlujo>();
+
+// PARA HORARIO
+builder.Services.AddScoped<IHorarioDA, HorarioDA>();
+builder.Services.AddScoped<IHorarioFlujo, HorarioFlujo>();
 
 //Para SEGURIDAD
 builder.Services.AddTransient<Autorizacion.Abstracciones.Flujo.IAutorizacionFlujo,
