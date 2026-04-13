@@ -1,6 +1,10 @@
+using Abstracciones.Interfaces.Reglas;
 using Abstracciones.Modelos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Net;
+using System.Text.Json;
 
 namespace Web.Pages.Admin.Carreras;
 
@@ -10,32 +14,62 @@ public class EditarModel : PageModel
     public string AdminName { get; set; } = "Admin User";
     public string AdminEmail { get; set; } = "admin@uniplan.edu";
 
-    [BindProperty(SupportsGet = true)]
-    public Guid Id { get; set; }
+    private readonly IConfiguracion _configuracion;
 
-    [BindProperty]
-    public CarreraRequest Input { get; set; } = new();
+        public EditarModel(IConfiguracion configuracion)
+        {
+            _configuracion = configuracion;
+        }
+        [BindProperty]
+        public CarreraResponse carreraResponse { get; set; }
 
-    public async Task<IActionResult> OnGetAsync()
-    {
-        // TODO: var carrera = await _carreraService.ObtenerPorIdAsync(Id);
-        // if (carrera is null) return NotFound();
-        // Input.Nombre = carrera.Nombre;
 
-        // Datos de ejemplo
-        Input = new CarreraRequest { Nombre = "Ingeniería en Sistemas Computacionales" };
+        public async Task<ActionResult> OnGet(Guid? id)
+        {
+            if (id ==  Guid.Empty)
+                return  NotFound();
+            string endpoint = _configuracion.ObtenerMetodo("ApiEndPoints", "ObtenerCarrera");
+            var cliente = ObtenerClienteConToken();
+            var solicitud = new HttpRequestMessage(HttpMethod.Get, string.Format(endpoint, id));
 
-        return Page();
-    }
+            var respuesta = await cliente.SendAsync(solicitud);
+            respuesta.EnsureSuccessStatusCode();
+            if (respuesta.StatusCode == HttpStatusCode.OK)
+            {
 
-    public async Task<IActionResult> OnPostAsync()
-    {
-        if (!ModelState.IsValid)
+                var resultado = await respuesta.Content.ReadAsStringAsync();
+                var opciones = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                carreraResponse = JsonSerializer.Deserialize<CarreraResponse>(resultado, opciones);
+
+            }
+            
             return Page();
+        }
+        public async Task<ActionResult> OnPost()
+        {
 
-        // TODO: await _carreraService.ActualizarAsync(Id, Input);
+            if (!ModelState.IsValid)
+                return Page();
+            string endpoint = _configuracion.ObtenerMetodo("ApiEndPoints", "EditarCarrera");
+            var cliente = ObtenerClienteConToken();
+            var respuesta = await cliente.PutAsJsonAsync<CarreraRequest>(string.Format(endpoint, carreraResponse.Id), new CarreraRequest
+            { 
+                Nombre = carreraResponse.Nombre
+            });
+            respuesta.EnsureSuccessStatusCode();
+            return RedirectToPage("./Index");
 
-        TempData["Exito"] = "Carrera actualizada correctamente.";
-        return RedirectToPage("/Admin/Carreras/Index");
-    }
+        }
+
+        private HttpClient ObtenerClienteConToken()
+        {
+            var tokenClaim = HttpContext.User.Claims
+                .FirstOrDefault(c => c.Type == "Token");
+            var cliente = new HttpClient();
+            if (tokenClaim != null)
+                cliente.DefaultRequestHeaders.Authorization =
+                    new System.Net.Http.Headers.AuthenticationHeaderValue(
+                        "Bearer", tokenClaim.Value);
+            return cliente;
+        }
 }

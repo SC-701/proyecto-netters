@@ -28,9 +28,6 @@ public class IndexModel : PageModel
     public int PaginaInicio => (PaginaActual - 1) * TamañoPagina + 1;
     public int PaginaFin => Math.Min(PaginaActual * TamañoPagina, TotalCarreras);
 
-    // Lista de carreras — se trabaja con CarreraResponse
-    //public List<CarreraResponse> carreras { get; set; } = new();
-
     private readonly IConfiguracion _configuracion;
     public IList<CarreraResponse> carreras { get; set; } = default!;
 

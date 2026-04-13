@@ -15,9 +15,6 @@ public class CrearModel : PageModel
     public string AdminName { get; set; } = "Admin User";
     public string AdminEmail { get; set; } = "admin@uniplan.edu";
 
-    //[BindProperty]
-    //public CarreraRequest Input { get; set; } = new();
-
     private readonly IConfiguracion _configuracion;
 
     public CrearModel(IConfiguracion configuracion)
