@@ -42,4 +42,12 @@ namespace Abstracciones.Modelos
         public string CursoRequisito { get; set; }
         public bool Activo { get; set; }
     }
+
+    public class RequisitosEstadoRequest
+    {
+        public Guid IdCarrera { get; set; }
+        public Guid IdCurso { get; set; }
+        public Guid IdCursoRequisito { get; set; }
+        public bool Activo { get; set; }
+    }
 }

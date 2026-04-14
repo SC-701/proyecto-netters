@@ -14,5 +14,7 @@ namespace Abstracciones.Interfaces.Flujo
         Task<RequisitosKeyResponse> Agregar(RequisitosRequest requisito);
         Task<RequisitosKeyResponse> Editar(RequisitosRequest requisito);
         Task<RequisitosKeyResponse> Eliminar(RequisitosEliminarRequest requisito);
+
+        Task<RequisitosKeyResponse> CambiarEstado(RequisitosEstadoRequest requisito);
     }
 }
