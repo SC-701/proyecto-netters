@@ -126,5 +126,6 @@
     <Build Include="dbo\Stored Procedures\SP_PerfilxUsuario_Eliminar.sql" />
     <Build Include="dbo\Stored Procedures\SP_CursoPlanificacion_ObtenerUno.sql" />
     <Build Include="dbo\Stored Procedures\SP_Horario_Activar.sql" />
+    <Build Include="dbo\Stored Procedures\SP_Requisitos_CambiarEstado.sql" />
   </ItemGroup>
 </Project>

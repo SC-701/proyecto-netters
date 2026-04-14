@@ -42,4 +42,19 @@ namespace Abstracciones.Modelos
         public string CursoRequisito { get; set; }
         public bool Activo { get; set; }
     }
+    public class RequisitosEstadoRequest
+    {
+        [Required(ErrorMessage = "El Id de la carrera es requerido")]
+        public Guid IdCarrera { get; set; }
+
+        [Required(ErrorMessage = "El Id del curso es requerido")]
+        public Guid IdCurso { get; set; }
+
+        [Required(ErrorMessage = "El Id del curso requisito es requerido")]
+        public Guid IdCursoRequisito { get; set; }
+
+        [Required(ErrorMessage = "El estado es requerido")]
+        public bool Activo { get; set; }
+    }
+
 }
