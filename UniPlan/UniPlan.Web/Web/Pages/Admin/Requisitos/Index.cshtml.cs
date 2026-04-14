@@ -135,4 +135,27 @@ public class IndexModel : PageModel
 
         return cliente;
     }
+
+    public async Task<IActionResult> OnPostCambiarEstado(Guid idCarrera, Guid idCurso, Guid idCursoRequisito, bool activo)
+    {
+        string endpoint = _configuracion.ObtenerMetodo("ApiEndPoints", "CambiarEstadoRequisito");
+        var cliente = ObtenerClienteConToken();
+
+        var request = new RequisitosEstadoRequest
+        {
+            IdCarrera = idCarrera,
+            IdCurso = idCurso,
+            IdCursoRequisito = idCursoRequisito,
+            Activo = activo
+        };
+
+        var respuesta = await cliente.PutAsJsonAsync(endpoint, request);
+        respuesta.EnsureSuccessStatusCode();
+
+        return RedirectToPage("./Index", new
+        {
+            IdCarrera = idCarrera,
+            IdCurso = idCurso
+        });
+    }
 }

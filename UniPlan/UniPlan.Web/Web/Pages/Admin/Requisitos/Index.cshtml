@@ -77,8 +77,11 @@
                             <td class="px-6 py-5 text-center">
                                 @(requisito.Activo ? "Activo" : "Inactivo")
                             </td>
+
+
+
                             <td class="px-6 py-5 text-right">
-                                <div class="flex justify-end gap-3 text-slate-400">
+                                <div class="flex justify-end items-center gap-3 text-slate-400">
                                     <a asp-page="/Admin/Requisitos/Editar"
                                            asp-route-idCarrera="@requisito.IdCarrera"
                                            asp-route-idCurso="@requisito.IdCurso"
@@ -86,6 +89,7 @@
                                            class="hover:text-slate-600 dark:hover:text-slate-200 transition-colors">
                                         <span class="material-symbols-outlined text-[20px]">edit</span>
                                     </a>
+
                                     <a asp-page="/Admin/Requisitos/Eliminar"
                                            asp-route-idCarrera="@requisito.IdCarrera"
                                            asp-route-idCurso="@requisito.IdCurso"
@@ -93,6 +97,21 @@
                                            class="hover:text-red-500 transition-colors">
                                         <span class="material-symbols-outlined text-[20px]">delete</span>
                                     </a>
+
+                                    <form method="post" asp-page-handler="CambiarEstado" class="inline">
+                                        <input type="hidden" name="idCarrera" value="@requisito.IdCarrera" />
+                                        <input type="hidden" name="idCurso" value="@requisito.IdCurso" />
+                                        <input type="hidden" name="idCursoRequisito" value="@requisito.IdCursoRequisito" />
+                                        <input type="hidden" name="activo" value="@(!requisito.Activo)" />
+
+                                        <button type="submit"
+                                                class="hover:text-emerald-500 transition-colors"
+                                                title="@(requisito.Activo ? "Inactivar" : "Activar")">
+                                            <span class="material-symbols-outlined text-[20px]">
+                                                @(requisito.Activo ? "toggle_off" : "toggle_on")
+                                            </span>
+                                        </button>
+                                    </form>
                                 </div>
                             </td>
                         </tr>
