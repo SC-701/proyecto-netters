@@ -7,5 +7,6 @@ namespace Abstracciones.Interfaces.DA {
         Task<Guid> Agregar (EscuelaRequest escuela);
         Task<Guid> Editar (Guid Id, EscuelaRequest escuela);
         Task<Guid> Eliminar (Guid Id);
+        Task<Guid> Activar(Guid id);
     }
 }
