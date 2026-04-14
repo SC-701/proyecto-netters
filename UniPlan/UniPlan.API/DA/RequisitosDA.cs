@@ -113,13 +113,18 @@ namespace DA
         public async Task<RequisitosKeyResponse> CambiarEstado(RequisitosEstadoRequest requisito)
         {
             string query = @"SP_Requisitos_CambiarEstado";
-            var resultadoConsulta = await _sqlConnection.QueryAsync<RequisitosKeyResponse>(query, new
-            {
-                IdCarrera = requisito.IdCarrera,
-                IdCurso = requisito.IdCurso,
-                IdCursoRequisito = requisito.IdCursoRequisito,
-                Activo = requisito.Activo
-            });
+
+            var resultadoConsulta = await _sqlConnection.QueryAsync<RequisitosKeyResponse>(
+                query,
+                new
+                {
+                    IdCarrera = requisito.IdCarrera,
+                    IdCurso = requisito.IdCurso,
+                    IdCursoRequisito = requisito.IdCursoRequisito,
+                    Activo = requisito.Activo
+                },
+                commandType: System.Data.CommandType.StoredProcedure
+            );
 
             return resultadoConsulta.FirstOrDefault();
         }

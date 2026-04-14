@@ -81,9 +81,6 @@ namespace API.Controllers
         [Authorize(Roles = "2")]
         public async Task<IActionResult> CambiarEstado([FromBody] RequisitosEstadoRequest requisito)
         {
-            if (!await VerificarRequisitoExiste(requisito.IdCarrera, requisito.IdCurso, requisito.IdCursoRequisito))
-                return NotFound("El requisito no existe.");
-
             var resultado = await _requisitosFlujo.CambiarEstado(requisito);
             return Ok(resultado);
         }
