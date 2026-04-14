@@ -37,7 +37,6 @@
     <!-- Filtros -->
     <div class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-4 md:p-5">
         <form method="get" class="flex flex-col lg:flex-row gap-4 items-stretch lg:items-center">
-            <!-- Búsqueda -->
             <div class="relative flex-1 w-full">
                 <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
                 <input asp-for="Busqueda"
@@ -45,7 +44,6 @@
                        placeholder="Buscar por nombre o área..." />
             </div>
 
-            <!-- Filtro estado -->
             <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full lg:w-auto">
                 <select asp-for="FiltroEstado"
                         class="w-full sm:w-52 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl py-3 px-3 text-sm text-slate-600 dark:text-slate-300 font-medium focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all">
@@ -116,20 +114,48 @@
                                 </td>
 
                                 <td class="px-6 py-5">
-                                    @if (escuela.Activo)
-                                    {
-                                        <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400">
-                                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                                            <span class="text-[11px] font-bold uppercase tracking-wider">Activo</span>
-                                        </div>
-                                    }
-                                    else
-                                    {
-                                        <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400">
-                                            <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
-                                            <span class="text-[11px] font-bold uppercase tracking-wider">Inactivo</span>
-                                        </div>
-                                    }
+                                    <div class="flex items-center gap-3">
+                                        @if (escuela.Activo)
+                                        {
+                                            <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400">
+                                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                                <span class="text-[11px] font-bold uppercase tracking-wider">Activo</span>
+                                            </div>
+
+                                            <form method="post" asp-page-handler="Inactivar" class="inline">
+                                                <input type="hidden" name="id" value="@escuela.Id" />
+                                                <input type="hidden" name="busqueda" value="@Model.Busqueda" />
+                                                <input type="hidden" name="filtroEstado" value="@Model.FiltroEstado" />
+                                                <input type="hidden" name="paginaActual" value="@Model.PaginaActual" />
+
+                                                <button type="submit"
+                                                        title="Inactivar escuela"
+                                                        class="relative inline-flex h-7 w-12 items-center rounded-full bg-emerald-500 transition-colors hover:opacity-90">
+                                                    <span class="inline-block h-5 w-5 transform rounded-full bg-white translate-x-6 transition-transform"></span>
+                                                </button>
+                                            </form>
+                                        }
+                                        else
+                                        {
+                                            <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400">
+                                                <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
+                                                <span class="text-[11px] font-bold uppercase tracking-wider">Inactivo</span>
+                                            </div>
+
+                                            <form method="post" asp-page-handler="Activar" class="inline">
+                                                <input type="hidden" name="id" value="@escuela.Id" />
+                                                <input type="hidden" name="busqueda" value="@Model.Busqueda" />
+                                                <input type="hidden" name="filtroEstado" value="@Model.FiltroEstado" />
+                                                <input type="hidden" name="paginaActual" value="@Model.PaginaActual" />
+
+                                                <button type="submit"
+                                                        title="Activar escuela"
+                                                        class="relative inline-flex h-7 w-12 items-center rounded-full bg-slate-300 dark:bg-slate-600 transition-colors hover:opacity-90">
+                                                    <span class="inline-block h-5 w-5 transform rounded-full bg-white translate-x-1 transition-transform"></span>
+                                                </button>
+                                            </form>
+                                        }
+                                    </div>
                                 </td>
 
                                 <td class="px-6 py-5 text-right">

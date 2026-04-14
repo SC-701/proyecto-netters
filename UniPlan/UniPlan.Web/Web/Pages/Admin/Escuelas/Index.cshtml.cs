@@ -37,6 +37,57 @@ public class IndexModel : PageModel
 
     public async Task OnGet()
     {
+        await CargarEscuelas();
+    }
+
+    public async Task<IActionResult> OnPostActivarAsync(Guid id, string? busqueda, string? filtroEstado, int paginaActual = 1)
+    {
+        if (id == Guid.Empty)
+            return NotFound();
+
+        string endpoint = _configuracion.ObtenerMetodo("ApiEndpoints", "ActivarEscuela");
+
+        using var cliente = ObtenerClienteConToken();
+        var respuesta = await cliente.PutAsync(string.Format(endpoint, id), null);
+
+        respuesta.EnsureSuccessStatusCode();
+
+        TempData["Exito"] = "Escuela activada correctamente.";
+
+        return RedirectToPage("./Index", new
+        {
+            Busqueda = busqueda,
+            FiltroEstado = filtroEstado,
+            PaginaActual = paginaActual
+        });
+    }
+
+    public async Task<IActionResult> OnPostInactivarAsync(Guid id, string? busqueda, string? filtroEstado, int paginaActual = 1)
+    {
+        if (id == Guid.Empty)
+            return NotFound();
+
+        string endpoint = _configuracion.ObtenerMetodo("ApiEndpoints", "EliminarEscuela");
+
+        using var cliente = ObtenerClienteConToken();
+        var respuesta = await cliente.SendAsync(
+            new HttpRequestMessage(HttpMethod.Delete, string.Format(endpoint, id))
+        );
+
+        respuesta.EnsureSuccessStatusCode();
+
+        TempData["Exito"] = "Escuela inactivada correctamente.";
+
+        return RedirectToPage("./Index", new
+        {
+            Busqueda = busqueda,
+            FiltroEstado = filtroEstado,
+            PaginaActual = paginaActual
+        });
+    }
+
+    private async Task CargarEscuelas()
+    {
         PaginaActual = Math.Max(1, PaginaActual);
 
         string endpoint = _configuracion.ObtenerMetodo("ApiEndpoints", "ObtenerEscuelas");
@@ -65,7 +116,6 @@ public class IndexModel : PageModel
             ? JsonSerializer.Deserialize<List<EscuelaResponse>>(resultado, opciones) ?? new List<EscuelaResponse>()
             : new List<EscuelaResponse>();
 
-        // Filtro por búsqueda
         if (!string.IsNullOrWhiteSpace(Busqueda))
         {
             todasLasEscuelas = todasLasEscuelas
@@ -75,7 +125,6 @@ public class IndexModel : PageModel
                 .ToList();
         }
 
-        // Filtro por estado
         if (!string.IsNullOrWhiteSpace(FiltroEstado))
         {
             bool? activo = FiltroEstado.ToLower() switch
