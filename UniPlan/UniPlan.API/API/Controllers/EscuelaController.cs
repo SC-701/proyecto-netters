@@ -4,15 +4,18 @@ using Abstracciones.Modelos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace API.Controllers {
+namespace API.Controllers
+{
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class EscuelaController : Controller, IEscuelaController {
+    public class EscuelaController : Controller, IEscuelaController
+    {
         private IEscuelaFlujo _escuelaFlujo;
         private ILogger<EscuelaController> _logger;
 
-        public EscuelaController (IEscuelaFlujo escuelaFlujo, ILogger<EscuelaController> logger) {
+        public EscuelaController(IEscuelaFlujo escuelaFlujo, ILogger<EscuelaController> logger)
+        {
             _escuelaFlujo = escuelaFlujo;
             _logger = logger;
         }
@@ -23,23 +26,36 @@ namespace API.Controllers {
 
         [HttpPost]
         [Authorize(Roles = "2")]
-        public async Task<IActionResult> Agregar ([FromBody] EscuelaRequest escuela) {
+        public async Task<IActionResult> Agregar([FromBody] EscuelaRequest escuela)
+        {
             var resultado = await _escuelaFlujo.Agregar(escuela);
             return CreatedAtAction(nameof(Obtener), new { Id = resultado }, null);
         }
 
         [HttpPut("{Id}")]
         [Authorize(Roles = "2")]
-        public async Task<IActionResult> Editar ([FromRoute] Guid Id, [FromBody] EscuelaRequest escuela) {
+        public async Task<IActionResult> Editar([FromRoute] Guid Id, [FromBody] EscuelaRequest escuela)
+        {
             if (!await VerificarEscuelaExiste(Id))
                 return NotFound("La escuela no existe.");
             var resultado = await _escuelaFlujo.Editar(Id, escuela);
             return Ok(resultado);
         }
 
+        [HttpPut("Activar/{Id}")]
+        [Authorize(Roles = "2")]
+        public async Task<IActionResult> Activar([FromRoute] Guid Id)
+        {
+            if (!await VerificarEscuelaExiste(Id))
+                return NotFound("La escuela no existe.");
+            var resultado = await _escuelaFlujo.Activar(Id);
+            return Ok(resultado);
+        }
+
         [HttpDelete("{Id}")]
         [Authorize(Roles = "2")]
-        public async Task<IActionResult> Eliminar ([FromRoute] Guid Id) {
+        public async Task<IActionResult> Eliminar([FromRoute] Guid Id)
+        {
             if (!await VerificarEscuelaExiste(Id))
                 return NotFound("La escuela no existe.");
             var resultado = await _escuelaFlujo.Eliminar(Id);
@@ -48,7 +64,8 @@ namespace API.Controllers {
 
         [HttpGet]
         [Authorize(Roles = "2")]
-        public async Task<IActionResult> Obtener () {
+        public async Task<IActionResult> Obtener()
+        {
             var resultado = await _escuelaFlujo.Obtener();
             if (!resultado.Any())
                 return NoContent();
@@ -66,7 +83,8 @@ namespace API.Controllers {
         #endregion
 
         #region Helpers
-        private async Task<bool> VerificarEscuelaExiste (Guid Id) {
+        private async Task<bool> VerificarEscuelaExiste(Guid Id)
+        {
             var resultadoValidacion = false;
             var resultadoEscuelaExiste = await _escuelaFlujo.Obtener(Id);
             if (resultadoEscuelaExiste != null)
