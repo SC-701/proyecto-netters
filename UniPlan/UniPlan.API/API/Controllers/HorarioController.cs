@@ -22,7 +22,7 @@ namespace API.Controllers
 
         #region CRUD
         [HttpPost]
-        [Authorize(Roles = "2")]
+        [Authorize(Roles = "1")]
         public async Task<IActionResult> Agregar([FromBody] HorarioRequest horario)
         {
             var resultado = await _horarioFlujo.Agregar(horario);
@@ -30,7 +30,7 @@ namespace API.Controllers
         }
 
         [HttpPut("{Id}")]
-        [Authorize(Roles = "2")]
+        [Authorize(Roles = "1")]
         public async Task<IActionResult> Editar([FromRoute] Guid Id, [FromBody] HorarioRequest horario)
         {
             if (!await VerificarHorarioExiste(Id))
@@ -40,7 +40,7 @@ namespace API.Controllers
         }
 
         [HttpDelete("{Id}")]
-        [Authorize(Roles = "2")]
+        [Authorize(Roles = "1")]
         public async Task<IActionResult> Eliminar([FromRoute] Guid Id)
         {
             if (!await VerificarHorarioExiste(Id))
@@ -50,7 +50,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "2")]
+        [Authorize(Roles = "1")]
         public async Task<IActionResult> Obtener()
         {
             var resultado = await _horarioFlujo.Obtener();
@@ -60,7 +60,7 @@ namespace API.Controllers
         }
 
         [HttpGet("{Id}")]
-        [Authorize(Roles = "2")]
+        [Authorize(Roles = "1")]
         public async Task<IActionResult> Obtener([FromRoute] Guid Id)
         {
             var resultado = await _horarioFlujo.Obtener(Id);
@@ -68,7 +68,7 @@ namespace API.Controllers
         }
 
         [HttpPut("{Id}/activar")]
-        [Authorize(Roles = "2")]
+        [Authorize(Roles = "1")]
         public async Task<IActionResult> Activar([FromRoute] Guid Id)
         {
             if (!await VerificarHorarioExiste(Id))

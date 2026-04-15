@@ -30,6 +30,6 @@ public class RegisterModel : PageModel
         var cliente = new HttpClient();
         var respuesta = await cliente.PostAsJsonAsync<UsuarioBase>(endpoint, usuario);
         respuesta.EnsureSuccessStatusCode();
-        return RedirectToPage("/App/Dashboard");
+        return RedirectToPage("./Login");
     }
 }

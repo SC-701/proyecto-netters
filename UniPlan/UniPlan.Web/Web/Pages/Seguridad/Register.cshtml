@@ -25,7 +25,7 @@
         <!-- Mensajes de validación generales -->
         <div asp-validation-summary="ModelOnly" class="mb-4 text-sm text-red-600 dark:text-red-400"></div>
 
-        <form method="post" class="space-y-5">
+        <form method="post" class="space-y-5" onsubmit="return validarPasswords()">
             @Html.AntiForgeryToken()
 
             <!-- Nombre completo -->
@@ -65,8 +65,13 @@
                     <div class="relative">
                         <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-[20px]">lock</span>
                         <input asp-for="usuario.Password"
+                               type="password"
+                               id="passwordInput"
                                class="w-full pl-10 pr-4 py-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all placeholder:text-slate-400"
                                placeholder="••••••••" />
+                        <button type="button" onclick="togglePassword('passwordInput','toggleIconPassword')" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+                            <span id="toggleIconPassword" class="material-symbols-outlined text-[20px]">visibility</span>
+                        </button>
                     </div>
                     <span asp-validation-for="usuario.Password" class="text-xs text-red-500 mt-1 block"></span>
                 </div>
@@ -77,12 +82,19 @@
                     <div class="relative">
                         <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-[20px]">lock_clock</span>
                         <input asp-for="usuario.ConfirmarPassword"
+                               type="password"
+                               id="confirmPasswordInput"
                                class="w-full pl-10 pr-4 py-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all placeholder:text-slate-400"
                                placeholder="••••••••" />
+                        <button type="button" onclick="togglePassword('confirmPasswordInput','toggleIconConfirm')" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+                            <span id="toggleIconConfirm" class="material-symbols-outlined text-[20px]">visibility</span>
+                        </button>
                     </div>
                     <span asp-validation-for="usuario.ConfirmarPassword" class="text-xs text-red-500 mt-1 block"></span>
+                    <span id="errorPassword" class="text-xs text-red-500 mt-1 block"></span>
                 </div>
             </div>
+
 
             <!-- Botón submit -->
             <div class="pt-4">
@@ -107,9 +119,10 @@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <script>
-        function togglePassword() {
-            var passwordInput = document.getElementById("passwordInput");
-            var toggleIcon = document.getElementById("toggleIcon");
+        // Para ver contraseña (el ojito)
+        function togglePassword(inputId, iconId) {
+            var passwordInput = document.getElementById(inputId);
+            var toggleIcon = document.getElementById(iconId);
 
             if (passwordInput.type === "password") {
                 passwordInput.type = "text";
@@ -119,5 +132,31 @@
                 toggleIcon.textContent = "visibility";
             }
         }
+
+        // Para ver que sean iguales
+        function validarPasswords() {
+            var pass = document.getElementById("passwordInput").value;
+            var confirm = document.getElementById("confirmPasswordInput").value;
+            var error = document.getElementById("errorPassword");
+
+            if (pass !== confirm) {
+                error.textContent = "Las contraseñas no coinciden";
+                return false;
+            }
+
+            error.textContent = "";
+            return true;
+        }
+        document.addEventListener("DOMContentLoaded", function () {
+            document.getElementById("confirmPasswordInput").addEventListener("input", function () {
+                var pass = document.getElementById("passwordInput").value;
+                var confirm = this.value;
+                var error = document.getElementById("errorPassword");
+
+                if (pass === confirm) {
+                    error.textContent = "";
+                }
+            });
+        });
     </script>
 }
