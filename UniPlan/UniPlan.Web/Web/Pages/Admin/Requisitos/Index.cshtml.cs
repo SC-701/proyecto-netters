@@ -55,11 +55,7 @@ public class IndexModel : PageModel
         var respuesta = await cliente.PutAsJsonAsync(endpoint, request);
         respuesta.EnsureSuccessStatusCode();
 
-        return RedirectToPage("./Index", new
-        {
-            IdCarrera = IdCarrera,
-            IdCurso = IdCurso
-        });
+        return RedirectToPage("./Index");
     }
 
     private async Task CargarRequisitos()

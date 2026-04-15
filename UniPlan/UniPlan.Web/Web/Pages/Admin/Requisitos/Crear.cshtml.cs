@@ -48,7 +48,7 @@ public class CrearModel : PageModel
         var respuesta = await cliente.PostAsJsonAsync(endpoint, requisito);
         respuesta.EnsureSuccessStatusCode();
 
-        return RedirectToPage("./Index", new { idCarrera = requisito.IdCarrera, idCurso = requisito.IdCurso });
+        return RedirectToPage("./Index");
     }
 
     private async Task CargarCombos()
