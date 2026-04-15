@@ -27,7 +27,8 @@ namespace DA {
             string query = @"SP_Carrera_Actualizar";
             var resultadoConsulta = await _sqlConnection.ExecuteScalarAsync<Guid>(query, new {
                 Id = Id,
-                Nombre = carrera.Nombre
+                Nombre = carrera.Nombre,
+                Activo = carrera.Activo
             });
             return resultadoConsulta;
         }
