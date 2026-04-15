@@ -108,10 +108,22 @@
                                    class="hover:text-slate-600 dark:hover:text-slate-200 transition-colors">
                                     <span class="material-symbols-outlined text-[20px]">edit</span>
                                 </a>
-                                <a asp-page="/Admin/Horarios/Eliminar" asp-route-id="@horario.Id"
-                                   class="hover:text-red-500 transition-colors">
-                                    <span class="material-symbols-outlined text-[20px]">delete</span>
-                                </a>
+
+                                @if (horario.Activo)
+                                {
+                                    <a asp-page="/Admin/Horarios/Eliminar" asp-route-id="@horario.Id"
+                                       class="hover:text-red-500 transition-colors">
+                                        <span class="material-symbols-outlined text-[20px]">delete</span>
+                                    </a>
+                                }
+                                else
+                                {
+
+                                    <a asp-page="/Admin/Horarios/Activar" asp-route-id="@horario.Id" 
+                                        class="hover:text-emerald-600 transition-colors">
+                                        <span class="material-symbols-outlined text-[20px]">check_circle</span>
+                                    </a>
+                                }
                             </div>
                         </td>
                     </tr>
