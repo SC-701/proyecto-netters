@@ -11,6 +11,7 @@ namespace Abstracciones.Interfaces.DA
     {
         Task<IEnumerable<RequisitosResponse>> ObtenerPorCurso(Guid IdCarrera, Guid IdCurso);
         Task<IEnumerable<RequisitosResponse>> ObtenerCursosQueLoRequieren(Guid IdCursoRequisito);
+        Task<IEnumerable<RequisitosResponse>> Obtener();
         Task<RequisitosKeyResponse> Agregar(RequisitosRequest requisito);
         Task<RequisitosKeyResponse> Editar(RequisitosRequest requisito);
         Task<RequisitosKeyResponse> Eliminar(RequisitosEliminarRequest requisito);

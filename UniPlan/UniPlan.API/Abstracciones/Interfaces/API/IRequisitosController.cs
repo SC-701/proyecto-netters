@@ -15,7 +15,7 @@ namespace Abstracciones.Interfaces.API
         Task<IActionResult> Eliminar(RequisitosEliminarRequest requisito);
         Task<IActionResult> ObtenerPorCurso(Guid IdCarrera, Guid IdCurso);
         Task<IActionResult> ObtenerCursosQueLoRequieren(Guid IdCursoRequisito);
-
+        Task<IActionResult> Obtener();
         Task<IActionResult> CambiarEstado(RequisitosEstadoRequest requisito);
     }
 }

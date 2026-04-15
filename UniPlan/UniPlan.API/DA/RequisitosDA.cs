@@ -129,6 +129,18 @@ namespace DA
             return resultadoConsulta.FirstOrDefault();
         }
 
+        public async Task<IEnumerable<RequisitosResponse>> Obtener()
+        {
+            string query = @"SP_Requisitos_ObtenerTodos";
+
+            var resultadoConsulta = await _sqlConnection.QueryAsync<RequisitosResponse>(
+                query,
+                commandType: System.Data.CommandType.StoredProcedure
+            );
+
+            return resultadoConsulta;
+        }
+
         #endregion
     }
 }

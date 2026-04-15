@@ -17,6 +17,10 @@ namespace Flujo
         {
             _requisitosDA = requisitosDA;
         }
+        public async Task<IEnumerable<RequisitosResponse>> Obtener()
+        {
+            return await _requisitosDA.Obtener();
+        }
 
         public async Task<RequisitosKeyResponse> Agregar(RequisitosRequest requisito)
         {
