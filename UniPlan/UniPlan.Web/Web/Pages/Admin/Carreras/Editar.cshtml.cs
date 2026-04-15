@@ -24,7 +24,7 @@ public class EditarModel : PageModel
             _configuracion = configuracion;
         }
         [BindProperty]
-        public CarreraResponse carreraResponse { get; set; }
+        public CarreraRequest carreraRequest { get; set; }
 
 
         public async Task<ActionResult> OnGet(Guid? id)
@@ -42,7 +42,7 @@ public class EditarModel : PageModel
 
                 var resultado = await respuesta.Content.ReadAsStringAsync();
                 var opciones = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-                carreraResponse = JsonSerializer.Deserialize<CarreraResponse>(resultado, opciones);
+                carreraRequest = JsonSerializer.Deserialize<CarreraRequest>(resultado, opciones);
 
             }
             
@@ -55,11 +55,10 @@ public class EditarModel : PageModel
                 return Page();
             string endpoint = _configuracion.ObtenerMetodo("ApiEndPoints", "EditarCarrera");
             var cliente = ObtenerClienteConToken();
-            var respuesta = await cliente.PutAsJsonAsync<CarreraRequest>(string.Format(endpoint, carreraResponse.Id), new CarreraRequest
+            var respuesta = await cliente.PutAsJsonAsync<CarreraRequest>(string.Format(endpoint, carreraRequest.Id), new CarreraRequest
             { 
-                Nombre = carreraResponse.Nombre,
-                Activo = carreraResponse.Activo
-
+                Nombre = carreraRequest.Nombre,
+                Activo = carreraRequest.Activo
             });
             respuesta.EnsureSuccessStatusCode();
             return RedirectToPage("./Index");
