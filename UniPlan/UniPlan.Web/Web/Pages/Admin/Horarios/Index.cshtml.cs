@@ -1,11 +1,13 @@
 using Abstracciones.Interfaces.Reglas;
 using Abstracciones.Modelos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Text.Json;
 
 namespace Web.Pages.Admin.Horarios;
 
+[Authorize]
 public class IndexModel : PageModel
 {
     // Datos del admin — TODO: cargar desde sesión / claims
