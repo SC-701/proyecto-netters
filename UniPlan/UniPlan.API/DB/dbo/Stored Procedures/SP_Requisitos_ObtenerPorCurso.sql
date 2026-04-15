@@ -1,9 +1,4 @@
-﻿
--- -----------------------------------------------------------
--- SP1: Requisitos de un curso dentro de una carrera específica
--- -----------------------------------------------------------
-
-CREATE   PROCEDURE SP_Requisitos_ObtenerPorCurso
+﻿CREATE   PROCEDURE [dbo].[SP_Requisitos_ObtenerPorCurso]
     @IdCarrera UNIQUEIDENTIFIER,
     @IdCurso   UNIQUEIDENTIFIER
 AS
@@ -26,6 +21,5 @@ BEGIN
     JOIN  Curso      cr ON cr.Id = r.IdCursoRequisito
     WHERE r.IdCarrera = @IdCarrera
       AND r.IdCurso   = @IdCurso
-      AND r.Activo    = 1
     ORDER BY cr.Sigla;
 END;

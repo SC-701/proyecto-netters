@@ -1,20 +1,16 @@
 ﻿
 -- -----------------------------------------------------------
 
-CREATE PROCEDURE [dbo].[SP_Carrera_Actualizar]
-    @Id UNIQUEIDENTIFIER,
-    @Nombre NVARCHAR(150),
-    @Activo BIT
+CREATE   PROCEDURE SP_Carrera_Actualizar
+    @Id     UNIQUEIDENTIFIER,
+    @Nombre NVARCHAR(150)
 AS
 BEGIN
     SET NOCOUNT ON;
 
     UPDATE Carrera
-    SET Nombre = @Nombre,
-        Activo = @Activo
+    SET Nombre = @Nombre
     WHERE Id = @Id;
 
-    SELECT Id
-    FROM Carrera
-    WHERE Id = @Id;
+    SELECT Id FROM Carrera WHERE Id = @Id;
 END;

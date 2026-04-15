@@ -56,7 +56,7 @@
                 <tr class="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800">
                     <th class="px-6 py-4 text-[11px] uppercase tracking-widest font-bold text-slate-400">Carrera</th>
                     <th class="px-6 py-4 text-[11px] uppercase tracking-widest font-bold text-slate-400">Curso</th>
-                    <th class="px-6 py-4 text-[11px] uppercase tracking-widest font-bold text-slate-400">Requisito</th>
+                    <th class="px-6 py-4 text-[11px] uppercase tracking-widest font-bold text-slate-400">Curso Requisito</th>
                     <th class="px-6 py-4 text-[11px] uppercase tracking-widest font-bold text-slate-400 text-center">Tipo</th>
                     <th class="px-6 py-4 text-[11px] uppercase tracking-widest font-bold text-slate-400 text-center">Estado</th>
                     <th class="px-6 py-4 text-[11px] uppercase tracking-widest font-bold text-slate-400 text-right">Acciones</th>
@@ -68,31 +68,86 @@
                     @foreach (var requisito in Model.requisitos)
                     {
                         <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
-                            <td class="px-6 py-5">@requisito.Carrera</td>
-                            <td class="px-6 py-5">@requisito.SiglaCurso - @requisito.Curso</td>
-                            <td class="px-6 py-5">@requisito.SiglaRequisito - @requisito.CursoRequisito</td>
-                            <td class="px-6 py-5 text-center">
-                                @(requisito.EsCorequisito ? "Corequisito" : "Requisito")
+                            <td class="px-6 py-5">
+                                <span class="font-semibold text-slate-900 dark:text-white">@requisito.Carrera</span>
                             </td>
-                            <td class="px-6 py-5 text-center">
-                                @(requisito.Activo ? "Activo" : "Inactivo")
+
+                            <td class="px-6 py-5">
+                                <span class="font-semibold text-slate-900 dark:text-white">@requisito.SiglaCurso - @requisito.Curso</span>
                             </td>
+
+                            <td class="px-6 py-5">
+                                <span class="font-semibold text-slate-900 dark:text-white">@requisito.SiglaRequisito - @requisito.CursoRequisito</span>
+                            </td>
+
+                            <td class="px-6 py-5 text-center">
+                                @if (requisito.EsCorequisito)
+                                {
+                                    <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                                        <span class="text-[11px] font-bold uppercase tracking-wider">Corequisito</span>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+                                        <span class="text-[11px] font-bold uppercase tracking-wider">Requisito</span>
+                                    </div>
+                                }
+                            </td>
+
+                            <td class="px-6 py-5 text-center">
+                                @if (requisito.Activo)
+                                {
+                                    <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                        <span class="text-[11px] font-bold uppercase tracking-wider">Activo</span>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
+                                        <span class="text-[11px] font-bold uppercase tracking-wider">Inactivo</span>
+                                    </div>
+                                }
+                            </td>
+
                             <td class="px-6 py-5 text-right">
-                                <div class="flex justify-end gap-3 text-slate-400">
+                                <div class="flex justify-end items-center gap-3 text-slate-400">
                                     <a asp-page="/Admin/Requisitos/Editar"
                                            asp-route-idCarrera="@requisito.IdCarrera"
                                            asp-route-idCurso="@requisito.IdCurso"
                                            asp-route-idCursoRequisito="@requisito.IdCursoRequisito"
-                                           class="hover:text-slate-600 dark:hover:text-slate-200 transition-colors">
+                                           class="hover:text-slate-600 dark:hover:text-slate-200 transition-colors"
+                                           title="Editar">
                                         <span class="material-symbols-outlined text-[20px]">edit</span>
                                     </a>
+
                                     <a asp-page="/Admin/Requisitos/Eliminar"
                                            asp-route-idCarrera="@requisito.IdCarrera"
                                            asp-route-idCurso="@requisito.IdCurso"
                                            asp-route-idCursoRequisito="@requisito.IdCursoRequisito"
-                                           class="hover:text-red-500 transition-colors">
+                                           class="hover:text-red-500 transition-colors"
+                                           title="Eliminar">
                                         <span class="material-symbols-outlined text-[20px]">delete</span>
                                     </a>
+
+                                    <form method="post" asp-page-handler="CambiarEstado" class="inline">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="idCarrera" value="@requisito.IdCarrera" />
+                                        <input type="hidden" name="idCurso" value="@requisito.IdCurso" />
+                                        <input type="hidden" name="idCursoRequisito" value="@requisito.IdCursoRequisito" />
+                                        <input type="hidden" name="activo" value="@( !requisito.Activo ? "true" : "false" )" />
+                                        <button type="submit"
+                                                class="hover:text-emerald-500 transition-colors"
+                                                title="@(requisito.Activo ? "Inactivar" : "Activar")">
+                                            <span class="material-symbols-outlined text-[20px]">
+                                                @(requisito.Activo ? "toggle_off" : "toggle_on")
+                                            </span>
+                                        </button>
+                                    </form>
                                 </div>
                             </td>
                         </tr>

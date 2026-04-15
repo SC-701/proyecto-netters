@@ -7,5 +7,7 @@ namespace Abstracciones.Interfaces.Flujo {
         Task<Guid> Agregar (EscuelaRequest escuela);
         Task<Guid> Editar (Guid Id, EscuelaRequest escuela);
         Task<Guid> Eliminar (Guid Id);
+
+        Task<Guid> Activar(Guid Id);
     }
 }

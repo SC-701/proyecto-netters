@@ -42,5 +42,10 @@ namespace Flujo
         {
             return await _requisitosDA.ObtenerCursosQueLoRequieren(IdCursoRequisito);
         }
+
+        public async Task<RequisitosKeyResponse> CambiarEstado(RequisitosEstadoRequest requisito)
+        {
+            return await _requisitosDA.CambiarEstado(requisito);
+        }
     }
 }
