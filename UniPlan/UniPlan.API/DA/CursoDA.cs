@@ -47,6 +47,15 @@ namespace DA {
             return resultadoConsulta;
         }
 
+        public async Task<Guid> Activar (Guid Id) {
+            await verificarCursoExiste(Id);
+            string query = @"SP_Curso_Activar";
+            var resultadoConsulta = await _sqlConnection.ExecuteScalarAsync<Guid>(query, new {
+                Id = Id
+            });
+            return resultadoConsulta;
+        }
+
         public async Task<IEnumerable<CursoResponse>> Obtener () {
             string query = @"SP_Curso_ObtenerTodos";
             var resultadoConsulta = await _sqlConnection.QueryAsync<CursoResponse>(query);
