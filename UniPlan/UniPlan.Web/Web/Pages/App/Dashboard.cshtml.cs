@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Security.Claims;
 
 namespace Web.Pages.App;
 
@@ -25,7 +26,7 @@ public class SubjectItem
     public string Initials { get; set; } = "";
     public string Schedule { get; set; } = "";
     public int Credits { get; set; }
-    public string BgColor { get; set; } = "#EFF6FF";   // Tailwind blue-50
+    public string BgColor { get; set; } = "#EFF6FF";
     public string TextColor { get; set; } = "#2463eb";
 }
 
@@ -33,7 +34,7 @@ public class UpcomingSubject
 {
     public string Name { get; set; } = "";
     public string Prerequisite { get; set; } = "";
-    public bool IsAvailable { get; set; }             // true = punto azul, false = gris
+    public bool IsAvailable { get; set; }
 }
 
 // ---------------------------------------------------------------------------
@@ -42,14 +43,12 @@ public class UpcomingSubject
 [Authorize]
 public class DashboardModel : PageModel
 {
-    // Datos del usuario — TODO: cargar desde sesión / API
-    public string UserName { get; set; } = "Alex Thompson";
-    public string FirstName { get; set; } = "Alex";
-    public string UserCareer { get; set; } = "Ingeniería de Software";
+    public string UserName { get; set; } = "";
+    public string FirstName { get; set; } = "";
+    public string UserCareer { get; set; } = "Estudiante";
     public string UserAvatarUrl { get; set; } =
         "https://lh3.googleusercontent.com/aida-public/AB6AXuBbdaSxX2F1IzAxP7xWO_9TF9pCPclgikgt5h-J7wpb7Kn455-qSfSl3xXOE7tLYrPBcDBclZR42VZCGEstwVO3uqyGbKFZ8oDv2XLaFIJIzhlJrYeyHikW_hfa6xSESIAypSuyFTGt2qY1yvcWC1hz0QqNcDQfqv5pqzvSTLfmjhIKvGpkADchcUSfXzOxgqtRkS4xJTuArzQOlQJ0iTli2skUvl5Np9YRhAmqbLnZvaTLvzqcKOalZnLjF9RAFAudANHDCHMtSQw";
 
-    // Estadísticas — TODO: cargar desde API
     public AcademicStats Stats { get; set; } = new()
     {
         ApprovedSubjects = 15,
@@ -61,7 +60,6 @@ public class DashboardModel : PageModel
         LastTermAverage = "9.1",
     };
 
-    // Materias del cuatrimestre actual — TODO: cargar desde API
     public List<SubjectItem> CurrentTermSubjects { get; set; } = new()
     {
         new() { Name = "Estructuras de Datos",  Initials = "ED", Schedule = "Lunes y Miércoles 18:00 - 20:00", Credits = 4, BgColor = "#DBEAFE", TextColor = "#1D4ED8" },
@@ -69,7 +67,6 @@ public class DashboardModel : PageModel
         new() { Name = "Bases de Datos I",      Initials = "BD", Schedule = "Viernes 14:00 - 18:00",           Credits = 5, BgColor = "#FFEDD5", TextColor = "#C2410C" },
     };
 
-    // Próximas materias — TODO: cargar desde API
     public List<UpcomingSubject> UpcomingSubjects { get; set; } = new()
     {
         new() { Name = "Diseño de Algoritmos",     Prerequisite = "Estructuras de Datos", IsAvailable = true  },
@@ -78,16 +75,17 @@ public class DashboardModel : PageModel
         new() { Name = "Arquitectura de Software", Prerequisite = "",                     IsAvailable = false },
     };
 
-    // Mensaje del tip — TODO: generar dinámicamente desde API
     public string TipMessage { get; set; } =
         "Has completado el 75% de las materias de nivel inicial. ¡Estás muy cerca de comenzar las especializaciones!";
 
     public void OnGet()
     {
-        // TODO: reemplazar datos estáticos con llamadas a tu API
-        // var student = await _studentService.GetCurrentStudentAsync(User);
-        // Stats = await _academicService.GetStatsAsync(student.Id);
-        // CurrentTermSubjects = await _academicService.GetCurrentTermAsync(student.Id);
-        // UpcomingSubjects = await _academicService.GetUpcomingSubjectsAsync(student.Id);
+        UserName = User.FindFirst("NombreUsuario")?.Value
+                   ?? User.FindFirst(ClaimTypes.Name)?.Value
+                   ?? "Usuario";
+
+        FirstName = UserName.Split(' ', StringSplitOptions.RemoveEmptyEntries).FirstOrDefault() ?? "Usuario";
+
+        UserCareer = User.FindFirst("Carrera")?.Value ?? "Estudiante";
     }
 }

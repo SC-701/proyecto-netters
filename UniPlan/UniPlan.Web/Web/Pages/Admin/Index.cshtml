@@ -1,5 +1,135 @@
-﻿@page
+﻿@page "/Admin"
 @model Web.Pages.Admin.IndexModel
 @{
+    ViewData["Title"] = "Panel Administrativo";
+    ViewData["ActivePage"] = "Admin";
+    ViewData["AdminName"] = Model.AdminName;
+    ViewData["AdminEmail"] = Model.AdminEmail;
     Layout = "_AdminLayout";
 }
+
+<header class="mb-8 flex flex-wrap justify-between items-end gap-4">
+    <div>
+        <h2 class="text-3xl font-black tracking-tight text-slate-900 dark:text-white">¡Hola, @Model.FirstName!</h2>
+        <p class="text-slate-500 mt-1">Aquí tienes el resumen general del panel administrativo.</p>
+    </div>
+    <div class="flex gap-3">
+        <a asp-page="/Admin/Requisitos/Index"
+               class="px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-700 flex items-center gap-2">
+            <span class="material-symbols-outlined text-[20px]">rule</span>
+            Ver requisitos
+        </a>
+        <a asp-page="/Admin/Carreras/Crear"
+               class="px-4 py-2 text-sm font-medium text-white bg-primary rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2 shadow-sm">
+            <span class="material-symbols-outlined text-[20px]">add</span>
+            Nueva carrera
+        </a>
+    </div>
+</header>
+
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+    <div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+        <div class="flex items-center justify-between mb-2">
+            <span class="text-slate-500 text-sm font-medium">Carreras</span>
+            <span class="material-symbols-outlined text-primary">school</span>
+        </div>
+        <div class="text-3xl font-bold text-slate-900 dark:text-white">@Model.TotalCarreras</div>
+        <div class="mt-2 text-xs text-slate-400">Registros activos en el sistema</div>
+    </div>
+
+    <div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+        <div class="flex items-center justify-between mb-2">
+            <span class="text-slate-500 text-sm font-medium">Cursos</span>
+            <span class="material-symbols-outlined text-violet-500">menu_book</span>
+        </div>
+        <div class="text-3xl font-bold text-slate-900 dark:text-white">@Model.TotalCursos</div>
+        <div class="mt-2 text-xs text-slate-400">Cursos configurados actualmente</div>
+    </div>
+
+    <div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+        <div class="flex items-center justify-between mb-2">
+            <span class="text-slate-500 text-sm font-medium">Escuelas</span>
+            <span class="material-symbols-outlined text-emerald-500">domain</span>
+        </div>
+        <div class="text-3xl font-bold text-slate-900 dark:text-white">@Model.TotalEscuelas</div>
+        <div class="mt-2 text-xs text-slate-400">Unidades académicas registradas</div>
+    </div>
+
+    <div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+        <div class="flex items-center justify-between mb-2">
+            <span class="text-slate-500 text-sm font-medium">Requisitos</span>
+            <span class="material-symbols-outlined text-pink-500">rule</span>
+        </div>
+        <div class="text-3xl font-bold text-slate-900 dark:text-white">@Model.TotalRequisitos</div>
+        <div class="mt-2 text-xs text-slate-400">Relaciones académicas configuradas</div>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+    <div class="lg:col-span-2 space-y-8">
+        <section class="bg-white dark:bg-slate-900 p-8 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-6">Accesos rápidos</h3>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                @foreach (var item in Model.QuickAccess)
+                {
+                    <a asp-page="@item.PageUrl"
+                           class="group block p-5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/40 hover:bg-white dark:hover:bg-slate-800 transition-all">
+                        <div class="flex items-start gap-4">
+                            <div class="size-12 rounded-xl flex items-center justify-center"
+                                 style="background-color:@item.BgColor; color:@item.TextColor;">
+                                <span class="material-symbols-outlined">@item.Icon</span>
+                            </div>
+                            <div class="flex-1">
+                                <h4 class="text-base font-bold text-slate-900 dark:text-white group-hover:text-primary transition-colors">
+                                    @item.Title
+                                </h4>
+                                <p class="text-sm text-slate-500 mt-1 leading-relaxed">
+                                    @item.Description
+                                </p>
+                            </div>
+                        </div>
+                    </a>
+                }
+            </div>
+        </section>
+    </div>
+
+    <div class="space-y-6">
+        <section class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+            <h3 class="text-sm font-bold text-slate-500 uppercase tracking-widest mb-4">Administrador actual</h3>
+
+            <div class="space-y-4">
+                <div>
+                    <p class="text-xs text-slate-500 uppercase tracking-wider mb-1">Nombre</p>
+                    <p class="text-sm font-bold text-slate-900 dark:text-white">@Model.AdminName</p>
+                </div>
+
+                <div>
+                    <p class="text-xs text-slate-500 uppercase tracking-wider mb-1">Correo</p>
+                    <p class="text-sm font-medium text-slate-700 dark:text-slate-300">@Model.AdminEmail</p>
+                </div>
+
+                <div>
+                    <p class="text-xs text-slate-500 uppercase tracking-wider mb-1">Rol</p>
+                    <p class="text-sm font-medium text-slate-700 dark:text-slate-300">@Model.AdminRole</p>
+                </div>
+            </div>
+        </section>
+
+        <div class="bg-gradient-to-br from-primary to-blue-700 p-6 rounded-xl text-white shadow-lg">
+            <div class="flex items-center gap-2 mb-3">
+                <span class="material-symbols-outlined text-yellow-300">admin_panel_settings</span>
+                <h4 class="font-bold">Panel UniPlan</h4>
+            </div>
+            <p class="text-sm text-blue-50 leading-relaxed mb-4">
+                Desde aquí puedes gestionar carreras, cursos, escuelas, horarios y requisitos del sistema.
+            </p>
+            <a asp-page="/Admin/Requisitos/Index"
+                   class="block w-full py-2 bg-white/20 hover:bg-white/30 rounded-lg text-sm font-medium transition-colors text-center">
+                Ir a administración
+            </a>
+        </div>
+    </div>
+</div>
