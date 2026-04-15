@@ -77,6 +77,14 @@ namespace API.Controllers
 
             return Ok(resultado);
         }
+        [HttpPut("Estado")]
+        [Authorize(Roles = "2")]
+        public async Task<IActionResult> CambiarEstado([FromBody] RequisitosEstadoRequest requisito)
+        {
+            var resultado = await _requisitosFlujo.CambiarEstado(requisito);
+            return Ok(resultado);
+        }
+
 
         #endregion
 

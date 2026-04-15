@@ -1,17 +1,19 @@
-﻿CREATE   PROCEDURE SP_Requisitos_Actualizar
+﻿CREATE   PROCEDURE SP_Requisitos_CambiarEstado
     @IdCarrera         UNIQUEIDENTIFIER,
     @IdCurso           UNIQUEIDENTIFIER,
     @IdCursoRequisito  UNIQUEIDENTIFIER,
-    @EsCorequisito     BIT
+    @Activo            BIT
 AS
 BEGIN
     SET NOCOUNT ON;
-    
+
     UPDATE Requisitos
-    SET EsCorequisito = @EsCorequisito
+    SET Activo = @Activo
     WHERE IdCarrera = @IdCarrera
       AND IdCurso = @IdCurso
       AND IdCursoRequisito = @IdCursoRequisito;
 
-    SELECT @IdCarrera AS IdCarrera, @IdCurso AS IdCurso, @IdCursoRequisito AS IdCursoRequisito;
+    SELECT @IdCarrera AS IdCarrera,
+           @IdCurso AS IdCurso,
+           @IdCursoRequisito AS IdCursoRequisito;
 END;
