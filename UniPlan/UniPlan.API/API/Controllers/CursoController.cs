@@ -56,7 +56,7 @@ namespace API.Controllers {
         }
 
         [HttpGet]
-        [Authorize(Roles = "1")]
+        [Authorize(Roles = "2")]
         public async Task<IActionResult> Obtener () {
             var resultado = await _cursoFlujo.Obtener();
             if (!resultado.Any())
@@ -65,14 +65,14 @@ namespace API.Controllers {
         }
 
         [HttpGet("{Id}")]
-        [Authorize(Roles = "1")]
+        [Authorize(Roles = "2")]
         public async Task<IActionResult> Obtener ([FromRoute] Guid Id) {
             var resultado = await _cursoFlujo.Obtener(Id);
             return Ok(resultado);
         }
 
         [HttpGet("Sigla/{Sigla}")]
-        [Authorize(Roles = "1")]
+        [Authorize(Roles = "2")]
         public async Task<IActionResult> ObtenerSigla ([FromRoute] string Sigla) {
             var resultado = await _cursoFlujo.ObtenerSigla(Sigla);
             return Ok(resultado);

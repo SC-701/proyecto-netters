@@ -50,7 +50,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "1, 2")]
+        [Authorize(Roles = "2")]
         public async Task<IActionResult> Obtener()
         {
             var resultado = await _horarioFlujo.Obtener();
@@ -60,7 +60,7 @@ namespace API.Controllers
         }
 
         [HttpGet("{Id}")]
-        [Authorize(Roles = "1, 2")]
+        [Authorize(Roles = "2")]
         public async Task<IActionResult> Obtener([FromRoute] Guid Id)
         {
             var resultado = await _horarioFlujo.Obtener(Id);
