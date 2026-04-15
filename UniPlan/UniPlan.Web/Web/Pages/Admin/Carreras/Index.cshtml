@@ -95,10 +95,20 @@
                                    class="hover:text-slate-600 dark:hover:text-slate-200 transition-colors">
                                     <span class="material-symbols-outlined text-[20px]">edit</span>
                                 </a>
-                                <a asp-page="/Admin/Carreras/Eliminar" asp-route-id="@carrera.Id"
-                                   class="hover:text-red-500 transition-colors">
-                                    <span class="material-symbols-outlined text-[20px]">delete</span>
-                                </a>
+                                @if (carrera.Activo)
+                                {
+                                    <a asp-page="/Admin/Carreras/Eliminar" asp-route-id="@carrera.Id"
+                                       class="hover:text-red-500 transition-colors">
+                                        <span class="material-symbols-outlined text-[20px]">delete</span>
+                                    </a>
+                                } else
+                                {
+
+                                    <a asp-page="/Admin/Carreras/Activar" asp-route-id="@carrera.Id"
+                                       class="hover:text-emerald-600 transition-colors">
+                                        <span class="material-symbols-outlined text-[20px]">check_circle</span>
+                                    </a>
+                                }
                             </div>
                         </td>
                     </tr>
