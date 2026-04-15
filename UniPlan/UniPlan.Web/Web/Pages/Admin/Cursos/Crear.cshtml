@@ -30,40 +30,40 @@
 
                     <!-- Nombre -->
                     <div>
-                        <label asp-for="Input.Nombre"
+                        <label asp-for="curso.Nombre"
                                class="block text-[11px] font-bold uppercase tracking-widest text-slate-400 mb-2">
                             Nombre del Curso
                         </label>
-                        <input asp-for="Input.Nombre"
+                        <input asp-for="curso.Nombre"
                                class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-2 focus:ring-primary/30 focus:border-primary px-4 py-2.5 transition-all placeholder:text-slate-400 outline-none"
                                placeholder="Introducción a las Ciencias Computacionales" />
-                        <span asp-validation-for="Input.Nombre" class="text-xs text-red-500 mt-1 block"></span>
+                        <span asp-validation-for="curso.Nombre" class="text-xs text-red-500 mt-1 block"></span>
                     </div>
 
                     <!-- Sigla y Créditos -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            <label asp-for="Input.Sigla"
+                            <label asp-for="curso.Sigla"
                                    class="block text-[11px] font-bold uppercase tracking-widest text-slate-400 mb-2">
                                 Sigla
                             </label>
-                            <input asp-for="Input.Sigla"
+                            <input asp-for="curso.Sigla"
                                    class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-2 focus:ring-primary/30 focus:border-primary px-4 py-2.5 transition-all placeholder:text-slate-400 outline-none"
                                    placeholder="CS101" />
-                            <span asp-validation-for="Input.Sigla" class="text-xs text-red-500 mt-1 block"></span>
+                            <span asp-validation-for="curso.Sigla" class="text-xs text-red-500 mt-1 block"></span>
                         </div>
                         <div>
-                            <label asp-for="Input.Creditos"
+                            <label asp-for="curso.Creditos"
                                    class="block text-[11px] font-bold uppercase tracking-widest text-slate-400 mb-2">
                                 Créditos
                             </label>
                             <div class="relative">
-                                <input asp-for="Input.Creditos" type="number" min="1" max="20"
+                                <input asp-for="curso.Creditos" type="number" min="1" max="20"
                                        class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-2 focus:ring-primary/30 focus:border-primary px-4 py-2.5 pr-14 transition-all placeholder:text-slate-400 outline-none"
                                        placeholder="4" />
                                 <span class="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-slate-400 font-medium">UCA</span>
                             </div>
-                            <span asp-validation-for="Input.Creditos" class="text-xs text-red-500 mt-1 block"></span>
+                            <span asp-validation-for="curso.Creditos" class="text-xs text-red-500 mt-1 block"></span>
                         </div>
                     </div>
                 </div>
@@ -79,16 +79,16 @@
 
                     <!-- Escuela -->
                     <div>
-                        <label asp-for="Input.IdEscuela"
+                        <label asp-for="curso.IdEscuela"
                                class="block text-[11px] font-bold uppercase tracking-widest text-slate-400 mb-2">
                             Escuela
                         </label>
-                        <select asp-for="Input.IdEscuela"
-                                asp-items="Model.EscuelaOptions"
+                        <select asp-for="curso.IdEscuela"
+                                asp-items="Model.escuelas"
                                 class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-2 focus:ring-primary/30 focus:border-primary px-4 py-2.5 transition-all outline-none">
                             <option value="">Seleccione una escuela</option>
                         </select>
-                        <span asp-validation-for="Input.IdEscuela" class="text-xs text-red-500 mt-1 block"></span>
+                        <span asp-validation-for="curso.IdEscuela" class="text-xs text-red-500 mt-1 block"></span>
                     </div>
                 </div>
             </div>

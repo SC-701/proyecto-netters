@@ -1,6 +1,9 @@
+using Abstracciones.Interfaces.Reglas;
 using Abstracciones.Modelos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Net;
+using System.Text.Json;
 
 namespace Web.Pages.Admin.Cursos;
 
@@ -23,9 +26,14 @@ public class IndexModel : PageModel
     public int PaginaInicio => (PaginaActual - 1) * TamañoPagina + 1;
     public int PaginaFin => Math.Min(PaginaActual * TamañoPagina, TotalCursos);
 
-    public List<CursoResponse> Cursos { get; set; } = new();
+    private IConfiguracion _configuracion;
+    public IList<CursoResponse> cursos { get; set; } = default!;
 
-    public void OnGet()
+    public IndexModel(IConfiguracion configuracion) {
+        _configuracion = configuracion;
+    }
+
+    public async Task OnGet()
     {
         PaginaActual = Math.Max(1, PaginaActual);
 
@@ -33,14 +41,32 @@ public class IndexModel : PageModel
         // TODO: Cursos      = await _cursoService.ObtenerAsync(Busqueda, activo, PaginaActual, TamañoPagina);
         // TODO: TotalCursos = await _cursoService.ContarAsync(Busqueda, activo);
 
-        // Datos de ejemplo
-        Cursos = new List<CursoResponse>
-        {
-            new() { Id = Guid.NewGuid(), Sigla = "CS-101", Nombre = "Introducción a las Ciencias Computacionales", Creditos = 4, Escuela = "Ingeniería y Tecnología", Activo = true  },
-            new() { Id = Guid.NewGuid(), Sigla = "BIO-204", Nombre = "Biología Molecular Esencial",                Creditos = 3, Escuela = "Ciencias de la Vida",     Activo = true  },
-            new() { Id = Guid.NewGuid(), Sigla = "HIS-110", Nombre = "Historia Global: Siglo XVIII",               Creditos = 3, Escuela = "Humanidades",             Activo = false },
-            new() { Id = Guid.NewGuid(), Sigla = "DES-302", Nombre = "Diseño de Interfaces Interactivas",          Creditos = 4, Escuela = "Arte y Diseño",           Activo = true  },
-        };
+        string endpoint = _configuracion.ObtenerMetodo("ApiEndPoints", "ObtenerCursos");
+        using var cliente = ObtenerClienteConToken();
+        var solicitud = new HttpRequestMessage(HttpMethod.Get, endpoint);
+
+        var respuesta = await cliente.SendAsync(solicitud);
+        respuesta.EnsureSuccessStatusCode();
+        if (respuesta.StatusCode == HttpStatusCode.OK) {
+            var resultado = await respuesta.Content.ReadAsStringAsync();
+            var opciones = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            cursos = JsonSerializer.Deserialize<List<CursoResponse>>(resultado, opciones);
+        }
+
+
+
         TotalCursos = 11;
+    }
+
+    // Helper — extrae el JWT de los claims y configura el HttpClient
+    private HttpClient ObtenerClienteConToken () {
+        var tokenClaim = HttpContext.User.Claims
+            .FirstOrDefault(c => c.Type == "Token");
+        var cliente = new HttpClient();
+        if (tokenClaim != null)
+            cliente.DefaultRequestHeaders.Authorization =
+                new System.Net.Http.Headers.AuthenticationHeaderValue(
+                    "Bearer", tokenClaim.Value);
+        return cliente;
     }
 }
