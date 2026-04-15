@@ -32,7 +32,6 @@ public class IndexModel : PageModel
     public int TotalEscuelas { get; set; }
     public int TotalHorarios { get; set; }
     public int TotalRequisitos { get; set; }
-    public bool EsUsuario { get; set; }
 
     public List<AdminQuickAccess> QuickAccess { get; set; } = new();
 
@@ -43,7 +42,6 @@ public class IndexModel : PageModel
 
     public async Task OnGet()
     {
-        EsUsuario = User.Claims.Any(c => c.Type == "role" && c.Value == "1");
         CargarDatosAdministrador();
         ConfigurarAccesosRapidos();
         await CargarResumenAdministrativo();
