@@ -31,7 +31,7 @@
             <div class="bg-slate-50 dark:bg-slate-800/50 rounded-lg p-4 mb-6 border border-slate-200 dark:border-slate-700">
                 <div class="flex flex-col gap-1">
                     <span class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Nombre de la Carrera</span>
-                    <p class="text-sm font-bold text-slate-900 dark:text-white">@Model.carrera.Nombre</p>
+                    <p class="text-sm font-bold text-slate-900 dark:text-white">@Model.carreraResponse.Nombre</p>
                 </div>
             </div>
 
@@ -61,18 +61,28 @@
                 </div>
 
                 <!-- Botones -->
+                <input asp-for="carreraResponse.Activo" type="hidden" id="activoInput" value="true" />
+
+                <!-- Botones -->
                 <div class="grid grid-cols-2 gap-4">
-                    <a asp-page="/Admin/Carreras/Index"
-                       class="w-full bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100 font-bold py-3 px-4 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-all active:scale-[0.98] text-sm text-center">
-                        Cancelar
-                    </a>
-                    <button id="btnActivar" type="submit" disabled
-                            class="w-full bg-green-500 text-white font-bold py-3 px-4 rounded-lg shadow-sm hover:bg-green-600 transition-all active:scale-[0.98] flex items-center justify-center gap-2 text-sm
-                                   disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-green-500">
-                        <span class="material-symbols-outlined text-lg">check</span>
-                        Confirmar Activación
-                    </button>
+                    <div class="grid grid-cols-2 gap-4">
+                        <a asp-page="/Admin/Carreras/Index"
+                           class="w-full bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100 font-bold py-3 px-4 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-all active:scale-[0.98] text-sm text-center">
+                            Cancelar
+                        </a>
+
+                        <button id="btnActivar"
+                                type="submit"
+                                class="w-full bg-green-500 text-white font-bold py-3 px-4 rounded-lg shadow-sm hover:bg-green-600 transition-all active:scale-[0.98] flex items-center justify-center gap-2 text-sm">
+                            <span class="material-symbols-outlined text-lg">check</span>
+                            Confirmar Activación
+                        </button>
+                    </div>
                 </div>
+
+                <input asp-for="carreraResponse.Id" type="hidden" />
+                <input asp-for="carreraResponse.Nombre" type="hidden" />
+                <input asp-for="carreraResponse.Activo" type="hidden" id="activoInput" value="true" />
             </form>
         </div>
     </div>
