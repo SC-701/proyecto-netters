@@ -121,19 +121,6 @@
                                                 <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
                                                 <span class="text-[11px] font-bold uppercase tracking-wider">Activo</span>
                                             </div>
-
-                                            <form method="post" asp-page-handler="Inactivar" class="inline">
-                                                <input type="hidden" name="id" value="@escuela.Id" />
-                                                <input type="hidden" name="busqueda" value="@Model.Busqueda" />
-                                                <input type="hidden" name="filtroEstado" value="@Model.FiltroEstado" />
-                                                <input type="hidden" name="paginaActual" value="@Model.PaginaActual" />
-
-                                                <button type="submit"
-                                                        title="Inactivar escuela"
-                                                        class="relative inline-flex h-7 w-12 items-center rounded-full bg-emerald-500 transition-colors hover:opacity-90">
-                                                    <span class="inline-block h-5 w-5 transform rounded-full bg-white translate-x-6 transition-transform"></span>
-                                                </button>
-                                            </form>
                                         }
                                         else
                                         {
@@ -141,28 +128,14 @@
                                                 <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
                                                 <span class="text-[11px] font-bold uppercase tracking-wider">Inactivo</span>
                                             </div>
-
-                                            <form method="post" asp-page-handler="Activar" class="inline">
-                                                <input type="hidden" name="id" value="@escuela.Id" />
-                                                <input type="hidden" name="busqueda" value="@Model.Busqueda" />
-                                                <input type="hidden" name="filtroEstado" value="@Model.FiltroEstado" />
-                                                <input type="hidden" name="paginaActual" value="@Model.PaginaActual" />
-
-                                                <button type="submit"
-                                                        title="Activar escuela"
-                                                        class="relative inline-flex h-7 w-12 items-center rounded-full bg-slate-300 dark:bg-slate-600 transition-colors hover:opacity-90">
-                                                    <span class="inline-block h-5 w-5 transform rounded-full bg-white translate-x-1 transition-transform"></span>
-                                                </button>
-                                            </form>
                                         }
                                     </div>
                                 </td>
 
                                 <td class="px-6 py-5 text-right">
-                                    <div class="flex justify-end gap-2">
-                                        <a asp-page="/Admin/Escuelas/Editar"
-                                           asp-route-id="@escuela.Id"
-                                           class="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-all">
+                                    <div class="flex justify-end gap-3 text-slate-400">
+                                        <a asp-page="/Admin/Escuelas/Editar" asp-route-id="@escuela.Id"
+                                            class="hover:text-slate-600 dark:hover:text-slate-200 transition-colors">
                                             <span class="material-symbols-outlined text-[20px]">edit</span>
                                         </a>
 
