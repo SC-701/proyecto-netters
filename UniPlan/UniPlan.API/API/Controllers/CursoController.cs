@@ -32,8 +32,17 @@ namespace API.Controllers {
         [Authorize(Roles = "2")]
         public async Task<IActionResult> Editar ([FromRoute] Guid Id, [FromBody] CursoRequest curso) {
             if (!await VerificarCursoExiste(Id))
-                return NotFound("La curso no existe.");
+                return NotFound("El curso no existe.");
             var resultado = await _cursoFlujo.Editar(Id, curso);
+            return Ok(resultado);
+        }
+
+        [HttpPut("Activar/{Id}")]
+        [Authorize(Roles = "2")]
+        public async Task<IActionResult> Activar ([FromRoute] Guid Id) {
+            if (!await VerificarCursoExiste(Id))
+                return NotFound("El curso no existe.");
+            var resultado = await _cursoFlujo.Activar(Id);
             return Ok(resultado);
         }
 
@@ -41,7 +50,7 @@ namespace API.Controllers {
         [Authorize(Roles = "2")]
         public async Task<IActionResult> Eliminar ([FromRoute] Guid Id) {
             if (!await VerificarCursoExiste(Id))
-                return NotFound("La curso no existe.");
+                return NotFound("El curso no existe.");
             var resultado = await _cursoFlujo.Eliminar(Id);
             return NoContent();
         }
@@ -56,14 +65,14 @@ namespace API.Controllers {
         }
 
         [HttpGet("{Id}")]
-        [Authorize(Roles = "1")]
+        [Authorize(Roles = "2")]
         public async Task<IActionResult> Obtener ([FromRoute] Guid Id) {
             var resultado = await _cursoFlujo.Obtener(Id);
             return Ok(resultado);
         }
 
         [HttpGet("Sigla/{Sigla}")]
-        [Authorize(Roles = "1")]
+        [Authorize(Roles = "2")]
         public async Task<IActionResult> ObtenerSigla ([FromRoute] string Sigla) {
             var resultado = await _cursoFlujo.ObtenerSigla(Sigla);
             return Ok(resultado);

@@ -128,5 +128,7 @@
     <Build Include="dbo\Stored Procedures\SP_Horario_Activar.sql" />
     <Build Include="dbo\Stored Procedures\SP_Escuela_Activar.sql" />
     <Build Include="dbo\Stored Procedures\SP_Requisitos_CambiarEstado.sql" />
+    <Build Include="dbo\Stored Procedures\SP_Requisitos_ObtenerTodos.sql" />
+    <Build Include="dbo\Stored Procedures\SP_Curso_Activar.sql" />
   </ItemGroup>
 </Project>

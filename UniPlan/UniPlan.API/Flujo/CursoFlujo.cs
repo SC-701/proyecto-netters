@@ -22,6 +22,10 @@ namespace Flujo {
             return await _cursoDA.Eliminar(Id);
         }
 
+        public async Task<Guid> Activar (Guid Id) {
+            return await _cursoDA.Activar(Id);
+        }
+
         public async Task<IEnumerable<CursoResponse>> Obtener () {
             return await _cursoDA.Obtener();
         }
