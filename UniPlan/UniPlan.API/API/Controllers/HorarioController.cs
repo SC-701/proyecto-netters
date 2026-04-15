@@ -67,7 +67,7 @@ namespace API.Controllers
             return Ok(resultado);
         }
 
-        [HttpPatch("{Id}/activar")]
+        [HttpPut("{Id}/activar")]
         [Authorize(Roles = "2")]
         public async Task<IActionResult> Activar([FromRoute] Guid Id)
         {

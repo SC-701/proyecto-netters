@@ -1,41 +1,87 @@
+using Abstracciones.Interfaces.Reglas;
 using Abstracciones.Modelos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Text.Json;
 
 namespace Web.Pages.Admin.Escuelas;
 
+[Authorize]
 public class EliminarModel : PageModel
 {
     public string AdminName { get; set; } = "Admin User";
     public string AdminEmail { get; set; } = "admin@uniplan.edu";
 
-    [BindProperty(SupportsGet = true)]
-    public Guid Id { get; set; }
+    private readonly IConfiguracion _configuracion;
 
-    public EscuelaResponse Escuela { get; set; } = new();
-
-    public async Task<IActionResult> OnGetAsync()
+    public EliminarModel(IConfiguracion configuracion)
     {
-        // TODO: Escuela = await _escuelaService.ObtenerPorIdAsync(Id);
-        // if (Escuela is null) return NotFound();
+        _configuracion = configuracion;
+    }
 
-        // Datos de ejemplo
-        Escuela = new EscuelaResponse
+    public EscuelaResponse Escuela { get; set; } = default!;
+
+    public async Task<ActionResult> OnGet(Guid? id)
+    {
+        if (id == null || id == Guid.Empty)
+            return NotFound();
+
+        string endpoint = _configuracion.ObtenerMetodo("ApiEndpoints", "ObtenerEscuela");
+
+        var cliente = ObtenerClienteConToken();
+        var respuesta = await cliente.SendAsync(
+            new HttpRequestMessage(HttpMethod.Get, string.Format(endpoint, id))
+        );
+
+        respuesta.EnsureSuccessStatusCode();
+
+        var resultado = await respuesta.Content.ReadAsStringAsync();
+        var opciones = new JsonSerializerOptions
         {
-            Id = Id,
-            Nombre = "Saint Patrick's Academy",
-            Area = "Humanidades y Artes",
-            Activo = true,
+            PropertyNameCaseInsensitive = true
         };
+
+        Escuela = JsonSerializer.Deserialize<EscuelaResponse>(resultado, opciones)!;
 
         return Page();
     }
 
-    public async Task<IActionResult> OnPostAsync()
+    public async Task<ActionResult> OnPost(Guid? id)
     {
-        // TODO: await _escuelaService.EliminarAsync(Id);
+        if (id == null || id == Guid.Empty)
+            return NotFound();
+
+        if (!ModelState.IsValid)
+            return Page();
+
+        string endpoint = _configuracion.ObtenerMetodo("ApiEndpoints", "EliminarEscuela");
+
+        var cliente = ObtenerClienteConToken();
+        var respuesta = await cliente.SendAsync(
+            new HttpRequestMessage(HttpMethod.Delete, string.Format(endpoint, id))
+        );
+
+        respuesta.EnsureSuccessStatusCode();
 
         TempData["Exito"] = "Escuela eliminada correctamente.";
-        return RedirectToPage("/Admin/Escuelas/Index");
+        return RedirectToPage("./Index");
+    }
+
+    private HttpClient ObtenerClienteConToken()
+    {
+        var tokenClaim = HttpContext.User.Claims
+            .FirstOrDefault(c => c.Type == "Token");
+
+        var cliente = new HttpClient();
+
+        if (tokenClaim != null)
+        {
+            cliente.DefaultRequestHeaders.Authorization =
+                new System.Net.Http.Headers.AuthenticationHeaderValue(
+                    "Bearer", tokenClaim.Value);
+        }
+
+        return cliente;
     }
 }
