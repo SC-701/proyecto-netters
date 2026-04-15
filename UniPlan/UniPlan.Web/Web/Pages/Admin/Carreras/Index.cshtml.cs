@@ -46,10 +46,32 @@ public class IndexModel : PageModel
         var solicitud = new HttpRequestMessage(HttpMethod.Get, endpoint);
 
         var respuesta = await cliente.SendAsync(solicitud);
+
+        if (respuesta.StatusCode == HttpStatusCode.NoContent)
+        {
+            carreras = new List<CarreraResponse>();
+            TotalCarreras = 0;
+            return;
+        }
+
         respuesta.EnsureSuccessStatusCode();
+
         var resultado = await respuesta.Content.ReadAsStringAsync();
-        var opciones = new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-        carreras = JsonSerializer.Deserialize<List<CarreraResponse>>(resultado, opciones);
+
+        if (string.IsNullOrWhiteSpace(resultado))
+        {
+            carreras = new List<CarreraResponse>();
+            TotalCarreras = 0;
+            return;
+        }
+
+        var opciones = new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true
+        };
+
+        carreras = JsonSerializer.Deserialize<List<CarreraResponse>>(resultado, opciones) ?? new List<CarreraResponse>();
+        TotalCarreras = carreras.Count;
     }
 
     private HttpClient ObtenerClienteConToken()
