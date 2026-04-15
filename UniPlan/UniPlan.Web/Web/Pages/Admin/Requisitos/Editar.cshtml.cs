@@ -88,7 +88,7 @@ public class EditarModel : PageModel
         var respuesta = await cliente.PutAsJsonAsync(endpoint, requisito);
         respuesta.EnsureSuccessStatusCode();
 
-        return RedirectToPage("./Index", new { idCarrera = requisito.IdCarrera, idCurso = requisito.IdCurso });
+        return RedirectToPage("./Index");
     }
 
     private HttpClient ObtenerClienteConToken()
