@@ -46,7 +46,6 @@ public class DashboardModel : PageModel
     public string UserName { get; set; } = "";
     public string FirstName { get; set; } = "";
     public string UserCareer { get; set; } = "Estudiante";
-    public bool EsAdmin { get; set; }
     public string UserAvatarUrl { get; set; } =
         "https://lh3.googleusercontent.com/aida-public/AB6AXuBbdaSxX2F1IzAxP7xWO_9TF9pCPclgikgt5h-J7wpb7Kn455-qSfSl3xXOE7tLYrPBcDBclZR42VZCGEstwVO3uqyGbKFZ8oDv2XLaFIJIzhlJrYeyHikW_hfa6xSESIAypSuyFTGt2qY1yvcWC1hz0QqNcDQfqv5pqzvSTLfmjhIKvGpkADchcUSfXzOxgqtRkS4xJTuArzQOlQJ0iTli2skUvl5Np9YRhAmqbLnZvaTLvzqcKOalZnLjF9RAFAudANHDCHMtSQw";
 
@@ -81,7 +80,6 @@ public class DashboardModel : PageModel
 
     public void OnGet()
     {
-        EsAdmin = User.Claims.Any(c => c.Type == "role" && c.Value == "2");
         UserName = User.FindFirst("NombreUsuario")?.Value
                    ?? User.FindFirst(ClaimTypes.Name)?.Value
                    ?? "Usuario";
