@@ -1,11 +1,23 @@
+using Abstracciones.Interfaces.Reglas;
 using Abstracciones.Modelos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Net;
+using System.Text.Json;
 
 namespace Web.Pages.Admin.Horarios;
 
+[Authorize]
 public class EditarModel : PageModel
 {
+
+    private readonly IConfiguracion _configuracion;
+    public EditarModel(IConfiguracion configuracion)
+    {
+        _configuracion = configuracion;
+    }
+
     public string AdminName { get; set; } = "Admin User";
     public string AdminEmail { get; set; } = "admin@uniplan.edu";
 
@@ -15,28 +27,53 @@ public class EditarModel : PageModel
     [BindProperty]
     public HorarioRequest Input { get; set; } = new();
 
-    public async Task<IActionResult> OnGetAsync()
+    public async Task<ActionResult> OnGet()
     {
-        // TODO: var horario = await _horarioService.ObtenerPorIdAsync(Id);
-        // if (horario is null) return NotFound();
-        // Input.Dia         = horario.Dia;
-        // Input.HoraEntrada = horario.HoraEntrada;
-        // Input.HoraSalida  = horario.HoraSalida;
+        if (Id == Guid.Empty)
+            return NotFound();
+        string endpoint = _configuracion.ObtenerMetodo("ApiEndPoints", "ObtenerCarrera");
+        var cliente = ObtenerClienteConToken();
+        var solicitud = new HttpRequestMessage(HttpMethod.Get, string.Format(endpoint, Id));
+        var respuesta = await cliente.SendAsync(solicitud);
+        respuesta.EnsureSuccessStatusCode();
+        if (respuesta.StatusCode == HttpStatusCode.OK)
+        {
 
-        // Datos de ejemplo
-        Input = new HorarioRequest { Dia = "Lunes", HoraEntrada = 8, HoraSalida = 10 };
+            var resultado = await respuesta.Content.ReadAsStringAsync();
+            var opciones = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            Input = JsonSerializer.Deserialize<HorarioRequest>(resultado, opciones);
+
+        }
 
         return Page();
     }
-
-    public async Task<IActionResult> OnPostAsync()
+    public async Task<ActionResult> OnPost()
     {
+
         if (!ModelState.IsValid)
             return Page();
+        string endpoint = _configuracion.ObtenerMetodo("ApiEndPoints", "EditarHorario");
+        var cliente = ObtenerClienteConToken();
+        var respuesta = await cliente.PutAsJsonAsync<HorarioRequest>(string.Format(endpoint, Id), new HorarioRequest
+        {
+            Dia = Input.Dia,
+            HoraEntrada = Input.HoraEntrada,
+            HoraSalida = Input.HoraSalida
+        });
+        respuesta.EnsureSuccessStatusCode();
+        return RedirectToPage("./Index");
 
-        // TODO: await _horarioService.ActualizarAsync(Id, Input);
+    }
 
-        TempData["Exito"] = "Horario actualizado correctamente.";
-        return RedirectToPage("/Admin/Horarios/Index");
+    private HttpClient ObtenerClienteConToken()
+    {
+        var tokenClaim = HttpContext.User.Claims
+            .FirstOrDefault(c => c.Type == "Token");
+        var cliente = new HttpClient();
+        if (tokenClaim != null)
+            cliente.DefaultRequestHeaders.Authorization =
+                new System.Net.Http.Headers.AuthenticationHeaderValue(
+                    "Bearer", tokenClaim.Value);
+        return cliente;
     }
 }

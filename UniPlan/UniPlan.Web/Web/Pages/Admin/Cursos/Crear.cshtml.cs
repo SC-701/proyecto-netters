@@ -1,10 +1,12 @@
 using Abstracciones.Modelos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Web.Pages.Admin.Cursos;
 
+[Authorize]
 public class CrearModel : PageModel
 {
     public string AdminName { get; set; } = "Admin User";

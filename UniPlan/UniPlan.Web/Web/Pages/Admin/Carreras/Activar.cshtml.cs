@@ -1,36 +1,32 @@
 using Abstracciones.Interfaces.Reglas;
 using Abstracciones.Modelos;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Net;
 using System.Text.Json;
 
-namespace Web.Pages.Admin.Carreras;
-
-[Authorize]
-
-public class EditarModel : PageModel
+namespace Web.Pages.Admin.Carreras
 {
-    // Datos del admin — TODO: cargar desde sesión / claims
-    public string AdminName { get; set; } = "Admin User";
-    public string AdminEmail { get; set; } = "admin@uniplan.edu";
+    public class ActivarModel : PageModel
+    {
 
-    private readonly IConfiguracion _configuracion;
+        public string AdminName { get; set; } = "Admin User";
+        public string AdminEmail { get; set; } = "admin@uniplan.edu";
 
-        public EditarModel(IConfiguracion configuracion)
+        private readonly IConfiguracion _configuracion;
+
+        public ActivarModel(IConfiguracion configuracion)
         {
             _configuracion = configuracion;
         }
         [BindProperty]
-        public CarreraRequest carreraRequest { get; set; }
+        public CarreraResponse carreraResponse { get; set; }
 
 
         public async Task<ActionResult> OnGet(Guid? id)
         {
-            if (id ==  Guid.Empty)
-                return  NotFound();
+            if (id == Guid.Empty)
+                return NotFound();
             string endpoint = _configuracion.ObtenerMetodo("ApiEndPoints", "ObtenerCarrera");
             var cliente = ObtenerClienteConToken();
             var solicitud = new HttpRequestMessage(HttpMethod.Get, string.Format(endpoint, id));
@@ -42,10 +38,10 @@ public class EditarModel : PageModel
 
                 var resultado = await respuesta.Content.ReadAsStringAsync();
                 var opciones = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-                carreraRequest = JsonSerializer.Deserialize<CarreraRequest>(resultado, opciones);
+                carreraResponse = JsonSerializer.Deserialize<CarreraResponse>(resultado, opciones);
 
             }
-            
+
             return Page();
         }
         public async Task<ActionResult> OnPost()
@@ -55,10 +51,12 @@ public class EditarModel : PageModel
                 return Page();
             string endpoint = _configuracion.ObtenerMetodo("ApiEndPoints", "EditarCarrera");
             var cliente = ObtenerClienteConToken();
-            var respuesta = await cliente.PutAsJsonAsync<CarreraRequest>(string.Format(endpoint, carreraRequest.Id), new CarreraRequest
-            { 
-                Nombre = carreraRequest.Nombre,
-                Activo = carreraRequest.Activo
+            var respuesta = await cliente.PutAsJsonAsync<CarreraRequest>(string.Format(endpoint, carreraResponse.Id), new CarreraRequest
+            {
+                Id = carreraResponse.Id,
+                Nombre = carreraResponse.Nombre,
+                Activo = carreraResponse.Activo
+
             });
             respuesta.EnsureSuccessStatusCode();
             return RedirectToPage("./Index");
@@ -76,4 +74,5 @@ public class EditarModel : PageModel
                         "Bearer", tokenClaim.Value);
             return cliente;
         }
+    }
 }
