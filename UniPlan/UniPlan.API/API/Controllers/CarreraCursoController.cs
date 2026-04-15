@@ -22,7 +22,7 @@ namespace API.Controllers
 
         #region "Operaciones"
         [HttpPost]
-        [Authorize(Roles = "2")]
+        [Authorize(Roles = "1")]
         public async Task<IActionResult> Agregar([FromBody] CarreraCursoRequest carreraCurso)
         {
             var resultado = await _carreraCursoFlujo.Agregar(carreraCurso);
@@ -31,7 +31,7 @@ namespace API.Controllers
         }
 
         [HttpPut("{IdCarrera}/{IdCurso}")]
-        [Authorize(Roles = "2")]
+        [Authorize(Roles = "1")]
         public async Task<IActionResult> Editar([FromRoute] Guid IdCarrera, [FromRoute] Guid IdCurso, [FromBody] CarreraCursoRequest carreraCurso)
         {
             if (!await VerificarCarreraExiste(IdCarrera))
@@ -42,7 +42,7 @@ namespace API.Controllers
         }
 
         [HttpDelete("{IdCarrera}/{IdCurso}")]
-        [Authorize(Roles = "2")]
+        [Authorize(Roles = "1")]
         public async Task<IActionResult> Eliminar([FromRoute] Guid IdCarrera, [FromRoute] Guid IdCurso)
         {
             if (!await VerificarCarreraExiste(IdCarrera))
@@ -53,7 +53,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "2")]
+        [Authorize(Roles = "1")]
         public async Task<IActionResult> Obtener()
         {
             var resultado = await _carreraCursoFlujo.Obtener();
@@ -63,7 +63,7 @@ namespace API.Controllers
         }
 
         [HttpGet("{IdCarrera}/{IdCurso}")]
-        [Authorize(Roles = "2")]
+        [Authorize(Roles = "1")]
         public async Task<IActionResult> Obtener([FromRoute] Guid IdCarrera)
         {
             var resultado = await _carreraCursoFlujo.Obtener(IdCarrera);

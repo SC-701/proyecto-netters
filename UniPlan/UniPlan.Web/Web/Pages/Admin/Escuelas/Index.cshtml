@@ -22,9 +22,6 @@
             <h2 class="text-4xl font-extrabold text-slate-900 dark:text-white tracking-tighter">
                 Gestión de Escuelas
             </h2>
-            <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">
-                Administre las escuelas y facultades registradas en la institución.
-            </p>
         </div>
 
         <a asp-page="/Admin/Escuelas/Crear"
@@ -35,8 +32,8 @@
     </div>
 
     <!-- Filtros -->
-    <div class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-4 md:p-5">
-        <form method="get" class="flex flex-col lg:flex-row gap-4 items-stretch lg:items-center">
+    @* <div class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-4 md:p-5"> *@
+        <form method="get" class="flex flex-col md:flex-row gap-4 items-center mb-6">
             <div class="relative flex-1 w-full">
                 <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
                 <input asp-for="Busqueda"
@@ -58,7 +55,7 @@
                 </button>
             </div>
         </form>
-    </div>
+    @* </div> *@
 
     <!-- Tabla -->
     <div class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">

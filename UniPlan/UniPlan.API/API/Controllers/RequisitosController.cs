@@ -23,7 +23,7 @@ namespace API.Controllers
         #region CRUD
 
         [HttpGet]
-        [Authorize(Roles = "2")]
+        [Authorize(Roles = "1")]
         public async Task<IActionResult> Obtener()
         {
             var resultado = await _requisitosFlujo.Obtener();
@@ -36,7 +36,7 @@ namespace API.Controllers
 
 
         [HttpPost]
-        [Authorize(Roles = "2")]
+        [Authorize(Roles = "1")]
         public async Task<IActionResult> Agregar([FromBody] RequisitosRequest requisito)
         {
             var resultado = await _requisitosFlujo.Agregar(requisito);
@@ -48,7 +48,7 @@ namespace API.Controllers
         }
 
         [HttpPut]
-        [Authorize(Roles = "2")]
+        [Authorize(Roles = "1")]
         public async Task<IActionResult> Editar([FromBody] RequisitosRequest requisito)
         {
             if (!await VerificarRequisitoExiste(requisito.IdCarrera, requisito.IdCurso, requisito.IdCursoRequisito))
@@ -59,7 +59,7 @@ namespace API.Controllers
         }
 
         [HttpDelete]
-        [Authorize(Roles = "2")]
+        [Authorize(Roles = "1")]
         public async Task<IActionResult> Eliminar([FromBody] RequisitosEliminarRequest requisito)
         {
             if (!await VerificarRequisitoExiste(requisito.IdCarrera, requisito.IdCurso, requisito.IdCursoRequisito))
@@ -70,7 +70,7 @@ namespace API.Controllers
         }
 
         [HttpGet("PorCurso/{IdCarrera}/{IdCurso}")]
-        [Authorize(Roles = "2")]
+        [Authorize(Roles = "1")]
         public async Task<IActionResult> ObtenerPorCurso([FromRoute] Guid IdCarrera, [FromRoute] Guid IdCurso)
         {
             var resultado = await _requisitosFlujo.ObtenerPorCurso(IdCarrera, IdCurso);
@@ -81,7 +81,7 @@ namespace API.Controllers
         }
 
         [HttpGet("CursosQueLoRequieren/{IdCursoRequisito}")]
-        [Authorize(Roles = "2")]
+        [Authorize(Roles = "1")]
         public async Task<IActionResult> ObtenerCursosQueLoRequieren([FromRoute] Guid IdCursoRequisito)
         {
             var resultado = await _requisitosFlujo.ObtenerCursosQueLoRequieren(IdCursoRequisito);
@@ -91,7 +91,7 @@ namespace API.Controllers
             return Ok(resultado);
         }
         [HttpPut("Estado")]
-        [Authorize(Roles = "2")]
+        [Authorize(Roles = "1")]
         public async Task<IActionResult> CambiarEstado([FromBody] RequisitosEstadoRequest requisito)
         {
             var resultado = await _requisitosFlujo.CambiarEstado(requisito);

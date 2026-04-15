@@ -25,7 +25,7 @@ namespace API.Controllers
         // Roles: 1 - Usuario, 2 - Administrador (también tiene 1)
 
         [HttpPost]
-        [Authorize(Roles = "2")]
+        [Authorize(Roles = "1")]
         public async Task<IActionResult> Agregar([FromBody] EscuelaRequest escuela)
         {
             var resultado = await _escuelaFlujo.Agregar(escuela);
@@ -33,7 +33,7 @@ namespace API.Controllers
         }
 
         [HttpPut("{Id}")]
-        [Authorize(Roles = "2")]
+        [Authorize(Roles = "1")]
         public async Task<IActionResult> Editar([FromRoute] Guid Id, [FromBody] EscuelaRequest escuela)
         {
             if (!await VerificarEscuelaExiste(Id))
@@ -43,7 +43,7 @@ namespace API.Controllers
         }
 
         [HttpPut("Activar/{Id}")]
-        [Authorize(Roles = "2")]
+        [Authorize(Roles = "1")]
         public async Task<IActionResult> Activar([FromRoute] Guid Id)
         {
             if (!await VerificarEscuelaExiste(Id))
@@ -53,7 +53,7 @@ namespace API.Controllers
         }
 
         [HttpDelete("{Id}")]
-        [Authorize(Roles = "2")]
+        [Authorize(Roles = "1")]
         public async Task<IActionResult> Eliminar([FromRoute] Guid Id)
         {
             if (!await VerificarEscuelaExiste(Id))
@@ -63,7 +63,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "2")]
+        [Authorize(Roles = "1")]
         public async Task<IActionResult> Obtener()
         {
             var resultado = await _escuelaFlujo.Obtener();
@@ -73,7 +73,7 @@ namespace API.Controllers
         }
 
         [HttpGet("{Id}")]
-        [Authorize(Roles = "2")]
+        [Authorize(Roles = "1")]
         public async Task<IActionResult> Obtener([FromRoute] Guid Id)
         {
             var resultado = await _escuelaFlujo.Obtener(Id);
