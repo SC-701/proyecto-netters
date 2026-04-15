@@ -1,6 +1,8 @@
+using Abstracciones.Interfaces.Reglas;
 using Abstracciones.Modelos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Text.Json;
 
 namespace Web.Pages.Admin.Horarios;
 
@@ -28,24 +30,54 @@ public class IndexModel : PageModel
     public int TotalPaginas => (int)Math.Ceiling((double)TotalHorarios / TamañoPagina);
     public int PaginaInicio => (PaginaActual - 1) * TamañoPagina + 1;
     public int PaginaFin => Math.Min(PaginaActual * TamañoPagina, TotalHorarios);
+    
+    private readonly IConfiguracion _configuracion;
 
-    public List<HorarioResponse> Horarios { get; set; } = new();
-
-    public void OnGet()
+    public IndexModel(IConfiguracion configuracion)
     {
-        PaginaActual = Math.Max(1, PaginaActual);
+        _configuracion = configuracion;
+    }
 
-        // TODO: bool? activo = FiltroEstado == "true" ? true : FiltroEstado == "false" ? false : null;
-        // TODO: Horarios      = await _horarioService.ObtenerAsync(Busqueda, FiltroDia, activo, PaginaActual, TamañoPagina);
-        // TODO: TotalHorarios = await _horarioService.ContarAsync(Busqueda, FiltroDia, activo);
+    public IList<HorarioResponse> Horarios { get; set; } = default!;
 
-        // Datos de ejemplo
-        Horarios = new List<HorarioResponse>
+    public async Task OnGetAsync()
+    {
+        string endpoint = _configuracion.ObtenerMetodo("ApiEndPoints", "ObtenerHorarios");
+        using var cliente = ObtenerClienteConToken();
+        var solicitud = new HttpRequestMessage(HttpMethod.Get, endpoint);
+
+        var respuesta = await cliente.SendAsync(solicitud);
+
+        if (respuesta.StatusCode == System.Net.HttpStatusCode.NoContent)
         {
-            new() { Id = Guid.NewGuid(), Dia = "Lunes",     HoraEntrada = 8,  HoraSalida = 10, Activo = true  },
-            new() { Id = Guid.NewGuid(), Dia = "Martes",    HoraEntrada = 11, HoraSalida = 13, Activo = false },
-            new() { Id = Guid.NewGuid(), Dia = "Miércoles", HoraEntrada = 14, HoraSalida = 16, Activo = true  },
-        };
-        TotalHorarios = 11;
+            Horarios = new List<HorarioResponse>();
+            return;
+        }
+
+        respuesta.EnsureSuccessStatusCode();
+
+        var resultado = await respuesta.Content.ReadAsStringAsync();
+        var opciones = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+
+        if (!string.IsNullOrWhiteSpace(resultado))
+        {
+            Horarios = JsonSerializer.Deserialize<List<HorarioResponse>>(resultado, opciones) ?? new List<HorarioResponse>();
+        }
+        else
+        {
+            Horarios = new List<HorarioResponse>();
+        }
+    }
+
+    private HttpClient ObtenerClienteConToken()
+    {
+        var tokenClaim = HttpContext.User.Claims
+            .FirstOrDefault(c => c.Type == "Token");
+        var cliente = new HttpClient();
+        if (tokenClaim != null)
+            cliente.DefaultRequestHeaders.Authorization =
+                new System.Net.Http.Headers.AuthenticationHeaderValue(
+                    "Bearer", tokenClaim.Value);
+        return cliente;
     }
 }
