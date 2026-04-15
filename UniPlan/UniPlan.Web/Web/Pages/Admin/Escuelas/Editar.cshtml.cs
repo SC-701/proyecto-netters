@@ -1,5 +1,6 @@
 using Abstracciones.Interfaces.Reglas;
 using Abstracciones.Modelos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Net;
@@ -7,6 +8,7 @@ using System.Text.Json;
 
 namespace Web.Pages.Admin.Escuelas;
 
+[Authorize]
 public class EditarModel : PageModel
 {
     public string AdminName { get; set; } = "Admin User";

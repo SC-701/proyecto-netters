@@ -1,5 +1,6 @@
 using Abstracciones.Interfaces.Reglas;
 using Abstracciones.Modelos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -9,6 +10,7 @@ using System.Text.RegularExpressions;
 
 namespace Web.Pages.Admin.Carreras;
 
+[Authorize]
 public class CrearModel : PageModel
 {
     // Datos del admin — TODO: cargar desde sesión / claims

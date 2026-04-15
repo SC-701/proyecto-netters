@@ -48,9 +48,6 @@
                     <label asp-for="loginInfo.Password" class="block text-slate-700 dark:text-slate-300 text-sm font-semibold">
                         Contraseña
                     </label>
-                    <a asp-page="/Account/ForgotPassword" class="text-primary text-xs font-semibold hover:underline">
-                        ¿Olvidaste tu contraseña?
-                    </a>
                 </div>
                 <div class="relative">
                     <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-[20px]">lock</span>
@@ -79,7 +76,7 @@
         <div class="mt-8 pt-6 border-t border-slate-100 dark:border-slate-800 text-center">
             <p class="text-slate-600 dark:text-slate-400 text-sm">
                 ¿No tienes una cuenta?
-                <a asp-page="/Account/Register" class="text-primary font-bold hover:underline">Registrarse</a>
+                <a asp-page="/Seguridad/Register" class="text-primary font-bold hover:underline">Registrarse</a>
             </p>
         </div>
     </div>
@@ -89,11 +86,16 @@
     <partial name="_ValidationScriptsPartial" />
     <script>
         function togglePassword() {
-            const input = document.getElementById('passwordInput');
-            const icon  = document.getElementById('toggleIcon');
-            const isHidden = input.type === 'password';
-            input.type = isHidden ? 'text' : 'password';
-            icon.textContent = isHidden ? 'visibility_off' : 'visibility';
+            var passwordInput = document.getElementById("passwordInput");
+            var toggleIcon = document.getElementById("toggleIcon");
+
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+                toggleIcon.textContent = "visibility_off";
+            } else {
+                passwordInput.type = "password";
+                toggleIcon.textContent = "visibility";
+            }
         }
     </script>
 }
