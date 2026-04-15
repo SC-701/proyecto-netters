@@ -125,29 +125,33 @@
                                         <span class="material-symbols-outlined text-[20px]">edit</span>
                                     </a>
 
-                                    <a asp-page="/Admin/Requisitos/Eliminar"
-                                           asp-route-idCarrera="@requisito.IdCarrera"
-                                           asp-route-idCurso="@requisito.IdCurso"
-                                           asp-route-idCursoRequisito="@requisito.IdCursoRequisito"
-                                           class="hover:text-red-500 transition-colors"
-                                           title="Eliminar">
-                                        <span class="material-symbols-outlined text-[20px]">delete</span>
-                                    </a>
+                                    @if (requisito.Activo)
+                                    {
+                                        <a asp-page="/Admin/Requisitos/Eliminar"
+                                               asp-route-idCarrera="@requisito.IdCarrera"
+                                               asp-route-idCurso="@requisito.IdCurso"
+                                               asp-route-idCursoRequisito="@requisito.IdCursoRequisito"
+                                               class="hover:text-red-500 transition-colors"
+                                               title="Eliminar">
+                                            <span class="material-symbols-outlined text-[20px]">delete</span>
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <form method="post" asp-page-handler="CambiarEstado" class="inline">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="idCarrera" value="@requisito.IdCarrera" />
+                                            <input type="hidden" name="idCurso" value="@requisito.IdCurso" />
+                                            <input type="hidden" name="idCursoRequisito" value="@requisito.IdCursoRequisito" />
+                                            <input type="hidden" name="activo" value="true" />
 
-                                    <form method="post" asp-page-handler="CambiarEstado" class="inline">
-                                        @Html.AntiForgeryToken()
-                                        <input type="hidden" name="idCarrera" value="@requisito.IdCarrera" />
-                                        <input type="hidden" name="idCurso" value="@requisito.IdCurso" />
-                                        <input type="hidden" name="idCursoRequisito" value="@requisito.IdCursoRequisito" />
-                                        <input type="hidden" name="activo" value="@( !requisito.Activo ? "true" : "false" )" />
-                                        <button type="submit"
-                                                class="hover:text-emerald-500 transition-colors"
-                                                title="@(requisito.Activo ? "Inactivar" : "Activar")">
-                                            <span class="material-symbols-outlined text-[20px]">
-                                                @(requisito.Activo ? "toggle_off" : "toggle_on")
-                                            </span>
-                                        </button>
-                                    </form>
+                                            <button type="submit"
+                                                    class="hover:text-emerald-500 transition-colors"
+                                                    title="Activar">
+                                                <span class="material-symbols-outlined text-[20px]">check_circle</span>
+                                            </button>
+                                        </form>
+                                    }
                                 </div>
                             </td>
                         </tr>

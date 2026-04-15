@@ -1,6 +1,5 @@
 using Abstracciones.Interfaces.Reglas;
 using Abstracciones.Modelos;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -9,7 +8,6 @@ using System.Text.Json;
 
 namespace Web.Pages.Admin.Requisitos;
 
-[Authorize]
 public class IndexModel : PageModel
 {
     public string AdminName { get; set; } = "Admin User";
@@ -38,34 +36,71 @@ public class IndexModel : PageModel
     public async Task OnGet()
     {
         await CargarCombos();
+        await CargarRequisitos();
+    }
 
-        if (IdCarrera.HasValue && IdCurso.HasValue)
+    public async Task<IActionResult> OnPostCambiarEstado(Guid idCarrera, Guid idCurso, Guid idCursoRequisito, bool activo)
+    {
+        string endpoint = _configuracion.ObtenerMetodo("ApiEndPoints", "CambiarEstadoRequisito");
+        var cliente = ObtenerClienteConToken();
+
+        var request = new RequisitosEstadoRequest
         {
-            string endpoint = _configuracion.ObtenerMetodo("ApiEndPoints", "ObtenerRequisitosPorCurso");
-            using var cliente = ObtenerClienteConToken();
-            var solicitud = new HttpRequestMessage(HttpMethod.Get, string.Format(endpoint, IdCarrera, IdCurso));
+            IdCarrera = idCarrera,
+            IdCurso = idCurso,
+            IdCursoRequisito = idCursoRequisito,
+            Activo = activo
+        };
 
-            var respuesta = await cliente.SendAsync(solicitud);
+        var respuesta = await cliente.PutAsJsonAsync(endpoint, request);
+        respuesta.EnsureSuccessStatusCode();
 
-            if (respuesta.StatusCode == HttpStatusCode.NoContent)
-            {
-                requisitos = new List<RequisitosResponse>();
-                return;
-            }
+        return RedirectToPage("./Index", new
+        {
+            IdCarrera = IdCarrera,
+            IdCurso = IdCurso
+        });
+    }
 
-            respuesta.EnsureSuccessStatusCode();
+    private async Task CargarRequisitos()
+    {
+        using var cliente = ObtenerClienteConToken();
+        var opciones = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
 
-            var resultado = await respuesta.Content.ReadAsStringAsync();
-            var opciones = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+        string endpoint = _configuracion.ObtenerMetodo("ApiEndPoints", "ObtenerRequisitos");
+        var respuesta = await cliente.GetAsync(endpoint);
 
-            if (!string.IsNullOrWhiteSpace(resultado))
-            {
-                requisitos = JsonSerializer.Deserialize<List<RequisitosResponse>>(resultado, opciones) ?? new List<RequisitosResponse>();
-            }
-            else
-            {
-                requisitos = new List<RequisitosResponse>();
-            }
+        if (respuesta.StatusCode == HttpStatusCode.NoContent)
+        {
+            requisitos = new List<RequisitosResponse>();
+            return;
+        }
+
+        respuesta.EnsureSuccessStatusCode();
+
+        var resultado = await respuesta.Content.ReadAsStringAsync();
+
+        if (!string.IsNullOrWhiteSpace(resultado))
+        {
+            requisitos = JsonSerializer.Deserialize<List<RequisitosResponse>>(resultado, opciones) ?? new List<RequisitosResponse>();
+        }
+        else
+        {
+            requisitos = new List<RequisitosResponse>();
+        }
+
+        if (IdCarrera.HasValue)
+        {
+            requisitos = requisitos
+                .Where(x => x.IdCarrera == IdCarrera.Value)
+                .ToList();
+        }
+
+        if (IdCurso.HasValue)
+        {
+            requisitos = requisitos
+                .Where(x => x.IdCurso == IdCurso.Value)
+                .ToList();
         }
     }
 
@@ -136,28 +171,5 @@ public class IndexModel : PageModel
         }
 
         return cliente;
-    }
-
-    public async Task<IActionResult> OnPostCambiarEstado(Guid idCarrera, Guid idCurso, Guid idCursoRequisito, bool activo)
-    {
-        string endpoint = _configuracion.ObtenerMetodo("ApiEndPoints", "CambiarEstadoRequisito");
-        var cliente = ObtenerClienteConToken();
-
-        var request = new RequisitosEstadoRequest
-        {
-            IdCarrera = idCarrera,
-            IdCurso = idCurso,
-            IdCursoRequisito = idCursoRequisito,
-            Activo = activo
-        };
-
-        var respuesta = await cliente.PutAsJsonAsync(endpoint, request);
-        respuesta.EnsureSuccessStatusCode();
-
-        return RedirectToPage("./Index", new
-        {
-            IdCarrera = idCarrera,
-            IdCurso = idCurso
-        });
     }
 }

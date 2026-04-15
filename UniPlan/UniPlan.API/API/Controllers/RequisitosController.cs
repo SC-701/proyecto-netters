@@ -22,6 +22,19 @@ namespace API.Controllers
 
         #region CRUD
 
+        [HttpGet]
+        [Authorize(Roles = "2")]
+        public async Task<IActionResult> Obtener()
+        {
+            var resultado = await _requisitosFlujo.Obtener();
+
+            if (!resultado.Any())
+                return NoContent();
+
+            return Ok(resultado);
+        }
+
+
         [HttpPost]
         [Authorize(Roles = "2")]
         public async Task<IActionResult> Agregar([FromBody] RequisitosRequest requisito)
